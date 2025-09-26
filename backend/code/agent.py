@@ -10,6 +10,8 @@ from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
 from langgraph.graph import StateGraph, END
 from llm_provider import get_llm
+from llm_provider import get_llm_for_agent
+from logger import log_message
 
 class AgentAction(BaseModel):
     action: str = Field(description="你的行动决策，必须是 'POST', 'NO_ACTION', 或 'DROPOUT' 之一")
@@ -29,7 +31,7 @@ class Agent:
     def __init__(self, agent_id: str, persona: dict):
         self.id = agent_id
         self.persona = persona
-        self.llm = get_llm()
+        self.llm = get_llm_for_agent(persona)
         self.memory = chromadb.Client().create_collection(name=f"agent_memory_{self.id}")
         self.last_cognitive_summary = ""
 
@@ -47,7 +49,10 @@ class Agent:
     def _create_graph(self):
         
         def unified_cognitive_node(state: AgentState) -> dict:
-            print(f"--- Agent {self.id} ({self.persona['username']}) 正在思考 ---")
+            log_message(f"--- Agent {self.id} ({self.persona['username']}) 正在思考 ---")
+
+            llm_info = f"{self.persona.get('llm_model')}"
+            log_message(f"   [使用LLM]: {llm_info}")
             
             raw_memories = self._retrieve_raw_memory_docs("\n".join(state['recent_messages']))
             
@@ -109,8 +114,8 @@ class Agent:
                 "platform": platform
             })
 
-            print(f"   [关联记忆]: {cognitive_result.internal_monologue}")
-            print(f"   [认知总结]: {cognitive_result.cognitive_summary}")
+            log_message(f"   [关联记忆]: {cognitive_result.internal_monologue}")
+            log_message(f"   [认知总结]: {cognitive_result.cognitive_summary}")
             
             self.update_memory(cognitive_result.cognitive_summary)
             self.last_cognitive_summary = cognitive_result.cognitive_summary
@@ -118,10 +123,10 @@ class Agent:
             final_action = cognitive_result.final_action
 
             if final_action.action == 'POST':
-                print(f"   [决策]: {final_action.action}, 发表内容: '{final_action.content}'")
+                log_message(f"   [决策]: {final_action.action}, 发表内容: '{final_action.content}'")
                 self.update_memory(f"我对此发表了新帖子: '{final_action.content}'")
             else:
-                print(f"   [决策]: {final_action.action}")
+                log_message(f"   [决策]: {final_action.action}")
 
             return {"response": cognitive_result}
 
