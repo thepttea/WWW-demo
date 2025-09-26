@@ -1,0 +1,11 @@
+# requirements.txt
+python-dotenv
+networkx
+langchain
+langgraph
+pydantic
+chromadb
+langchain-google-genai
+langchain-openai
+langchain-anthropic
+langchain-deepseek
