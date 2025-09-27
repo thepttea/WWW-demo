@@ -1,0 +1,87 @@
+/**
+ * 网络图组件样式
+ */
+
+.network-graph-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  /* 确保容器稳定，避免重排 */
+  contain: layout style paint;
+  will-change: auto;
+  z-index: 1;
+}
+
+.network-legend {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 10;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+
+.legend-color {
+  width: 16px;
+  height: 3px;
+  margin-right: 8px;
+  border-radius: 2px;
+}
+
+.legend-color.mutual {
+  background-color: #52c41a;
+}
+
+.legend-color.weak {
+  background-color: #d9d9d9;
+}
+
+.legend-color.active {
+  background-color: #ff4d4f;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #ff4d4f,
+    #ff4d4f 5px,
+    transparent 5px,
+    transparent 10px
+  );
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .network-legend {
+    top: 8px;
+    right: 8px;
+    padding: 8px;
+  }
+  
+  .legend-item {
+    font-size: 10px;
+  }
+  
+  .legend-color {
+    width: 12px;
+    height: 2px;
+    margin-right: 6px;
+  }
+}

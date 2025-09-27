@@ -1,0 +1,144 @@
+/**
+ * 节点详情面板样式
+ */
+
+.node-detail-panel {
+  position: relative;
+  max-width: 320px;
+  min-width: 280px;
+}
+
+.detail-card {
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.header-info {
+  flex: 1;
+}
+
+.close-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff4d4f;
+  transform: scale(1.1);
+}
+
+.detail-content {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.info-section {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px !important;
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 12px;
+}
+
+.platform-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cognitive-summary {
+  background: rgba(24, 144, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border-left: 3px solid #1890ff;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 12px;
+}
+
+/* 滚动条样式 */
+.detail-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.detail-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 2px;
+}
+
+.detail-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.detail-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .node-detail-panel {
+    max-width: 280px;
+    min-width: 240px;
+  }
+  
+  .info-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
