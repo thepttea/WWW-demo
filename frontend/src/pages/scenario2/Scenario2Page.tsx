@@ -16,7 +16,7 @@ const Scenario2Page: React.FC = () => {
   const [simulationResult] = useState<any>(null);
   const [selectedCase, setSelectedCase] = useState<HistoricalCase | null>(null);
 
-  const handleStartSimulation = async (config: SimulationConfig) => {
+  const handleStartSimulation = async (_config: SimulationConfig) => {
     if (!selectedCase) {
       message.warning('Please select a classic PR case first');
       return;

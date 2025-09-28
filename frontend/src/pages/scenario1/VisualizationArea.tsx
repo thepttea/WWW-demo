@@ -12,8 +12,8 @@ interface VisualizationAreaProps {
 
 const VisualizationArea: React.FC<VisualizationAreaProps> = ({
   isLoading = false,
-  networkData,
-  simulationResult,
+  networkData: _networkData,
+  simulationResult: _simulationResult,
 }) => {
   return (
     <Card className="visualization-area glassmorphism">
@@ -27,7 +27,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
             <Spin size="large" />
             <p className="loading-text">Running simulation...</p>
           </div>
-        ) : networkData ? (
+        ) : _networkData ? (
           <div className="network-visualization">
             {/* 这里将来会集成网络可视化组件 */}
             <div className="network-placeholder">

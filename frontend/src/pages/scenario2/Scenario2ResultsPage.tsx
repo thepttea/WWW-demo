@@ -15,7 +15,7 @@ interface Scenario2ResultsPageProps {
 }
 
 const Scenario2ResultsPage: React.FC<Scenario2ResultsPageProps> = ({
-  selectedCase,
+  selectedCase: _selectedCase,
   simulationResults,
   realWorldResults,
   onBack,

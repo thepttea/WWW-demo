@@ -12,6 +12,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 24px;
+  border-bottom: none !important;
+}
+
+.page-header::after {
+  display: none !important;
+}
+
+.page-header::before {
+  display: none !important;
 }
 
 .page-title {
@@ -29,12 +42,25 @@
   font-size: 16px;
   max-width: 600px;
   text-align: center;
+  border-bottom: none !important;
+}
+
+.page-description::after {
+  display: none !important;
+}
+
+.page-description::before {
+  display: none !important;
 }
 
 .page-content {
   flex: 1;
   height: calc(100vh - 200px);
   min-height: 600px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
 }
 
 .content-grid {
@@ -80,6 +106,7 @@
   .page-content {
     height: calc(100vh - 150px);
     min-height: 500px;
+    padding: 0 16px;
   }
   
   .content-grid {

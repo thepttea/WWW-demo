@@ -18,7 +18,7 @@ interface Scenario2SimulationPageProps {
 
 const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   selectedCase,
-  onBack,
+  onBack: _onBack,
   onReselectCase,
 }) => {
   const [currentRound, setCurrentRound] = useState(1);

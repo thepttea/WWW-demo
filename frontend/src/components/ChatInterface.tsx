@@ -12,7 +12,7 @@ interface ChatInterfaceProps {
   onStrategyGenerated: (strategy: string) => void;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated }) => {
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onStrategyGenerated }) => {
   const [messages, setMessages] = useState<ChatMessageType[]>([
     {
       id: '1',
