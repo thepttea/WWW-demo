@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { Card, Typography, Button, Divider } from 'antd';
 import {
   ReloadOutlined,
-  ArrowLeftOutlined
+  ArrowLeftOutlined,
+  BarChartOutlined
 } from '@ant-design/icons';
 import { HistoricalCase } from '../../types';
+import Scenario2ResultsPage from './Scenario2ResultsPage';
 import './Scenario2SimulationPage.css';
 
 const { Title, Text } = Typography;
@@ -21,9 +23,27 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   onReselectCase,
 }) => {
   const [currentRound, setCurrentRound] = useState(1);
+  const [showResults, setShowResults] = useState(false);
+  const [isSimulationComplete, setIsSimulationComplete] = useState(false);
 
   const handleContinueNextRound = () => {
-    setCurrentRound(prev => prev + 1);
+    const newRound = currentRound + 1;
+    setCurrentRound(newRound);
+    
+    // 假设总共有3轮，当到达第3轮时标记为完成
+    if (newRound >= 3) {
+      setIsSimulationComplete(true);
+    }
+  };
+
+  const handleViewResults = () => {
+    setShowResults(true);
+  };
+
+
+  const handleReset = () => {
+    setCurrentRound(1);
+    setIsSimulationComplete(false);
   };
 
   const getCurrentRoundStrategy = (fullStrategy: string, round: number) => {
@@ -54,17 +74,24 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
       <div className="map-visualization">
         <div className="map-header">
           <Title level={4} className="map-title">Public Opinion Propagation Map</Title>
-          <Text className="round-info">Round {currentRound} Analysis</Text>
+          <Text className="round-info">
+            {isSimulationComplete ? 'Final Analysis' : `Round ${currentRound} Analysis`}
+          </Text>
         </div>
 
         <div className="map-content">
           <div className="simulation-status">
             <div className="status-indicator">
-              <div className="status-dot"></div>
-              <Text className="status-text">Simulation Running...</Text>
+              <div className={`status-dot ${isSimulationComplete ? 'completed' : ''}`}></div>
+              <Text className="status-text">
+                {isSimulationComplete ? 'Simulation Complete' : 'Simulation Running...'}
+              </Text>
             </div>
             <Text className="simulation-description">
-              Analyzing public opinion propagation and sentiment spread for Round {currentRound}
+              {isSimulationComplete 
+                ? 'All rounds completed. Ready to view comprehensive results and comparison.'
+                : `Analyzing public opinion propagation and sentiment spread for Round ${currentRound}`
+              }
             </Text>
           </div>
         </div>
@@ -100,18 +127,18 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
             size="large"
             className="action-button primary-button"
             onClick={handleContinueNextRound}
+            disabled={isSimulationComplete}
             icon={<ReloadOutlined />}
           >
-            Continue Next Round Simulation
+            {isSimulationComplete ? 'Simulation Complete' : 'Continue Next Round Simulation'}
           </Button>
 
           <Button
             size="large"
             className="action-button secondary-button"
-            onClick={() => {
-              // TODO: 实现查看和比较结果功能
-              console.log('View & Compare Results');
-            }}
+            onClick={handleViewResults}
+            disabled={!isSimulationComplete}
+            icon={<BarChartOutlined />}
           >
             View & Compare Results
           </Button>
@@ -119,10 +146,8 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
           <Button
             size="large"
             className="action-button secondary-button"
-            onClick={() => {
-              // TODO: 实现重置功能
-              console.log('Reset');
-            }}
+            onClick={handleReset}
+            icon={<ReloadOutlined />}
           >
             Reset
           </Button>
@@ -139,6 +164,19 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     );
   };
 
+
+  // 如果显示结果页面，渲染结果比较页面
+  if (showResults) {
+    return (
+      <Scenario2ResultsPage
+        selectedCase={selectedCase}
+        simulationResults={null} // 实际项目中会传入真实的模拟结果
+        realWorldResults={null} // 实际项目中会传入真实的历史结果
+        onBack={() => setShowResults(false)}
+        onClose={() => setShowResults(false)}
+      />
+    );
+  }
 
   return (
     <div className="scenario2-simulation-page">
