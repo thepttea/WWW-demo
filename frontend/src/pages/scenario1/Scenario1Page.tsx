@@ -72,22 +72,24 @@ const Scenario1Page: React.FC = () => {
         </Paragraph>
       </div>
 
-      <Row gutter={32} className="page-content">
-        <Col xs={24} lg={8}>
-          <ConfigurationPanel
-            onStartSimulation={handleStartSimulation}
-            onGenerateReport={handleGenerateReport}
-            onReset={handleReset}
-          />
-        </Col>
-        <Col xs={24} lg={16}>
-          <VisualizationArea
-            isLoading={isLoading}
-            networkData={simulationResult?.networkData}
-            simulationResult={simulationResult}
-          />
-        </Col>
-      </Row>
+      <div className="page-content">
+        <div className="content-grid">
+          <div className="config-column">
+            <ConfigurationPanel
+              onStartSimulation={handleStartSimulation}
+              onGenerateReport={handleGenerateReport}
+              onReset={handleReset}
+            />
+          </div>
+          <div className="visualization-column">
+            <VisualizationArea
+              isLoading={isLoading}
+              networkData={simulationResult?.networkData}
+              simulationResult={simulationResult}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
