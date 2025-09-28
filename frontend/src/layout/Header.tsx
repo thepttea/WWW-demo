@@ -6,7 +6,7 @@ import './Header.css';
 const { Header: AntHeader } = Layout;
 
 interface HeaderProps {
-  currentScenario?: 'scenario1' | 'scenario2';
+  currentScenario?: 'scenario1' | 'scenario2' | 'home';
   onScenarioChange?: (scenario: 'scenario1' | 'scenario2' | 'home') => void;
 }
 

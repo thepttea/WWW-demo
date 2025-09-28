@@ -7,7 +7,7 @@ const { Content } = Layout;
 
 interface MainLayoutProps {
   children: React.ReactNode;
-  currentScenario?: 'scenario1' | 'scenario2';
+  currentScenario?: 'scenario1' | 'scenario2' | 'home';
   onScenarioChange?: (scenario: 'scenario1' | 'scenario2' | 'home') => void;
 }
 
