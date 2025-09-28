@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Select, Button, Typography, Divider } from 'antd';
 import { 
-  PlayCircleOutlined, 
-  BarChartOutlined, 
-  ReloadOutlined,
+  PlayCircleOutlined,
   FolderOpenOutlined
 } from '@ant-design/icons';
 import CaseSelectionModal from '../../components/CaseSelectionModal';
@@ -16,16 +14,12 @@ interface CaseSelectionPanelProps {
   selectedCase: HistoricalCase | null;
   onCaseSelect: (caseItem: HistoricalCase) => void;
   onStartSimulation: (config: any) => void;
-  onGenerateReport: () => void;
-  onReset: () => void;
 }
 
 const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
   selectedCase,
   onCaseSelect,
   onStartSimulation,
-  onGenerateReport,
-  onReset,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4');
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -105,25 +99,6 @@ const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
             icon={<PlayCircleOutlined />}
           >
             Start Simulation
-          </Button>
-          
-          <Button
-            size="large"
-            className="action-button secondary-button"
-            onClick={onGenerateReport}
-            disabled={!selectedCase}
-            icon={<BarChartOutlined />}
-          >
-            View & Compare Results
-          </Button>
-          
-          <Button
-            size="large"
-            className="action-button secondary-button"
-            onClick={onReset}
-            icon={<ReloadOutlined />}
-          >
-            Reset
           </Button>
         </div>
       </div>

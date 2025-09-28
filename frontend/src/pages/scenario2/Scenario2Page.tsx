@@ -2,14 +2,18 @@ import React, { useState } from 'react';
 import { Typography, message } from 'antd';
 import CaseSelectionPanel from './CaseSelectionPanel';
 import VisualizationArea from './VisualizationArea';
+import Scenario2SimulationPage from './Scenario2SimulationPage';
 import { SimulationConfig, HistoricalCase } from '../../types';
 import './Scenario2Page.css';
 
 const { Title, Paragraph } = Typography;
 
+type Scenario2View = 'selection' | 'simulation';
+
 const Scenario2Page: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [simulationResult, setSimulationResult] = useState<any>(null);
+  const [currentView, setCurrentView] = useState<Scenario2View>('selection');
+  const [isLoading] = useState(false);
+  const [simulationResult] = useState<any>(null);
   const [selectedCase, setSelectedCase] = useState<HistoricalCase | null>(null);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
@@ -18,63 +22,34 @@ const Scenario2Page: React.FC = () => {
       return;
     }
 
-    setIsLoading(true);
-    setSimulationResult(null);
-
-    try {
-      // 模拟API调用
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // 模拟结果
-      const mockResult = {
-        success: Math.random() > 0.5,
-        score: Math.floor(Math.random() * 40) + 60, // 60-100
-        accuracy: Math.floor(Math.random() * 20) + 80, // 80-100% 与实际结果的一致性
-        comparison: {
-          predicted: {
-            positive: Math.floor(Math.random() * 30) + 40,
-            negative: Math.floor(Math.random() * 30) + 20,
-            neutral: Math.floor(Math.random() * 20) + 30,
-          },
-          actual: {
-            positive: Math.floor(Math.random() * 30) + 40,
-            negative: Math.floor(Math.random() * 30) + 20,
-            neutral: Math.floor(Math.random() * 20) + 30,
-          }
-        },
-        networkData: {
-          nodes: Math.floor(Math.random() * 50) + 20,
-          connections: Math.floor(Math.random() * 100) + 50,
-        }
-      };
-
-      setSimulationResult(mockResult);
-      message.success('Simulation completed successfully!');
-    } catch (error) {
-      message.error('Simulation failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    // 直接跳转到模拟页面，不需要等待
+    setCurrentView('simulation');
+    message.success('Starting simulation...');
   };
 
-  const handleGenerateReport = () => {
-    if (!simulationResult) {
-      message.warning('Please run a simulation first');
-      return;
-    }
-    message.info('Generating comparison report...');
-  };
-
-  const handleReset = () => {
-    setSimulationResult(null);
-    setSelectedCase(null);
-    message.success('Simulation reset');
-  };
 
   const handleCaseSelect = (caseItem: HistoricalCase) => {
     setSelectedCase(caseItem);
     message.success(`Selected case: ${caseItem.title}`);
   };
+
+  const handleBackToSelection = () => {
+    setCurrentView('selection');
+  };
+
+  const handleReselectCase = () => {
+    setCurrentView('selection');
+  };
+
+  if (currentView === 'simulation') {
+    return (
+      <Scenario2SimulationPage
+        selectedCase={selectedCase}
+        onBack={handleBackToSelection}
+        onReselectCase={handleReselectCase}
+      />
+    );
+  }
 
   return (
     <div className="scenario2-page">
@@ -94,8 +69,6 @@ const Scenario2Page: React.FC = () => {
               selectedCase={selectedCase}
               onCaseSelect={handleCaseSelect}
               onStartSimulation={handleStartSimulation}
-              onGenerateReport={handleGenerateReport}
-              onReset={handleReset}
             />
           </div>
           <div className="visualization-column">
