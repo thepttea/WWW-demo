@@ -6,6 +6,7 @@ import {
   ReloadOutlined,
   FolderOpenOutlined
 } from '@ant-design/icons';
+import CaseSelectionModal from '../../components/CaseSelectionModal';
 import { LLMOption, HistoricalCase } from '../../types';
 import './CaseSelectionPanel.css';
 
@@ -27,6 +28,7 @@ const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
   onReset,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4');
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const llmOptions: LLMOption[] = [
     { value: 'gpt-4', label: 'GPT-4' },
@@ -74,10 +76,7 @@ const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
           <Button
             className="case-select-button"
             icon={<FolderOpenOutlined />}
-            onClick={() => {
-              // TODO: 这里将跳转到案例选择页面
-              console.log('Navigate to case selection page');
-            }}
+            onClick={() => setIsModalVisible(true)}
           >
             {selectedCase ? selectedCase.title : 'Select Classic PR Case'}
           </Button>
@@ -88,10 +87,7 @@ const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
               <Button
                 type="link"
                 size="small"
-                onClick={() => {
-                  // TODO: 清除选择的案例
-                  console.log('Clear selected case');
-                }}
+                onClick={() => setIsModalVisible(true)}
               >
                 Change Case
               </Button>
@@ -131,6 +127,12 @@ const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
           </Button>
         </div>
       </div>
+
+      <CaseSelectionModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        onCaseSelect={onCaseSelect}
+      />
     </Card>
   );
 };
