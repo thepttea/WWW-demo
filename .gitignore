@@ -17,6 +17,7 @@ yarn-error.log*
 /frontend/dist
 /frontend/.next
 /frontend/out
+/frontend/pnpm-lock.yaml
 
 # ====================
 # Python 后端
