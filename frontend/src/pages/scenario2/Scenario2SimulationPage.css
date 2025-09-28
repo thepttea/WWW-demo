@@ -8,25 +8,12 @@
 .page-header {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
   margin-bottom: 32px;
   padding-bottom: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.back-button {
-  color: rgba(255, 255, 255, 0.7) !important;
-  font-size: 14px;
-  padding: 8px 16px;
-  height: auto;
-  border-radius: 8px;
-  transition: all 0.3s;
-}
-
-.back-button:hover {
-  color: #137fec !important;
-  background: rgba(19, 127, 236, 0.1) !important;
-}
 
 .page-title {
   color: inherit !important;

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Card, Typography, Button, Divider } from 'antd';
 import {
   ReloadOutlined,
-  ArrowLeftOutlined,
   BarChartOutlined
 } from '@ant-design/icons';
 import { HistoricalCase } from '../../types';
@@ -181,14 +180,6 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   return (
     <div className="scenario2-simulation-page">
       <div className="page-header">
-        <Button
-          type="text"
-          icon={<ArrowLeftOutlined />}
-          onClick={onBack}
-          className="back-button"
-        >
-          Back to Case Selection
-        </Button>
         <Title level={2} className="page-title">PR Event Simulation</Title>
       </div>
 

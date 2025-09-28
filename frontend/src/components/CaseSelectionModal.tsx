@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Typography, Button } from 'antd';
-import { CloseOutlined, CheckOutlined } from '@ant-design/icons';
+import { CheckOutlined } from '@ant-design/icons';
 import { HistoricalCase } from '../types';
 import './CaseSelectionModal.css';
 
@@ -98,12 +98,6 @@ const CaseSelectionModal: React.FC<CaseSelectionModalProps> = ({
       <div className="modal-content">
         <div className="modal-header">
           <Title level={2} className="modal-title">Select PR Case Study</Title>
-          <Button
-            type="text"
-            icon={<CloseOutlined />}
-            onClick={onClose}
-            className="close-button"
-          />
         </div>
 
         <div className="modal-body">
