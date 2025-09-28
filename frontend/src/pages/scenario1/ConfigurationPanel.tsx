@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Card, Select, Switch, Input, Button, Space, Typography } from 'antd';
+import { Card, Select, Input, Button, Space, Typography } from 'antd';
 import { ThunderboltOutlined, SendOutlined, RightOutlined } from '@ant-design/icons';
-import { LLMOption, PRStrategy } from '../../types';
+import { LLMOption } from '../../types';
 import './ConfigurationPanel.css';
 
 const { Title } = Typography;

@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { Typography, message } from 'antd';
-import ConfigurationPanel from './ConfigurationPanel';
+import CaseSelectionPanel from './CaseSelectionPanel';
 import VisualizationArea from './VisualizationArea';
-import StrategyRefinementDrawer from '../../components/StrategyRefinementDrawer';
-import { SimulationConfig, SimulationParameters } from '../../types';
-import './Scenario1Page.css';
+import { SimulationConfig, HistoricalCase } from '../../types';
+import './Scenario2Page.css';
 
 const { Title, Paragraph } = Typography;
 
-const Scenario1Page: React.FC = () => {
+const Scenario2Page: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [simulationResult, setSimulationResult] = useState<any>(null);
-  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+  const [selectedCase, setSelectedCase] = useState<HistoricalCase | null>(null);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
-    if (!config.strategy.content.trim()) {
-      message.warning('Please enter your PR strategy first');
+    if (!selectedCase) {
+      message.warning('Please select a classic PR case first');
       return;
     }
 
@@ -30,11 +29,19 @@ const Scenario1Page: React.FC = () => {
       const mockResult = {
         success: Math.random() > 0.5,
         score: Math.floor(Math.random() * 40) + 60, // 60-100
-        improvements: [
-          'Consider addressing the emotional impact more directly',
-          'Add more specific data points to support your claims',
-          'Include a clear timeline for follow-up actions'
-        ],
+        accuracy: Math.floor(Math.random() * 20) + 80, // 80-100% 与实际结果的一致性
+        comparison: {
+          predicted: {
+            positive: Math.floor(Math.random() * 30) + 40,
+            negative: Math.floor(Math.random() * 30) + 20,
+            neutral: Math.floor(Math.random() * 20) + 30,
+          },
+          actual: {
+            positive: Math.floor(Math.random() * 30) + 40,
+            negative: Math.floor(Math.random() * 30) + 20,
+            neutral: Math.floor(Math.random() * 20) + 30,
+          }
+        },
         networkData: {
           nodes: Math.floor(Math.random() * 50) + 20,
           connections: Math.floor(Math.random() * 100) + 50,
@@ -55,48 +62,40 @@ const Scenario1Page: React.FC = () => {
       message.warning('Please run a simulation first');
       return;
     }
-    message.info('Generating report...');
+    message.info('Generating comparison report...');
   };
 
   const handleReset = () => {
     setSimulationResult(null);
+    setSelectedCase(null);
     message.success('Simulation reset');
   };
 
-  const handleOpenDrawer = () => {
-    setIsDrawerVisible(true);
-  };
-
-  const handleCloseDrawer = () => {
-    setIsDrawerVisible(false);
-  };
-
-  const handleStrategyConfirm = (strategy: string, parameters: SimulationParameters) => {
-    // 这里可以处理策略确认逻辑
-    console.log('Confirmed strategy:', strategy);
-    console.log('Parameters:', parameters);
-    message.success('Strategy confirmed and parameters updated!');
+  const handleCaseSelect = (caseItem: HistoricalCase) => {
+    setSelectedCase(caseItem);
+    message.success(`Selected case: ${caseItem.title}`);
   };
 
   return (
-    <div className="scenario1-page">
+    <div className="scenario2-page">
       <div className="page-header">
         <Title level={2} className="page-title">
-          EchoChamber: A Simulator for Public Relations Crisis Dynamics
+          Public Opinion Simulator: Historical Case Analysis
         </Title>
         <Paragraph className="page-description">
-          Analyze public opinion propagation through multi-agent llm-based simulation.
+          Select classic PR cases and simulate public opinion propagation using LLM-based multi-agent systems.
         </Paragraph>
       </div>
 
       <div className="page-content">
         <div className="content-grid">
           <div className="config-column">
-            <ConfigurationPanel
+            <CaseSelectionPanel
+              selectedCase={selectedCase}
+              onCaseSelect={handleCaseSelect}
               onStartSimulation={handleStartSimulation}
               onGenerateReport={handleGenerateReport}
               onReset={handleReset}
-              onOpenDrawer={handleOpenDrawer}
             />
           </div>
           <div className="visualization-column">
@@ -104,18 +103,13 @@ const Scenario1Page: React.FC = () => {
               isLoading={isLoading}
               networkData={simulationResult?.networkData}
               simulationResult={simulationResult}
+              selectedCase={selectedCase}
             />
           </div>
         </div>
       </div>
-
-      <StrategyRefinementDrawer
-        visible={isDrawerVisible}
-        onClose={handleCloseDrawer}
-        onStrategyConfirm={handleStrategyConfirm}
-      />
     </div>
   );
 };
 
-export default Scenario1Page;
+export default Scenario2Page;

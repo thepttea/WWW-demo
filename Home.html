@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SimuNet - Multi-Agent Simulation</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.5rem",
+              lg: "1rem",
+              xl: "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+<style>
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.05);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .dark .glass-effect {
+        background: rgba(16, 25, 34, 0.5);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white/90">
+<div class="relative min-h-screen w-full overflow-x-hidden">
+<div class="absolute inset-0 z-0 h-full w-full bg-background-dark bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(19,127,236,0.3),rgba(255,255,255,0))]"></div>
+<div class="relative z-10 flex h-full grow flex-col">
+<header class="sticky top-0 z-50 glass-effect">
+<div class="container mx-auto flex items-center justify-between whitespace-nowrap px-4 py-4 sm:px-6 lg:px-8">
+<a class="flex items-center gap-3 text-white" href="#">
+<svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M42.4379 44C42.4379 44 36.0744 33.9038 41.1692 24C46.8624 12.9336 42.2078 4 42.2078 4L7.01134 4C7.01134 4 11.6577 12.932 5.96912 23.9969C0.876273 33.9029 7.27094 44 7.27094 44L42.4379 44Z" fill="currentColor"></path>
+</svg>
+<h2 class="text-xl font-bold leading-tight">EchoChamber</h2>
+</a>
+<nav class="hidden items-center gap-8 md:flex">
+<a class="text-sm font-medium text-white/70 transition-colors hover:text-white" href="#">Home</a>
+<a class="text-sm font-medium text-white/70 transition-colors hover:text-white" href="#">Scenario 1</a>
+<a class="text-sm font-medium text-white/70 transition-colors hover:text-white" href="#">Scenario 2</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden rounded-full bg-white/10 p-2 text-white/70 transition-colors hover:bg-white/20 hover:text-white sm:block">
+<svg fill="currentColor" height="20px" viewBox="0 0 256 256" width="20px" xmlns="http://www.w3.org/2000/svg">
+<path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path>
+</svg>
+</button>
+<div class="aspect-square w-10 rounded-full bg-cover bg-center bg-no-repeat" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD4l0aU4RHfYJLha8r6j2EW4WlavvM2r6gzoX_AV8WSLQ61jchOcRzeO1k79tOvkHbVPAqLli7n9XfsQRhZ14A1jEC6w8SVzZE4A3UxnWMM5t6iZIOkN_4IPrQ2qbJc5nBdZaTnKWv4PTyX0lYBILftDhWkCPBn8Qm6qQ9gi9uuD0h3U-6TRv0fyXT-KQKfrXpt2ExJ2UY8wV61vjOvT6u9dirPopDzTQAd9x-8Db7-TSpkRTnUryTpJDA0WF6wt0oHbZwP12GBGVg");'></div>
+</div>
+</div>
+</header>
+<main class="container mx-auto flex flex-1 flex-col items-center justify-center px-4 py-16 sm:px-6 lg:px-8">
+<div class="w-full max-w-4xl text-center">
+<h1 class="text-4xl font-bold leading-tight tracking-tighter text-white sm:text-5xl md:text-6xl">EchoChamber : A Multi-Agent  Public Relations Simulator</h1>
+<p class="mx-auto mt-6 max-w-2xl text-lg text-white/70 md:text-xl">Explore the dynamics of public opinion with our advanced multi-agent simulation system. Understand how opinions form, spread, and evolve in complex social networks.</p>
+</div>
+<div class="mt-20 grid w-full max-w-5xl gap-8 md:grid-cols-2 lg:gap-12">
+<div class="glass-effect group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20">
+<div class="relative z-10 flex flex-col items-start gap-4">
+<div class="absolute right-6 top-0 h-48 w-48 rounded-full bg-primary/20 opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150"></div>
+<h3 class="text-2xl font-bold text-white">Scenario 1: Influencer Dynamics</h3>
+<p class="text-white/70">Analyze how key influencers shape public discourse and impact opinion trends within a simulated social network.</p>
+<a class="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg transition-transform duration-300 hover:scale-105" href="#">
+                  Explore Scenario
+                </a>
+</div>
+</div>
+<div class="glass-effect group relative overflow-hidden rounded-xl p-6 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-primary/20">
+<div class="relative z-10 flex flex-col items-start gap-4">
+<div class="absolute right-6 top-0 h-48 w-48 rounded-full bg-primary/20 opacity-50 blur-3xl transition-all duration-500 group-hover:scale-150"></div>
+<h3 class="text-2xl font-bold text-white">Scenario 2: Yesterday Once More</h3>
+<p class="text-white/70">Simulate public reactions to some typical public relations crisis event and evaluate the difference between the real world and our simulation.</p>
+<a class="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white shadow-lg transition-transform duration-300 hover:scale-105" href="#">
+                  Explore Scenario
+                </a>
+</div>
+</div>
+</div>
+</main>
+<footer class="w-full py-6">
+<div class="container mx-auto px-4 text-center text-sm text-white/50 sm:px-6 lg:px-8">
+<p>© 2025 EchoChamber. All Rights Reserved.</p>
+</div>
+</footer>
+</div>
+</div>
+
+</body></html>

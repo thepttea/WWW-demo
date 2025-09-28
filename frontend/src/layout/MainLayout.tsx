@@ -8,9 +8,10 @@ const { Content } = Layout;
 interface MainLayoutProps {
   children: React.ReactNode;
   currentScenario?: 'scenario1' | 'scenario2';
+  onScenarioChange?: (scenario: 'scenario1' | 'scenario2' | 'home') => void;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children, currentScenario }) => {
+const MainLayout: React.FC<MainLayoutProps> = ({ children, currentScenario, onScenarioChange }) => {
   return (
     <ConfigProvider
       theme={{
@@ -34,7 +35,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, currentScenario }) =>
       }}
     >
       <Layout className="main-layout">
-        <Header currentScenario={currentScenario} />
+        <Header currentScenario={currentScenario} onScenarioChange={onScenarioChange} />
         <Content className="main-content">
           {children}
         </Content>

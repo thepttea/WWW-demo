@@ -1,15 +1,16 @@
 import React from 'react';
 import { Layout, Menu, Avatar, Button, Space } from 'antd';
-import { BellOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined } from '@ant-design/icons';
 import './Header.css';
 
 const { Header: AntHeader } = Layout;
 
 interface HeaderProps {
   currentScenario?: 'scenario1' | 'scenario2';
+  onScenarioChange?: (scenario: 'scenario1' | 'scenario2' | 'home') => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentScenario }) => {
+const Header: React.FC<HeaderProps> = ({ currentScenario, onScenarioChange }) => {
   const menuItems = [
     {
       key: 'home',
@@ -57,6 +58,11 @@ const Header: React.FC<HeaderProps> = ({ currentScenario }) => {
             selectedKeys={currentScenario ? [currentScenario] : []}
             items={menuItems}
             className="header-menu"
+            onClick={({ key }) => {
+              if (onScenarioChange) {
+                onScenarioChange(key as 'scenario1' | 'scenario2' | 'home');
+              }
+            }}
           />
         </div>
         

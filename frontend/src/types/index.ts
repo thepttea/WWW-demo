@@ -49,3 +49,31 @@ export interface SimulationParameters {
   initialNegativeSentiment: number;
   initialNeutralSentiment: number;
 }
+
+export interface Scenario2Config {
+  llm: string;
+  case: HistoricalCase;
+  enableRefinement: boolean;
+}
+
+export interface Scenario2Result {
+  success: boolean;
+  score: number;
+  accuracy: number;
+  comparison: {
+    predicted: {
+      positive: number;
+      negative: number;
+      neutral: number;
+    };
+    actual: {
+      positive: number;
+      negative: number;
+      neutral: number;
+    };
+  };
+  networkData: {
+    nodes: number;
+    connections: number;
+  };
+}
