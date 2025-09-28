@@ -1,0 +1,169 @@
+.configuration-panel {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .configuration-panel {
+  background: rgba(16, 25, 34, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-title {
+  margin-bottom: 24px !important;
+  color: inherit;
+  font-weight: 600;
+}
+
+.config-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.config-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.config-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: inherit;
+  margin-bottom: 8px;
+}
+
+.config-select {
+  width: 100%;
+}
+
+.config-select .ant-select-selector {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  transition: all 0.3s;
+}
+
+.config-select .ant-select-selector:hover {
+  border-color: #137fec !important;
+}
+
+.config-select.ant-select-focused .ant-select-selector {
+  border-color: #137fec !important;
+  box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2) !important;
+}
+
+.dark .config-select .ant-select-selector {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.refinement-toggle {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s;
+}
+
+.refinement-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dark .refinement-toggle {
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .refinement-toggle:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.refinement-icon {
+  color: #137fec;
+  font-size: 16px;
+}
+
+.refinement-text {
+  font-weight: 500;
+  color: inherit;
+}
+
+.strategy-input {
+  background: rgba(255, 255, 255, 0.5) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  resize: none !important;
+  transition: all 0.3s;
+}
+
+.strategy-input:hover {
+  border-color: #137fec !important;
+}
+
+.strategy-input:focus {
+  border-color: #137fec !important;
+  box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2) !important;
+}
+
+.dark .strategy-input {
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.config-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.action-button {
+  width: 100%;
+  height: 48px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.primary-button {
+  background: #137fec !important;
+  border-color: #137fec !important;
+}
+
+.primary-button:hover {
+  background: #0f6fd4 !important;
+  border-color: #0f6fd4 !important;
+  opacity: 0.9;
+}
+
+.secondary-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: inherit !important;
+}
+
+.secondary-button:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.dark .secondary-button {
+  background: rgba(0, 0, 0, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .secondary-button:hover {
+  background: rgba(0, 0, 0, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}

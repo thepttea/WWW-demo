@@ -1,50 +1,30 @@
-/**
- * 主应用组件
- * 配置路由和全局状态
- */
-
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ConfigProvider, theme } from 'antd';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Dashboard } from '@/pages/Dashboard';
+import React, { useState } from 'react';
+import MainLayout from './layout/MainLayout';
+import Scenario1Page from './pages/scenario1/Scenario1Page';
 import './App.css';
 
-// 创建React Query客户端
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+type CurrentPage = 'scenario1' | 'scenario2' | 'home';
 
 const App: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<CurrentPage>('scenario1');
+
+  const renderPage = () => {
+    switch (currentPage) {
+      case 'scenario1':
+        return <Scenario1Page />;
+      case 'scenario2':
+        return <div>Scenario 2 - Coming Soon</div>;
+      case 'home':
+        return <div>Home - Coming Soon</div>;
+      default:
+        return <Scenario1Page />;
+    }
+  };
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ConfigProvider
-        theme={{
-          algorithm: theme.defaultAlgorithm,
-          token: {
-            colorPrimary: '#1890ff',
-            borderRadius: 6,
-          },
-        }}
-      >
-        <Router>
-          <div className="app">
-            <Routes>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/scenario1" element={<div>Scenario 1 - 自定义公关方案</div>} />
-              <Route path="/scenario2" element={<div>Scenario 2 - 历史案例对比</div>} />
-              <Route path="*" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-          </div>
-        </Router>
-      </ConfigProvider>
-    </QueryClientProvider>
+    <MainLayout currentScenario={currentPage === 'scenario1' ? 'scenario1' : currentPage === 'scenario2' ? 'scenario2' : undefined}>
+      {renderPage()}
+    </MainLayout>
   );
 };
 

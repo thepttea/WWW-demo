@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Public Opinion Report Comparison</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#137fec',
+              'background-light': '#f6f7f8',
+              'background-dark': '#101922',
+            },
+            fontFamily: {
+              display: ['Space Grotesk', 'sans-serif'],
+            },
+            borderRadius: {
+              DEFAULT: '0.5rem',
+              lg: '1rem',
+              xl: '1.5rem',
+              full: '9999px',
+            },
+          },
+        },
+      };
+    </script>
+<style>
+      body {
+        font-family: 'Space Grotesk', sans-serif;
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display">
+<div class="fixed inset-0 z-10 flex items-center justify-center bg-background-dark/50 backdrop-blur-sm">
+<div class="w-full max-w-7xl max-h-[90vh] overflow-y-auto rounded-xl bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-2xl border border-white/10 dark:border-white/10 shadow-2xl">
+<div class="sticky top-0 z-10 flex items-center justify-between px-8 py-4 bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-lg border-b border-white/10">
+<h1 class="text-2xl font-bold text-black dark:text-white">Public Opinion Report Comparison</h1>
+<button class="text-black dark:text-white">
+<span class="material-symbols-outlined"> close </span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-white/10">
+<div class="p-8 space-y-6 bg-background-light dark:bg-background-dark/50">
+<h2 class="text-xl font-bold text-black dark:text-white">Simulation Results</h2>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="flex flex-col gap-2 rounded-lg p-4 border border-white/10 bg-background-light dark:bg-background-dark/20">
+<p class="text-sm font-medium text-black/60 dark:text-white/60">Overall Sentiment</p>
+<p class="text-3xl font-bold text-black dark:text-white">65%</p>
+<p class="text-sm font-medium text-green-500">+5%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-4 border border-white/10 bg-background-light dark:bg-background-dark/20">
+<p class="text-sm font-medium text-black/60 dark:text-white/60">Engagement Rate</p>
+<p class="text-3xl font-bold text-black dark:text-white">12%</p>
+<p class="text-sm font-medium text-red-500">-2%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-4 border border-white/10 bg-background-light dark:bg-background-dark/20">
+<p class="text-sm font-medium text-black/60 dark:text-white/60">Reach</p>
+<p class="text-3xl font-bold text-black dark:text-white">500K</p>
+<p class="text-sm font-medium text-green-500">+10%</p>
+</div>
+</div>
+<div class="space-y-2">
+<p class="text-sm font-medium text-black/60 dark:text-white/60">Sentiment Trend</p>
+<div class="flex items-baseline gap-2">
+<p class="text-4xl font-bold text-black dark:text-white">65%</p>
+<p class="text-sm font-medium text-green-500">+5%</p>
+</div>
+<p class="text-xs text-black/60 dark:text-white/60">Last 7 Days</p>
+</div>
+<div class="min-h-[180px]">
+<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="sim-gradient" x1="236" x2="236" y1="1" y2="149">
+<stop stop-color="var(--tw-color-primary)" stop-opacity="0.4"></stop>
+<stop offset="1" stop-color="var(--tw-color-primary)" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#sim-gradient)"></path>
+<path class="text-primary" d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+</div>
+<div class="space-y-4">
+<h3 class="text-lg font-bold text-black dark:text-white">Key Insights</h3>
+<p class="text-sm text-black/80 dark:text-white/80">The simulation indicates a generally positive sentiment towards the company's response, with a notable increase in positive feedback over the past week. However, engagement rates have slightly decreased, suggesting a need to further amplify the message to maintain public interest. The reach of the campaign has been substantial, indicating effective dissemination of information.</p>
+</div>
+<div class="space-y-4">
+<h3 class="text-lg font-bold text-black dark:text-white">Influential Nodes</h3>
+<div class="overflow-hidden rounded-lg border border-white/10">
+<table class="w-full text-sm">
+<thead class="bg-background-light dark:bg-background-dark/20">
+<tr>
+<th class="px-4 py-2 text-left font-medium text-black/60 dark:text-white/60">Node</th>
+<th class="px-4 py-2 text-left font-medium text-black/60 dark:text-white/60">Influence Score</th>
+<th class="px-4 py-2 text-left font-medium text-black/60 dark:text-white/60">Sentiment</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/10">
+<tr>
+<td class="px-4 py-3 text-black dark:text-white">Node A</td>
+<td class="px-4 py-3 text-black/60 dark:text-white/60">92</td>
+<td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary">Positive</span></td>
+</tr>
+<tr>
+<td class="px-4 py-3 text-black dark:text-white">Node B</td>
+<td class="px-4 py-3 text-black/60 dark:text-white/60">88</td>
+<td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary">Neutral</span></td>
+</tr>
+<tr>
+<td class="px-4 py-3 text-black dark:text-white">Node C</td>
+<td class="px-4 py-3 text-black/60 dark:text-white/60">75</td>
+<td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary">Positive</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="p-8 space-y-6 bg-background-light dark:bg-background-dark/50">
+<h2 class="text-xl font-bold text-black dark:text-white">Real-World Results</h2>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="flex flex-col gap-2 rounded-lg p-4 border border-white/10 bg-background-light dark:bg-background-dark/20">
+<p class="text-sm font-medium text-black/60 dark:text-white/60">Overall Sentiment</p>
+<p class="text-3xl font-bold text-black dark:text-white">70%</p>
+<p class="text-sm font-medium text-green-500">+10%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-4 border border-white/10 bg-background-light dark:bg-background-dark/20">
+<p class="text-sm font-medium text-black/60 dark:text-white/60">Engagement Rate</p>
+<p class="text-3xl font-bold text-black dark:text-white">15%</p>
+<p class="text-sm font-medium text-green-500">+1%</p>
+</div>
+<div class="flex flex-col gap-2 rounded-lg p-4 border border-white/10 bg-background-light dark:bg-background-dark/20">
+<p class="text-sm font-medium text-black/60 dark:text-white/60">Reach</p>
+<p class="text-3xl font-bold text-black dark:text-white">600K</p>
+<p class="text-sm font-medium text-green-500">+20%</p>
+</div>
+</div>
+<div class="space-y-2">
+<p class="text-sm font-medium text-black/60 dark:text-white/60">Sentiment Trend</p>
+<div class="flex items-baseline gap-2">
+<p class="text-4xl font-bold text-black dark:text-white">70%</p>
+<p class="text-sm font-medium text-green-500">+10%</p>
+</div>
+<p class="text-xs text-black/60 dark:text-white/60">Last 7 Days</p>
+</div>
+<div class="min-h-[180px]">
+<svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="real-gradient" x1="236" x2="236" y1="1" y2="149">
+<stop stop-color="var(--tw-color-primary)" stop-opacity="0.4"></stop>
+<stop offset="1" stop-color="var(--tw-color-primary)" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#real-gradient)"></path>
+<path class="text-primary" d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="currentColor" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+</div>
+<div class="space-y-4">
+<h3 class="text-lg font-bold text-black dark:text-white">Key Insights</h3>
+<p class="text-sm text-black/80 dark:text-white/80">Real-world data shows an even more positive sentiment than the simulation predicted, with a significant increase in engagement and reach. This suggests that the actual public response was more favorable and widespread than initially anticipated. The campaign's effectiveness in shaping public opinion is evident.</p>
+</div>
+<div class="space-y-4">
+<h3 class="text-lg font-bold text-black dark:text-white">Influential Nodes</h3>
+<div class="overflow-hidden rounded-lg border border-white/10">
+<table class="w-full text-sm">
+<thead class="bg-background-light dark:bg-background-dark/20">
+<tr>
+<th class="px-4 py-2 text-left font-medium text-black/60 dark:text-white/60">Node</th>
+<th class="px-4 py-2 text-left font-medium text-black/60 dark:text-white/60">Influence Score</th>
+<th class="px-4 py-2 text-left font-medium text-black/60 dark:text-white/60">Sentiment</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/10">
+<tr>
+<td class="px-4 py-3 text-black dark:text-white">Node X</td>
+<td class="px-4 py-3 text-black/60 dark:text-white/60">95</td>
+<td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary">Positive</span></td>
+</tr>
+<tr>
+<td class="px-4 py-3 text-black dark:text-white">Node Y</td>
+<td class="px-4 py-3 text-black/60 dark:text-white/60">90</td>
+<td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary">Positive</span></td>
+</tr>
+<tr>
+<td class="px-4 py-3 text-black dark:text-white">Node Z</td>
+<td class="px-4 py-3 text-black/60 dark:text-white/60">80</td>
+<td class="px-4 py-3"><span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-primary/10 text-primary">Positive</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk"]
+            },
+            borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="flex h-screen flex-col">
+<header class="flex h-16 shrink-0 items-center justify-between border-b border-gray-200/10 dark:border-white/10 px-6">
+<div class="flex items-center gap-4">
+<div class="text-primary h-7 w-7">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"></path>
+</svg>
+</div>
+<h1 class="text-lg font-bold text-gray-900 dark:text-white">Social Network Simulation</h1>
+</div>
+<nav class="hidden items-center gap-6 md:flex">
+<a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary" href="#">Dashboard</a>
+<a class="text-sm font-medium text-primary dark:text-primary" href="#">Simulation</a>
+<a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary" href="#">Analysis</a>
+<a class="text-sm font-medium text-gray-600 hover:text-primary dark:text-gray-300 dark:hover:text-primary" href="#">Report</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-500/10 text-gray-600 hover:bg-gray-500/20 dark:text-gray-300 dark:hover:bg-white/20">
+<span class="material-symbols-outlined"> notifications </span>
+</button>
+<div class="h-10 w-10 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAULrfYPNAPxwJqlA-PcbjzyYh2Ij9ntARhZG_GSnQEc16Ms55J4ZjqWk856zr7GZ3yBi4-peYv0T-0NHVgi63oXKDA_eAzjXIhui2cC4leFW0iMoL1XTI4yIhYjRhLU5LRoSaC2o9ldEVHweaPlyrVC9fUJ621gVt6RbH-9QAXtvgAx3xTUwDEStGtcM7fTCru9oh39rxfGf9gp60sn0ASdQjFCTcBV7QXlsD0APgNTSz8hDLy07bmZDHuAyZ6gfHBi4lks22ffQE");'></div>
+</div>
+</header>
+<main class="flex flex-1 gap-6 p-6">
+<aside class="flex w-80 flex-col gap-6 rounded-lg bg-white/5 p-4 ring-1 ring-inset ring-gray-500/10 backdrop-blur-lg">
+<div class="flex flex-col gap-6">
+<h2 class="text-xl font-bold text-gray-900 dark:text-white">Simulation Configuration</h2>
+<div class="flex flex-col gap-4">
+<h3 class="font-semibold text-gray-900 dark:text-white">Current Round PR Strategy</h3>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-gray-600 dark:text-gray-300" for="pr-strategy">PR Strategy Details</label>
+<textarea class="h-48 resize-none rounded bg-gray-500/10 p-3 text-sm text-gray-700 dark:text-gray-300 ring-1 ring-inset ring-gray-500/20 focus:outline-none focus:ring-2 focus:ring-primary" id="pr-strategy" readonly="">A proactive communication strategy focusing on transparency and empathy. The company will issue a public apology, take full responsibility, and outline concrete steps to rectify the issue. This includes offering compensation to affected customers and implementing stricter quality control measures. The CEO will personally address the public through a video message.</textarea>
+</div>
+</div>
+<button class="flex h-10 items-center justify-center rounded bg-primary/20 text-sm font-bold text-primary hover:bg-primary/30">
+              Reselect Case Study
+            </button>
+</div>
+<div class="mt-auto flex flex-col gap-4 pt-6">
+<button class="flex h-10 items-center justify-center rounded-lg bg-primary text-sm font-bold text-white shadow-lg shadow-primary/20 hover:bg-opacity-90">
+              Start Simulation
+            </button>
+<button class="flex h-10 items-center justify-center rounded-lg bg-primary/20 text-sm font-bold text-primary hover:bg-primary/30">
+              Continue Next Round Simulation
+            </button>
+</div>
+</aside>
+<section class="flex-1 rounded-lg bg-white/5 p-4 ring-1 ring-inset ring-gray-500/10 backdrop-blur-lg">
+<div class="flex h-full flex-col gap-4">
+<h2 class="text-xl font-bold text-gray-900 dark:text-white">Social Network Visualization</h2>
+<div class="flex-1 rounded-lg bg-cover bg-center bg-no-repeat" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBt_XCnlaFa-LpgGLNpyEfydMSYTWf8Bj3oploGqkpgn_pJE0nYxgOqys_GXgUxdLJfvnq4onja9Vr7GB18-JSsMFn1_MOUu0UiCdKh6j7DQV5PNIBopC8UHq1ubwQ5qJHZNtdb8uGNNYZ333RnANM1aX1K0jdSGJMX4NsPKVvV18W0DnX7J4inJRtKda5g77yVPCBm4CGOLY94VuN-bZFv_vALIE7f4tYc9H5jipruH7E9KYe_hYBVOS7m70ivAabFy4OeIMRz2oY");'></div>
+</div>
+</section>
+</main>
+</div>
+
+</body></html>

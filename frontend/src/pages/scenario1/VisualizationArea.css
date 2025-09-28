@@ -1,0 +1,104 @@
+.visualization-area {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .visualization-area {
+  background: rgba(16, 25, 34, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.visualization-title {
+  margin-bottom: 16px !important;
+  color: inherit;
+  font-weight: 600;
+}
+
+.visualization-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: inherit;
+}
+
+.loading-text {
+  margin: 0;
+  font-size: 16px;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.network-visualization {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.network-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.network-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  color: inherit;
+  opacity: 0.6;
+}
+
+.empty-icon {
+  color: currentColor;
+  opacity: 0.5;
+}
+
+.empty-text {
+  margin: 0;
+  font-size: 16px;
+  max-width: 300px;
+  line-height: 1.5;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .visualization-content {
+    min-height: 300px;
+  }
+  
+  .empty-text {
+    font-size: 14px;
+    max-width: 250px;
+  }
+}

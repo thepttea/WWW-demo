@@ -1,138 +1,68 @@
-/**
- * 全局样式
- */
-
+/* 全局样式重置 */
 * {
   box-sizing: border-box;
 }
 
-body {
+html, body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  height: 100%;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
 }
 
-.app {
-  min-height: 100vh;
+#root {
+  height: 100%;
+}
+
+/* Ant Design 组件样式覆盖 */
+.ant-layout {
   background: transparent;
-  position: relative;
-  z-index: 1;
 }
 
-/* 自定义滚动条 */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 4px;
-  transition: background 0.3s ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
-}
-
-/* 工具提示样式 */
-.ant-tooltip-inner {
-  max-width: 300px;
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-/* 卡片样式优化 */
 .ant-card {
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: all 0.3s ease;
-}
-
-.ant-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-.ant-card-head {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  padding: 16px 20px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));
-  border-radius: 16px 16px 0 0;
+  box-shadow: none;
 }
 
 .ant-card-body {
-  padding: 20px;
+  padding: 24px;
 }
 
-/* 按钮样式优化 */
-.ant-btn {
-  border-radius: 12px;
-  font-weight: 600;
-  height: 40px;
-  padding: 0 20px;
-  transition: all 0.3s ease;
-  border: none;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/* 深色模式支持 */
+.dark {
+  color-scheme: dark;
 }
 
-.ant-btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  color: white;
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.ant-btn-primary:hover {
-  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
 }
 
-.ant-btn:not(.ant-btn-primary) {
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 3px;
 }
 
-.ant-btn:not(.ant-btn-primary):hover {
-  background: rgba(255, 255, 255, 1);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
 
-/* 统计数字样式 */
-.ant-statistic-title {
-  font-size: 12px;
-  color: #8c8c8c;
-  margin-bottom: 4px;
+.dark ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.ant-statistic-content {
-  font-size: 18px;
-  font-weight: 600;
-  color: #262626;
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
 }
 
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .ant-card-body {
-    padding: 12px;
-  }
-  
-  .ant-statistic-content {
-    font-size: 16px;
-  }
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
