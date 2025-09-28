@@ -4,14 +4,9 @@
   flex-direction: column;
   border: none;
   border-radius: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(16, 25, 34, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dark .configuration-panel {
-  background: rgba(16, 25, 34, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -47,8 +42,8 @@
 }
 
 .config-select .ant-select-selector {
-  background: rgba(255, 255, 255, 0.5) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px !important;
   transition: all 0.3s;
 }
@@ -62,29 +57,15 @@
   box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2) !important;
 }
 
-.dark .config-select .ant-select-selector {
-  background: rgba(0, 0, 0, 0.5) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
 .refinement-toggle {
   padding: 12px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s;
 }
 
 .refinement-toggle:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.dark .refinement-toggle {
-  background: rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.dark .refinement-toggle:hover {
   background: rgba(0, 0, 0, 0.15);
 }
 
@@ -99,8 +80,8 @@
 }
 
 .strategy-input {
-  background: rgba(255, 255, 255, 0.5) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px !important;
   resize: none !important;
   transition: all 0.3s;
@@ -113,11 +94,6 @@
 .strategy-input:focus {
   border-color: #137fec !important;
   box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2) !important;
-}
-
-.dark .strategy-input {
-  background: rgba(0, 0, 0, 0.5) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .config-actions {
@@ -148,22 +124,12 @@
 }
 
 .secondary-button {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(0, 0, 0, 0.2) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
   color: inherit !important;
 }
 
 .secondary-button:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(0, 0, 0, 0.3) !important;
   border-color: rgba(255, 255, 255, 0.3) !important;
-}
-
-.dark .secondary-button {
-  background: rgba(0, 0, 0, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-}
-
-.dark .secondary-button:hover {
-  background: rgba(0, 0, 0, 0.15) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
 }

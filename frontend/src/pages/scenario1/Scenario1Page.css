@@ -19,15 +19,10 @@
 }
 
 .page-description {
-  margin: 0 !important;
-  color: rgba(0, 0, 0, 0.6);
+  margin: 0 auto !important;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 16px;
   max-width: 600px;
-  margin: 0 auto !important;
-}
-
-.dark .page-description {
-  color: rgba(255, 255, 255, 0.6);
 }
 
 .page-content {

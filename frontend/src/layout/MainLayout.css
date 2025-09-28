@@ -2,11 +2,6 @@
 
 .main-layout {
   min-height: 100vh;
-  background: #f6f7f8;
-  color: #1e293b;
-}
-
-.dark .main-layout {
   background: #101922;
   color: #e2e8f0;
 }
@@ -29,14 +24,9 @@
 
 /* 全局样式 */
 .glassmorphism {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(16, 25, 34, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.dark .glassmorphism {
-  background: rgba(16, 25, 34, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 

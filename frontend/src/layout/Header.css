@@ -2,18 +2,13 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(16, 25, 34, 0.1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 0;
   height: 64px;
   line-height: 64px;
-}
-
-.dark .app-header {
-  background: rgba(16, 25, 34, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .header-content {
@@ -64,7 +59,7 @@
 }
 
 .header-menu .ant-menu-item {
-  color: rgba(0, 0, 0, 0.85);
+  color: rgba(255, 255, 255, 0.85);
   font-weight: 500;
   font-size: 14px;
   padding: 0 20px;
@@ -79,20 +74,6 @@
 }
 
 .header-menu .ant-menu-item-selected {
-  color: #137fec;
-  background: rgba(19, 127, 236, 0.1);
-}
-
-.dark .header-menu .ant-menu-item {
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.dark .header-menu .ant-menu-item:hover {
-  color: #137fec;
-  background: rgba(19, 127, 236, 0.1);
-}
-
-.dark .header-menu .ant-menu-item-selected {
   color: #137fec;
   background: rgba(19, 127, 236, 0.1);
 }
@@ -114,10 +95,6 @@
 }
 
 .header-icon-btn:hover {
-  background: rgba(0, 0, 0, 0.06);
-}
-
-.dark .header-icon-btn:hover {
   background: rgba(255, 255, 255, 0.1);
 }
 

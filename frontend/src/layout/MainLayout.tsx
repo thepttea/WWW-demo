@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, ConfigProvider } from 'antd';
+import { Layout, ConfigProvider, theme } from 'antd';
 import Header from './Header';
 import './MainLayout.css';
 
@@ -14,14 +14,21 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, currentScenario }) =>
   return (
     <ConfigProvider
       theme={{
+        algorithm: theme.darkAlgorithm,
         token: {
           colorPrimary: '#137fec',
+          colorBgBase: '#101922',
+          colorTextBase: '#e2e8f0',
           borderRadius: 8,
           fontFamily: '"Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         },
         components: {
           Layout: {
             headerBg: 'transparent',
+            bodyBg: 'transparent',
+          },
+          Card: {
+            colorBgContainer: 'transparent',
           },
         },
       }}
