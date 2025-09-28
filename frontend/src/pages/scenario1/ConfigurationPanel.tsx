@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Select, Switch, Input, Button, Space, Typography } from 'antd';
-import { ThunderboltOutlined, SendOutlined } from '@ant-design/icons';
+import { ThunderboltOutlined, SendOutlined, RightOutlined } from '@ant-design/icons';
 import { LLMOption, PRStrategy } from '../../types';
 import './ConfigurationPanel.css';
 
@@ -11,15 +11,16 @@ interface ConfigurationPanelProps {
   onStartSimulation: (config: any) => void;
   onGenerateReport: () => void;
   onReset: () => void;
+  onOpenDrawer: () => void;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onStartSimulation,
   onGenerateReport,
   onReset,
+  onOpenDrawer,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
-  const [enableRefinement, setEnableRefinement] = useState<boolean>(false);
   const [prStrategy, setPrStrategy] = useState<string>('');
 
   const llmOptions: LLMOption[] = [
@@ -33,9 +34,9 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
       llm: selectedLLM,
       strategy: {
         content: prStrategy,
-        isOptimized: enableRefinement,
+        isOptimized: false, // 默认未优化，用户需要通过侧边栏进行优化
       },
-      enableRefinement,
+      enableRefinement: false,
     };
     onStartSimulation(config);
   };
@@ -58,16 +59,12 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
 
         <div className="config-section">
           <label className="config-label">LLM Strategy Refinement</label>
-          <div className="refinement-toggle">
+          <div className="refinement-toggle" onClick={onOpenDrawer}>
             <Space>
               <ThunderboltOutlined className="refinement-icon" />
               <span className="refinement-text">Enable LLM Strategy Refinement</span>
-              <Switch
-                checked={enableRefinement}
-                onChange={setEnableRefinement}
-                size="small"
-              />
             </Space>
+            <RightOutlined className="refinement-arrow" />
           </div>
         </div>
 

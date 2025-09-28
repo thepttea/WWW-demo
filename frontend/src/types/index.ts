@@ -31,3 +31,21 @@ export interface HistoricalCase {
   actualOutcome: string;
   successRate: number;
 }
+
+export interface ChatMessage {
+  id: string;
+  type: 'user' | 'llm';
+  content: string;
+  timestamp: Date;
+}
+
+export interface SimulationParameters {
+  agents: number;
+  interactionProbability: number;
+  positiveResponseProbability: number;
+  negativeResponseProbability: number;
+  neutralResponseProbability: number;
+  initialPositiveSentiment: number;
+  initialNegativeSentiment: number;
+  initialNeutralSentiment: number;
+}

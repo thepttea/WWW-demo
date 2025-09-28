@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Row, Col, Typography, message } from 'antd';
 import ConfigurationPanel from './ConfigurationPanel';
 import VisualizationArea from './VisualizationArea';
-import { SimulationConfig } from '../../types';
+import StrategyRefinementDrawer from '../../components/StrategyRefinementDrawer';
+import { SimulationConfig, SimulationParameters } from '../../types';
 import './Scenario1Page.css';
 
 const { Title, Paragraph } = Typography;
@@ -10,6 +11,7 @@ const { Title, Paragraph } = Typography;
 const Scenario1Page: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [simulationResult, setSimulationResult] = useState<any>(null);
+  const [isDrawerVisible, setIsDrawerVisible] = useState(false);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
     if (!config.strategy.content.trim()) {
@@ -61,6 +63,21 @@ const Scenario1Page: React.FC = () => {
     message.success('Simulation reset');
   };
 
+  const handleOpenDrawer = () => {
+    setIsDrawerVisible(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setIsDrawerVisible(false);
+  };
+
+  const handleStrategyConfirm = (strategy: string, parameters: SimulationParameters) => {
+    // 这里可以处理策略确认逻辑
+    console.log('Confirmed strategy:', strategy);
+    console.log('Parameters:', parameters);
+    message.success('Strategy confirmed and parameters updated!');
+  };
+
   return (
     <div className="scenario1-page">
       <div className="page-header">
@@ -79,6 +96,7 @@ const Scenario1Page: React.FC = () => {
               onStartSimulation={handleStartSimulation}
               onGenerateReport={handleGenerateReport}
               onReset={handleReset}
+              onOpenDrawer={handleOpenDrawer}
             />
           </div>
           <div className="visualization-column">
@@ -90,6 +108,12 @@ const Scenario1Page: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <StrategyRefinementDrawer
+        visible={isDrawerVisible}
+        onClose={handleCloseDrawer}
+        onStrategyConfirm={handleStrategyConfirm}
+      />
     </div>
   );
 };

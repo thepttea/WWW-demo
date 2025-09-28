@@ -58,15 +58,22 @@
 }
 
 .refinement-toggle {
-  padding: 12px;
+  padding: 16px;
   background: rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .refinement-toggle:hover {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(19, 127, 236, 0.1);
+  border-color: #137fec;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(19, 127, 236, 0.2);
 }
 
 .refinement-icon {
@@ -77,6 +84,17 @@
 .refinement-text {
   font-weight: 500;
   color: inherit;
+}
+
+.refinement-arrow {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.refinement-toggle:hover .refinement-arrow {
+  color: #137fec;
+  transform: translateX(2px);
 }
 
 .strategy-input {
