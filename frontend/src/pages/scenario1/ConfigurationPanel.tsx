@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Select, Input, Button, Space, Typography } from 'antd';
-import { ThunderboltOutlined, SendOutlined, RightOutlined } from '@ant-design/icons';
+import { Card, Select, Input, Button, Space, Typography, Badge, InputNumber } from 'antd';
+import { ThunderboltOutlined, SendOutlined, RightOutlined, PlusOutlined, StopOutlined } from '@ant-design/icons';
 import { LLMOption } from '../../types';
 import './ConfigurationPanel.css';
 
@@ -9,19 +9,29 @@ const { TextArea } = Input;
 
 interface ConfigurationPanelProps {
   onStartSimulation: (config: any) => void;
+  onAddStrategy: (strategy: string) => void;  // 【新增】添加公关策略
+  onStopSimulation: () => void;  // 【新增】停止模拟
   onGenerateReport: () => void;
   onReset: () => void;
   onOpenDrawer: () => void;
+  isSimulationActive: boolean;  // 【新增】模拟是否激活
+  currentRound: number;  // 【新增】当前轮次
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onStartSimulation,
+  onAddStrategy,
+  onStopSimulation,
   onGenerateReport,
   onReset,
   onOpenDrawer,
+  isSimulationActive,
+  currentRound,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
+  const [initialTopic, setInitialTopic] = useState<string>('');  // 【新增】初始话题
   const [prStrategy, setPrStrategy] = useState<string>('');
+  const [numRounds, setNumRounds] = useState<number>(1);  // 【新增】回合数
 
   const llmOptions: LLMOption[] = [
     { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
@@ -30,20 +40,35 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   ];
 
   const handleStartSimulation = () => {
+    if (!initialTopic.trim()) {
+      return;
+    }
     const config = {
       llm: selectedLLM,
+      initialTopic: initialTopic,
+      numRounds: numRounds,  // 【新增】传递回合数
       strategy: {
         content: prStrategy,
-        isOptimized: false, // 默认未优化，用户需要通过侧边栏进行优化
+        isOptimized: false,
       },
       enableRefinement: false,
     };
     onStartSimulation(config);
   };
 
+  const handleAddStrategy = () => {
+    if (!prStrategy.trim()) {
+      return;
+    }
+    onAddStrategy(prStrategy);
+    setPrStrategy('');  // 清空输入框，准备下一轮
+  };
+
   return (
     <Card className="configuration-panel glassmorphism">
-      <Title level={4} className="panel-title">Configuration</Title>
+      <Title level={4} className="panel-title">
+        Configuration {isSimulationActive && <Badge count={`Round ${currentRound}`} style={{ backgroundColor: '#52c41a' }} />}
+      </Title>
       
       <div className="config-content">
         <div className="config-section">
@@ -54,27 +79,51 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
             onChange={setSelectedLLM}
             options={llmOptions}
             placeholder="Select LLM"
+            disabled={isSimulationActive}
           />
         </div>
 
-        <div className="config-section">
-          <label className="config-label">LLM Strategy Refinement</label>
-          <div className="refinement-toggle" onClick={onOpenDrawer}>
-            <Space>
-              <ThunderboltOutlined className="refinement-icon" />
-              <span className="refinement-text">Enable LLM Strategy Refinement</span>
-            </Space>
-            <RightOutlined className="refinement-arrow" />
-          </div>
-        </div>
+        {!isSimulationActive && (
+          <>
+            <div className="config-section">
+              <label className="config-label">Initial Topic (Crisis Event)</label>
+              <TextArea
+                className="strategy-input"
+                value={initialTopic}
+                onChange={(e) => setInitialTopic(e.target.value)}
+                placeholder="Enter an initial crisis event, e.g., A famous tech company was exposed for a data breach incident..."
+                rows={3}
+                showCount
+                maxLength={500}
+              />
+            </div>
+            
+            <div className="config-section">
+              <label className="config-label">Interaction Rounds (Rounds per strategy)</label>
+              <InputNumber
+                style={{ width: '100%' }}
+                min={1}
+                max={10}
+                value={numRounds}
+                onChange={(value) => setNumRounds(value || 1)}
+                placeholder="Number of rounds"
+              />
+              <div style={{ fontSize: '12px', color: '#888', marginTop: '4px' }}>
+                After each PR strategy, agents will interact for {numRounds} round(s)
+              </div>
+            </div>
+          </>
+        )}
 
         <div className="config-section">
-          <label className="config-label">PR Strategy Input</label>
+          <label className="config-label">
+            {isSimulationActive ? 'Add New PR Strategy (Intervention)' : 'Initial PR Strategy (Optional)'}
+          </label>
           <TextArea
             className="strategy-input"
             value={prStrategy}
             onChange={(e) => setPrStrategy(e.target.value)}
-            placeholder="Enter your PR strategy..."
+            placeholder={isSimulationActive ? "Enter a new PR strategy for intervention..." : "Enter initial PR strategy (optional)..."}
             rows={4}
             showCount
             maxLength={1000}
@@ -82,20 +131,46 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
         </div>
 
         <div className="config-actions">
-          <Button
-            type="primary"
-            size="large"
-            className="action-button primary-button"
-            onClick={handleStartSimulation}
-            icon={<SendOutlined />}
-          >
-            Start Simulation
-          </Button>
+          {!isSimulationActive ? (
+            <Button
+              type="primary"
+              size="large"
+              className="action-button primary-button"
+              onClick={handleStartSimulation}
+              icon={<SendOutlined />}
+              disabled={!initialTopic.trim()}
+            >
+              Start Simulation
+            </Button>
+          ) : (
+            <>
+              <Button
+                type="primary"
+                size="large"
+                className="action-button primary-button"
+                onClick={handleAddStrategy}
+                icon={<PlusOutlined />}
+                disabled={!prStrategy.trim()}
+              >
+                Add PR Strategy & Simulate
+              </Button>
+              <Button
+                size="large"
+                className="action-button secondary-button"
+                onClick={onStopSimulation}
+                icon={<StopOutlined />}
+                danger
+              >
+                Stop Simulation
+              </Button>
+            </>
+          )}
           
           <Button
             size="large"
             className="action-button secondary-button"
             onClick={onGenerateReport}
+            disabled={!isSimulationActive}
           >
             Generate Public Opinion Report
           </Button>
