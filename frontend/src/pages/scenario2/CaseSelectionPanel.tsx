@@ -11,12 +11,14 @@ import './CaseSelectionPanel.css';
 const { Title, Text } = Typography;
 
 interface CaseSelectionPanelProps {
+  historicalCases: HistoricalCase[]; // 新增 prop
   selectedCase: HistoricalCase | null;
   onCaseSelect: (caseItem: HistoricalCase) => void;
   onStartSimulation: (config: any) => void;
 }
 
 const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
+  historicalCases, // 接收 prop
   selectedCase,
   onCaseSelect,
   onStartSimulation,
@@ -30,7 +32,7 @@ const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
     { value: 'gemini-pro', label: 'Gemini Pro' },
   ];
 
-  // 历史案例数据 - 等待后端对接
+  // 历史案例数据 - 等待后端对接 (现在已对接)
   // const historicalCases: HistoricalCase[] = [];
 
   const handleStartSimulation = () => {
@@ -107,6 +109,7 @@ const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         onCaseSelect={onCaseSelect}
+        historicalCases={historicalCases} // 传递数据到 Modal
       />
     </Card>
   );

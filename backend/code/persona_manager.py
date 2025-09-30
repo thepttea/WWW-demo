@@ -22,7 +22,7 @@ def load_personas_from_csv(csv_file_path: str = file_path) -> List[Dict]:
     personas = []
     
     if not os.path.exists(csv_file_path):
-        raise FileNotFoundError(f"人设CSV文件未找到: {csv_file_path}")
+        raise FileNotFoundError(f"Persona CSV file not found: {csv_file_path}")
     
     with open(csv_file_path, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file)
@@ -41,22 +41,22 @@ def load_personas_from_csv(csv_file_path: str = file_path) -> List[Dict]:
             
             personas.append({"data": persona_data})
     
-    log_message(f"从 {csv_file_path} 成功加载 {len(personas)} 个人设") 
+    log_message(f"Successfully loaded {len(personas)} personas from {csv_file_path}") 
     return personas
 
     # 加载csv文件数据到PERSONA_LIBRARY
 try:
     PERSONA_LIBRARY = load_personas_from_csv()
 except FileNotFoundError as e:
-    log_message(f"警告: {e}")  
-    log_message("将使用默认的硬编码人设库")  
+    log_message(f"Warning: {e}")  
+    log_message("Will use the default hardcoded persona library.")  
     
     # 备用硬编码数据（防止CSV文件不存在时程序崩溃）
     PERSONA_LIBRARY = [
         {"data": {
             "username": "Default_Agent", 
-            "description": "默认人设", 
-            "emotional_style": "中立型", 
+            "description": "Default Persona", 
+            "emotional_style": "Neutral", 
             "influence_score": 50,
             "primary_platform": "Weibo/Twitter-like",
             "llm_model": "gpt-4o-mini",
@@ -113,7 +113,7 @@ def add_persona_to_csv(persona_data: Dict, csv_file_path: str = "personas.csv"):
             "llm_temperature": persona_data["llm_temperature"]
         })
     
-    log_message(f"已成功添加人设 '{persona_data['username']}' 到 {csv_file_path}")  
+    log_message(f"Successfully added persona '{persona_data['username']}' to {csv_file_path}")  
 
 def list_personas():
     """列出所有人设"""

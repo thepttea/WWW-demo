@@ -13,6 +13,15 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    // 添加代理配置以解决CORS问题
+    proxy: {
+      // 将 /api 请求代理到后端服务器
+      '/api': {
+        target: 'http://127.0.0.1:8000', // 明确使用IPv4地址
+        changeOrigin: true, // 需要虚拟主机站点
+        secure: false, // 如果是https则设为false
+      },
+    },
   },
   build: {
     outDir: 'build',

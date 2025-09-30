@@ -13,17 +13,12 @@ interface ChatInterfaceProps {
 }
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onStrategyGenerated }) => {
-  const [messages, setMessages] = useState<ChatMessageType[]>([
-    {
-      id: '1',
-      type: 'llm',
-      content: "Hello! I'm here to help you craft the perfect PR strategy. Please describe the situation and your goals.",
-      timestamp: new Date(),
-    },
-  ]);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const initStartedRef = useRef<boolean>(false); // 添加哨兵Ref
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -33,8 +28,58 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
     scrollToBottom();
   }, [messages]);
 
+  // 初始化聊天会话
+  useEffect(() => {
+    // 使用哨兵防止在React严格模式下重复执行
+    if (initStartedRef.current) {
+      return;
+    }
+    initStartedRef.current = true;
+
+    const initChat = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/scenario1/chat/init');
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          setSessionId(result.data.sessionId);
+          const initialMessage: ChatMessageType = {
+            id: '1',
+            type: 'llm',
+            content: result.data.content,
+            timestamp: new Date(result.data.timestamp),
+          };
+          setMessages([initialMessage]);
+        } else {
+          // 处理错误情况
+          const errorMessage: ChatMessageType = {
+            id: 'error-1',
+            type: 'llm',
+            content: 'Sorry, I failed to initialize. Please try refreshing.',
+            timestamp: new Date(),
+          };
+          setMessages([errorMessage]);
+        }
+      } catch (error) {
+        const errorMessage: ChatMessageType = {
+          id: 'error-1',
+          type: 'llm',
+          content: 'Error connecting to the server. Please check your connection and try again.',
+          timestamp: new Date(),
+        };
+        setMessages([errorMessage]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initChat();
+  }, []);
+
+
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim() || isLoading || !sessionId) return;
 
     const userMessage: ChatMessageType = {
       id: Date.now().toString(),
@@ -47,17 +92,48 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
     setInputValue('');
     setIsLoading(true);
 
-    // 模拟LLM响应
-    setTimeout(() => {
-      const llmMessage: ChatMessageType = {
-        id: (Date.now() + 1).toString(),
+    try {
+      const response = await fetch('/api/scenario1/chat/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          sessionId: sessionId,
+          message: inputValue,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success && result.data) {
+        const llmMessage: ChatMessageType = {
+          id: result.data.messageId || (Date.now() + 1).toString(),
+          type: 'llm',
+          content: result.data.content,
+          timestamp: new Date(result.data.timestamp),
+        };
+        setMessages(prev => [...prev, llmMessage]);
+      } else {
+        const errorMessage: ChatMessageType = {
+          id: 'error-' + Date.now(),
+          type: 'llm',
+          content: `Sorry, an error occurred: ${result.error?.message || 'Unknown error'}`,
+          timestamp: new Date(),
+        };
+        setMessages(prev => [...prev, errorMessage]);
+      }
+    } catch (error) {
+      const errorMessage: ChatMessageType = {
+        id: 'error-' + Date.now(),
         type: 'llm',
-        content: "I understand. Let's work together to develop a comprehensive PR plan. We can explore various approaches, such as targeted communication, influencer engagement, and community outreach. What are your initial thoughts?",
+        content: 'Failed to send message. Please check the server connection.',
         timestamp: new Date(),
       };
-      setMessages(prev => [...prev, llmMessage]);
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

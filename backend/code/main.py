@@ -53,7 +53,7 @@ def get_personalized_feed(agent_id, agents, G, all_posts_last_round):
         if is_visible:
             feed.append(f"{author_persona['username']}: {content}")
             
-    log_message(f"--- Agent {agent_id} 在其信息流中刷到了 {len(feed)} 条新动态 ---")
+    log_message(f"--- Agent {agent_id} found {len(feed)} new posts in their feed ---")
     return feed
 
 
@@ -61,32 +61,32 @@ def summarize_discourse(discourse_history: list, agents: dict):
     """
     在模拟结束后，调用LLM生成一份舆情总结报告。
     """
-    log_message("\n" + "="*25 + "\n=== 正在生成舆情总结报告... ===\n" + "="*25)
+    log_message("\n" + "="*25 + "\n=== Generating public opinion summary report... ===\n" + "="*25)
 
     llm = get_llm()
     
     formatted_history = ""
     for author_id, content, round_num in discourse_history:
-        username = agents[author_id].persona['username'] if author_id != "system" else "系统"
-        formatted_history += f"[第{round_num}回合] {username}: {content}\n"
+        username = agents[author_id].persona['username'] if author_id != "system" else "System"
+        formatted_history += f"[Round {round_num}] {username}: {content}\n"
         
     prompt = PromptTemplate.from_template(
-        """你是一位专业的社会舆情分析师。以下是一场关于“AI预测股市”话题的模拟网络讨论的完整记录。
+        """You are a professional social media public opinion analyst. Below is the complete record of a simulated online discussion about "AI predicting the stock market".
 
-        # 讨论记录:
+        # Discussion Record:
         ---
         {history}
         ---
 
-        # 你的任务:
-        请根据以上完整的讨论记录，撰写一份简洁明了的舆情总结报告。报告应至少包含以下几点：
-        1.  **核心议题**: 讨论的中心话题是什么？
-        2.  **主要观点阵营**: 讨论中形成了哪些主要的观点派别（例如：支持派、反对派、怀疑派等）？每个派别的核心论点是什么？
-        3.  **关键影响者 (KOL)**: 哪些用户（请指出用户名）在讨论中扮演了关键角色？他们是如何影响舆论走向的？
-        4.  **舆论的演变**: 讨论的整体情绪或主流观点是如何随着时间（回合）推移而发生变化的？
-        5.  **最终共识或分歧**: 讨论结束时，是否形成了普遍共识？如果没形成，最主要的分歧点是什么？
+        # Your Task:
+        Based on the complete discussion record above, please write a concise public opinion summary report. The report should include at least the following points:
+        1.  **Core Topic**: What was the central topic of the discussion?
+        2.  **Main Factions**: What were the main opinion groups that formed during the discussion (e.g., supporters, opponents, skeptics)? What were the core arguments of each faction?
+        3.  **Key Opinion Leaders (KOLs)**: Which users (please specify usernames) played a key role in the discussion? How did they influence the direction of public opinion?
+        4.  **Evolution of Opinion**: How did the overall sentiment or mainstream opinion of the discussion change over time (rounds)?
+        5.  **Final Consensus or Disagreement**: At the end of the discussion, was a general consensus reached? If not, what were the main points of disagreement?
 
-        请以专业的、分析性的口吻撰写这份报告。"""
+        Please write this report in a professional, analytical tone."""
     )
     
     summarizer_chain = prompt | llm
@@ -114,13 +114,13 @@ def run_simulation(num_rounds: int = 2, participation_prob: float = 0.8, rejoini
 
         G, agents = create_social_network(10)
 
-        initial_post = f"【初始话题 by 系统】: 一家名不见经传的初创公司发布了他们的产品，声称可以完美预测未来一周的股市走向！"
+        initial_post = f"【Initial Topic by System】: A little-known startup has released a product that claims to perfectly predict stock market trends for the next week!"
         global_discourse = [("system", initial_post, 0)]
     
         active_agent_ids = set(agents.keys())
         inactive_agent_ids = set()
 
-        log_message("\n" + "="*25 + "\n=== 舆论场模拟开始 ===\n" + "="*25)
+        log_message("\n" + "="*25 + "\n=== Public Opinion Simulation Start ===\n" + "="*25)
 
         for i in range(num_rounds):
             current_round = i + 1
@@ -130,16 +130,16 @@ def run_simulation(num_rounds: int = 2, participation_prob: float = 0.8, rejoini
                 active_agent_ids.update(newly_active)
                 inactive_agent_ids -= newly_active
                 for agent_id in newly_active:
-                    log_message(f"--- 观察者 {agents[agent_id].persona['username']} ({agent_id}) 重新对讨论产生兴趣，加入舆论场！ ---")
+                    log_message(f"--- Observer {agents[agent_id].persona['username']} ({agent_id}) has regained interest and joined the discussion! ---")
 
-            log_message(f"\n\n--- 第 {current_round} 回合 | 当前活跃人数: {len(active_agent_ids)} ---")
+            log_message(f"\n\n--- Round {current_round} | Active Agents: {len(active_agent_ids)} ---")
             if not active_agent_ids: 
-                log_message("所有Agent均已退出讨论，模拟提前结束。")
+                log_message("All agents have left the discussion. Simulation ending early.")
                 break
 
             last_round_posts = [post for post in global_discourse if post[2] == current_round - 1]
             if not last_round_posts and current_round > 1:
-                log_message("上一回合无人发言，舆论平息。模拟提前结束。")
+                log_message("No new posts in the last round. Public opinion has settled. Simulation ending early.")
                 break
         
             initial_messages = [post[1] for post in global_discourse if post[2] == 0]
@@ -163,7 +163,7 @@ def run_simulation(num_rounds: int = 2, participation_prob: float = 0.8, rejoini
                     visible_messages_for_agent = get_personalized_feed(agent_id, agents, G, last_round_posts)
 
                 if not visible_messages_for_agent:
-                    log_message(f"--- {agents[agent_id].persona['username']} ({agent_id}) 本回合没刷到任何新消息，保持沉默。 ---")
+                    log_message(f"--- {agents[agent_id].persona['username']} ({agent_id}) saw no new messages this round and remains silent. ---")
                     continue
 
                 state = {"recent_messages": visible_messages_for_agent, "agent_persona": agent.persona}
@@ -176,7 +176,7 @@ def run_simulation(num_rounds: int = 2, participation_prob: float = 0.8, rejoini
                 
                 elif action and action.action == "DROPOUT":
                     agents_to_make_inactive.add(agent_id)
-                    log_message(f"--- {agent.persona['username']} ({agent_id}) 已对该话题失去兴趣，永久退出讨论。 ---") 
+                    log_message(f"--- {agent.persona['username']} ({agent_id}) has lost interest and permanently left the discussion. ---") 
 
                 time.sleep(1)
         
@@ -186,19 +186,19 @@ def run_simulation(num_rounds: int = 2, participation_prob: float = 0.8, rejoini
             
             if new_posts_this_round:
                 global_discourse.extend(new_posts_this_round)
-                log_message(f"\n--- 第 {current_round} 回合结束，产生了 {len(new_posts_this_round)} 条新言论 ---")
+                log_message(f"\n--- Round {current_round} ended, with {len(new_posts_this_round)} new posts. ---")
             else:
-                log_message(f"\n--- 第 {current_round} 回合结束，无人发表新言论 ---")
+                log_message(f"\n--- Round {current_round} ended, with no new posts. ---")
 
-        log_message("\n" + "="*25 + f"\n=== 模拟结束 ===\n" + "="*25)
+        log_message("\n" + "="*25 + f"\n=== Simulation End ===\n" + "="*25)
 
-        log_message("\n最终舆论场全貌:")
+        log_message("\nFinal state of the discourse:")
         for author, content, round_num in global_discourse:
-            username = agents[author].persona['username'] if author != "system" else "系统"
-            log_message(f"[第{round_num}回合] {username}: {content}")
+            username = agents[author].persona['username'] if author != "system" else "System"
+            log_message(f"[Round {round_num}] {username}: {content}")
         
         final_report = summarize_discourse(global_discourse, agents)
-        log_message("\n\n" + "#"*25 + "\n### 最终舆情分析报告 ###\n" + "#"*25)
+        log_message("\n\n" + "#"*25 + "\n### Final Public Opinion Analysis Report ###\n" + "#"*25)
         log_message(final_report)
 
 if __name__ == "__main__":
