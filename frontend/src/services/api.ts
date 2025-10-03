@@ -49,6 +49,7 @@ export interface StartSimulationRequest {
   initialTopic: string;
   llmModel: string;
   simulationConfig: SimulationConfig;
+  prStrategy?: string;  // 第一轮公关策略（可选）
 }
 
 export interface SimulationStatus {

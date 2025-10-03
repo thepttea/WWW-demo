@@ -15,7 +15,6 @@ interface ConfigurationPanelProps {
   onReset: () => void;
   onOpenDrawer: () => void;
   simulationState?: SimulationState;
-  resetTrigger?: number; // 用于触发内部重置
   confirmedStrategy?: string;
   onResetFields?: () => void;
 }
@@ -27,7 +26,6 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onReset,
   onOpenDrawer,
   simulationState,
-  resetTrigger,
   confirmedStrategy,
   onResetFields,
 }) => {
@@ -39,23 +37,6 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   // Modal states
   const [eventModalVisible, setEventModalVisible] = useState(false);
   const [strategyModalVisible, setStrategyModalVisible] = useState(false);
-
-  // 重置所有内部状态
-  const resetInternalState = () => {
-    setSelectedLLM('gpt-4-turbo');
-    setEventDescription('');
-    setPrStrategy('');
-    setNextRoundStrategy('');
-    setEventModalVisible(false);
-    setStrategyModalVisible(false);
-  };
-
-  // 监听 resetTrigger 变化，重置内部状态
-  useEffect(() => {
-    if (resetTrigger !== undefined) {
-      resetInternalState();
-    }
-  }, [resetTrigger]);
 
   const llmOptions: LLMOption[] = [
     { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
