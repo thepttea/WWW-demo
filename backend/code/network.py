@@ -6,7 +6,7 @@ from agent import Agent
 import persona_manager
 from logger import log_message
 
-def create_social_network(num_agents: int = 10) -> (nx.Graph, dict):
+def create_social_network(num_agents: int = 10, sim_id_prefix: str = "") -> (nx.Graph, dict):
     log_message("--- 正在创建多平台社交网络... ---")
 
     persona_library = persona_manager.get_persona_library()
@@ -25,7 +25,8 @@ def create_social_network(num_agents: int = 10) -> (nx.Graph, dict):
 
     agents = {}
     for i, persona_data in enumerate(selected_personas_data):
-        agent_id = f"agent_{i}"
+        # 【修复】添加 sim_id_prefix 确保每个模拟的 agent ID 唯一
+        agent_id = f"{sim_id_prefix}_agent_{i}" if sim_id_prefix else f"agent_{i}"
         agents[agent_id] = Agent(agent_id=agent_id, persona=persona_data)
         log_message(f"  已创建Agent: {agent_id}, 用户名: {persona_data['username']},活跃平台: {persona_data['primary_platform']}, 描述: {persona_data['description']}")
 

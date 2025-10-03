@@ -10,7 +10,7 @@ def get_llm(model_name="gpt-4o-mini", temperature=0.7):
     
     # 统一使用OpenAI客户端
     base_url = config.CUSTOM_API_BASE
-    log_message(f"--- 加载模型: {model_name} ---")
+    log_message(f"--- Loading model: {model_name} ---")
         
     return ChatOpenAI(
         model=model_name,
