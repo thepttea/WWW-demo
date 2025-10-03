@@ -14,6 +14,10 @@ const Scenario1Page: React.FC = () => {
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
+    if (!config.eventDescription?.trim()) {
+      message.warning('Please enter event description first');
+      return;
+    }
     if (!config.strategy.content.trim()) {
       message.warning('Please enter your PR strategy first');
       return;
@@ -50,13 +54,6 @@ const Scenario1Page: React.FC = () => {
     }
   };
 
-  const handleGenerateReport = () => {
-    if (!simulationResult) {
-      message.warning('Please run a simulation first');
-      return;
-    }
-    message.info('Generating report...');
-  };
 
   const handleReset = () => {
     setSimulationResult(null);
@@ -94,7 +91,6 @@ const Scenario1Page: React.FC = () => {
           <div className="config-column">
             <ConfigurationPanel
               onStartSimulation={handleStartSimulation}
-              onGenerateReport={handleGenerateReport}
               onReset={handleReset}
               onOpenDrawer={handleOpenDrawer}
             />

@@ -12,6 +12,7 @@ export interface PRStrategy {
 
 export interface SimulationConfig {
   llm: string;
+  eventDescription?: string;
   strategy: PRStrategy;
   enableRefinement: boolean;
 }

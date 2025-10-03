@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SocialSim - Multi-Agent Simulation</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              "display": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "0.5rem",
+              "lg": "1rem",
+              "xl": "1.5rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      .glassmorphism {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .dark .glassmorphism {
+        background: rgba(16, 25, 34, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .form-select {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 0.5rem center;
+        background-repeat: no-repeat;
+        background-size: 1.5em 1.5em;
+        padding-right: 2.5rem;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+      }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200">
+<div class="relative min-h-screen w-full flex flex-col overflow-x-hidden">
+<header class="sticky top-0 z-10 flex items-center justify-between whitespace-nowrap px-10 py-4 glassmorphism">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_6_330)"><path clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fill-rule="evenodd"></path></g><defs><clipPath id="clip0_6_330"><rect fill="white" height="48" width="48"></rect></clipPath></defs></svg>
+</div>
+<h1 class="text-xl font-bold">EchoChamber</h1>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Home</a>
+<a class="text-sm font-medium text-primary" href="#">Scenario1</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Scenario2</a>
+<!-- <a class="text-sm font-medium hover:text-primary transition-colors" href="#">Settings</a> -->
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+<svg fill="currentColor" height="20px" viewBox="0 0 256 256" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path></svg>
+</button>
+<div class="size-10 rounded-full bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDKQiI7JzZQPr_fgYPp47hdYz9C43HRRScEDZNL4BLOb91re3naLKBicjC_3x0lHQAfsokHqbQoebvDM6EaBYdnbrzOtu6B1qz4rbVjVH1r-CY6yW8-ZcMUMwtS45lAk2bNTa-LIfBD-7yhLQ20Rbr2tzlyjdpMB5bBaObNkcOypEDlxBayJ4s8O-pudWV30JaLELlfIZmIUe9PHWp9Y-otGNELch7LsD8hAeT5fpG8nOJbCg1AE8HLZWkvyjWHmfCl1RPu77jbhgo");'></div>
+</div>
+</header>
+<main class="flex-1 flex flex-col py-10 px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-8">
+<h2 class="text-3xl font-bold tracking-tight">EchoChamber: A Simulator for Public Relations Crisis Dynamics</h2>
+<p class="mt-2 text-slate-500 dark:text-slate-400">Analyze public opinion propagation through multi-agent llm-based simulation.</p>
+</div>
+<div class="flex-1 grid grid-cols-10 gap-8">
+<div class="col-span-10 lg:col-span-3 flex flex-col">
+<div class="space-y-6 p-6 rounded-xl glassmorphism h-full flex flex-col">
+<h3 class="text-lg font-bold">Configuration</h3>
+<div class="flex-grow space-y-6">
+<div>
+<label class="block text-sm font-medium mb-2" for="llm-select">LLM Selection</label>
+<select class="form-select w-full bg-slate-200/50 dark:bg-slate-800/50 border-slate-300 dark:border-slate-700 rounded-lg focus:ring-primary focus:border-primary transition" id="llm-select">
+<option>GPT-4 Turbo</option>
+<option>Claude 3 Opus</option>
+<option>Gemini Pro</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium mb-2" for="event-description">Event Description</label>
+<textarea class="w-full pl-4 pr-4 py-3 bg-slate-200/50 dark:bg-slate-800/50 border-slate-300 dark:border-slate-700 rounded-lg focus:ring-primary focus:border-primary transition resize-none" id="event-description" placeholder="Describe the PR crisis event..." rows="3"></textarea>
+</div>
+<div class="space-y-2">
+<label class="block text-sm font-medium" for="llm-polishing">LLM Strategy Refinement</label>
+<a class="flex items-center justify-between w-full p-3 rounded-lg glassmorphism hover:bg-white/10 dark:hover:bg-black/10 transition-colors" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+<span class="font-medium">Enable LLM Strategy Refinement</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-500">chevron_right</span>
+</a>
+</div>
+<div>
+<label class="block text-sm font-medium mb-2" for="pr-strategy">First Round PR Strategy</label>
+<div class="relative flex items-center">
+<textarea class="w-full pl-4 pr-4 py-3 bg-slate-200/50 dark:bg-slate-800/50 border-slate-300 dark:border-slate-700 rounded-lg focus:ring-primary focus:border-primary transition resize-none" id="pr-strategy" placeholder="Enter your first round PR response strategy..." rows="4"></textarea>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-4 pt-4">
+<button class="w-full flex items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-sm font-bold hover:opacity-90 transition-opacity">
+<span>Start Simulation</span>
+</button>
+<button class="w-full flex items-center justify-center rounded-lg h-12 px-6 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200 text-sm font-bold hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors">
+<span>Reset</span>
+</button>
+</div>
+</div>
+</div>
+<div class="col-span-10 lg:col-span-7 flex flex-col">
+<div class="p-6 rounded-xl glassmorphism h-full flex flex-col">
+<h3 class="text-lg font-bold mb-4">Social Network Propagation</h3>
+<div class="w-full flex-1 bg-cover bg-center rounded-lg" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZyHKnKuy5qhOKSSAnkvVplxEz5RVjCAHwcfSQ1qkFcI_i3n_hDxkEU9b39I8ytQzQ8gDz23YO1lCtQhJ7hHdPF0Ao_0_linds5V7G0W8lEkx_3gqsHKmnuUR1Lg7Xe3e4AOpebxyhRTkx1gnf97-VcKbkCumWF5JHFL0zL4M0mejmAuU6xIeDjzt5zjruXiZcjTzxPIcA6T5yVG_FNie4KAyycAi8G2KLhsEpu_iAEGKp52_Gsh3tjgRl_Ky3YGBi35X6XJghbuA");'>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

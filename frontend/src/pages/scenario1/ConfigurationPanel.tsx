@@ -9,18 +9,17 @@ const { TextArea } = Input;
 
 interface ConfigurationPanelProps {
   onStartSimulation: (config: any) => void;
-  onGenerateReport: () => void;
   onReset: () => void;
   onOpenDrawer: () => void;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onStartSimulation,
-  onGenerateReport,
   onReset,
   onOpenDrawer,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
+  const [eventDescription, setEventDescription] = useState<string>('');
   const [prStrategy, setPrStrategy] = useState<string>('');
 
   const llmOptions: LLMOption[] = [
@@ -32,6 +31,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   const handleStartSimulation = () => {
     const config = {
       llm: selectedLLM,
+      eventDescription: eventDescription,
       strategy: {
         content: prStrategy,
         isOptimized: false, // 默认未优化，用户需要通过侧边栏进行优化
@@ -58,6 +58,19 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
         </div>
 
         <div className="config-section">
+          <label className="config-label">Event Description</label>
+          <TextArea
+            className="strategy-input"
+            value={eventDescription}
+            onChange={(e) => setEventDescription(e.target.value)}
+            placeholder="Describe the PR crisis event..."
+            rows={3}
+            showCount
+            maxLength={500}
+          />
+        </div>
+
+        <div className="config-section">
           <label className="config-label">LLM Strategy Refinement</label>
           <div className="refinement-toggle" onClick={onOpenDrawer}>
             <Space>
@@ -69,12 +82,12 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
         </div>
 
         <div className="config-section">
-          <label className="config-label">PR Strategy Input</label>
+          <label className="config-label">First Round PR Strategy</label>
           <TextArea
             className="strategy-input"
             value={prStrategy}
             onChange={(e) => setPrStrategy(e.target.value)}
-            placeholder="Enter your PR strategy..."
+            placeholder="Enter your first round PR response strategy..."
             rows={4}
             showCount
             maxLength={1000}
@@ -90,14 +103,6 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
             icon={<SendOutlined />}
           >
             Start Simulation
-          </Button>
-          
-          <Button
-            size="large"
-            className="action-button secondary-button"
-            onClick={onGenerateReport}
-          >
-            Generate Public Opinion Report
           </Button>
           
           <Button
