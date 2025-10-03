@@ -16,6 +16,8 @@ interface ConfigurationPanelProps {
   onOpenDrawer: () => void;
   simulationState?: SimulationState;
   resetTrigger?: number; // 用于触发内部重置
+  confirmedStrategy?: string;
+  onResetFields?: () => void;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -26,6 +28,8 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onOpenDrawer,
   simulationState,
   resetTrigger,
+  confirmedStrategy,
+  onResetFields,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
   const [eventDescription, setEventDescription] = useState<string>('');
@@ -58,6 +62,34 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
     { value: 'claude-3-opus', label: 'Claude 3 Opus' },
     { value: 'gemini-pro', label: 'Gemini Pro' },
   ];
+
+  // 监听confirmedStrategy变化，自动填充策略输入框
+  useEffect(() => {
+    if (confirmedStrategy && confirmedStrategy.trim()) {
+      if (simulationState?.isRunning) {
+        // 如果模拟正在运行，填充下一轮策略
+        setNextRoundStrategy(confirmedStrategy);
+      } else {
+        // 如果模拟未开始，填充第一轮策略
+        setPrStrategy(confirmedStrategy);
+      }
+    }
+  }, [confirmedStrategy, simulationState?.isRunning]);
+
+  // 重置所有字段
+  const resetFields = () => {
+    setSelectedLLM('gpt-4-turbo');
+    setEventDescription('');
+    setPrStrategy('');
+    setNextRoundStrategy('');
+  };
+
+  // 当父组件调用重置时，清空字段
+  useEffect(() => {
+    if (onResetFields) {
+      onResetFields();
+    }
+  }, [onResetFields]);
 
   const handleStartSimulation = () => {
     const config = {
@@ -169,13 +201,16 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
                 className="action-button secondary-button"
                 onClick={onGenerateReport}
               >
-                Generate Public Report
+                Generate Report & View Results
               </Button>
               
               <Button
                 size="large"
                 className="action-button secondary-button"
-                onClick={onReset}
+                onClick={() => {
+                  resetFields();
+                  onReset();
+                }}
               >
                 Reset
               </Button>
@@ -272,7 +307,10 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
           <Button
             size="large"
             className="action-button secondary-button"
-            onClick={onReset}
+            onClick={() => {
+              resetFields();
+              onReset();
+            }}
           >
             Reset
           </Button>

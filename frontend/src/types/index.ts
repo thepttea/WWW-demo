@@ -33,10 +33,30 @@ export interface SimulationState {
 }
 
 export interface SimulationResult {
-  success: boolean;
-  score: number;
-  improvements: string[];
-  networkVisualization: string; // 图片URL或数据
+  simulationId: string;
+  status: string;
+  round: number;
+  summary: {
+    totalAgents: number;
+    activeAgents: number;
+    totalPosts: number;
+    positiveSentiment: number;
+    negativeSentiment: number;
+    neutralSentiment: number;
+  };
+  agents: Array<{
+    nodeId: string;
+    value: number;
+    postSend: number;
+    postReceived: number;
+    round: number;
+    stance: string;
+  }>;
+  propagationPaths: Array<{
+    from: string;
+    to: string;
+    content: string;
+  }>;
 }
 
 export interface HistoricalCase {
