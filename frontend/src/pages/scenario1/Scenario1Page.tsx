@@ -93,6 +93,21 @@ const Scenario1Page: React.FC = () => {
       return;
     }
 
+    // 立即更新策略历史，不等待API调用完成
+    setSimulationState(prev => prev ? {
+      ...prev,
+      currentRound: prev.currentRound + 1,
+      strategyHistory: [
+        ...prev.strategyHistory,
+        {
+          round: prev.currentRound + 1,
+          strategy: strategy,
+          timestamp: new Date(),
+        }
+      ],
+      nextRoundStrategy: strategy,
+    } : null);
+
     try {
       const result = await addPRStrategyMutation.mutateAsync({
         simulationId,
@@ -100,21 +115,6 @@ const Scenario1Page: React.FC = () => {
       });
 
       if (result.success && result.data) {
-        // 更新模拟状态，将当前策略添加到历史中
-        setSimulationState(prev => prev ? {
-          ...prev,
-          currentRound: prev.currentRound + 1,
-          strategyHistory: [
-            ...prev.strategyHistory,
-            {
-              round: prev.currentRound + 1,
-              strategy: strategy,
-              timestamp: new Date(),
-            }
-          ],
-          nextRoundStrategy: strategy,
-        } : null);
-
         message.success(`Round ${simulationState?.currentRound ? simulationState.currentRound + 1 : 2} simulation started!`);
       } else {
         message.error(result.error?.message || 'Failed to start next round');
