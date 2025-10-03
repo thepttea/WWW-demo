@@ -10,9 +10,11 @@ const { TextArea } = Input;
 
 interface ChatInterfaceProps {
   onStrategyGenerated: (strategy: string) => void;
+  onStrategyConfirm?: (strategy: string) => void;
+  onLastLLMMessageChange?: (message: string) => void;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onStrategyGenerated }) => {
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onStrategyGenerated, onLastLLMMessageChange }) => {
   const [messages, setMessages] = useState<ChatMessageType[]>([
     {
       id: '1',
@@ -23,6 +25,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [lastLLMMessage, setLastLLMMessage] = useState<string>("Hello! I'm here to help you craft the perfect PR strategy. Please describe the situation and your goals.");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -32,6 +35,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // 当最后LLM消息变化时，通知父组件
+  useEffect(() => {
+    if (onLastLLMMessageChange && lastLLMMessage) {
+      onLastLLMMessageChange(lastLLMMessage);
+    }
+  }, [lastLLMMessage, onLastLLMMessageChange]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -56,6 +66,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
         timestamp: new Date(),
       };
       setMessages(prev => [...prev, llmMessage]);
+      // 更新最后一条LLM消息
+      setLastLLMMessage(llmMessage.content);
       setIsLoading(false);
     }, 1000);
   };
@@ -66,6 +78,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
       handleSendMessage();
     }
   };
+
 
   return (
     <Card className="chat-interface glassmorphism">
@@ -112,6 +125,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
           />
         </div>
       </div>
+
     </Card>
   );
 };

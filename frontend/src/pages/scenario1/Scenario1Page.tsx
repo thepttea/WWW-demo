@@ -13,6 +13,7 @@ const Scenario1Page: React.FC = () => {
   const [simulationResult, setSimulationResult] = useState<any>(null);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [simulationState, setSimulationState] = useState<SimulationState | null>(null);
+  const [confirmedStrategy, setConfirmedStrategy] = useState<string>('');
 
   const handleStartSimulation = async (config: SimulationConfig) => {
     if (!config.eventDescription?.trim()) {
@@ -129,7 +130,8 @@ const Scenario1Page: React.FC = () => {
   };
 
   const handleStrategyConfirm = (strategy: string, parameters: SimulationParameters) => {
-    // 这里可以处理策略确认逻辑
+    // 保存确认的策略
+    setConfirmedStrategy(strategy);
     console.log('Confirmed strategy:', strategy);
     console.log('Parameters:', parameters);
     message.success('Strategy confirmed and parameters updated!');
@@ -156,6 +158,7 @@ const Scenario1Page: React.FC = () => {
               onReset={handleReset}
               onOpenDrawer={handleOpenDrawer}
               simulationState={simulationState}
+              confirmedStrategy={confirmedStrategy}
             />
           </div>
           <div className="visualization-column">

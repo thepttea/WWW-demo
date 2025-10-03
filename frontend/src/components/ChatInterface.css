@@ -163,6 +163,76 @@
   background: rgba(255, 255, 255, 0.5);
 }
 
+/* 策略确认区域样式 */
+.strategy-confirmation {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.strategy-section {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.strategy-title {
+  color: white !important;
+  margin-bottom: 8px !important;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.strategy-description {
+  color: rgba(255, 255, 255, 0.7) !important;
+  margin-bottom: 16px !important;
+  font-size: 14px;
+}
+
+.strategy-input {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  color: white !important;
+  margin-bottom: 16px;
+}
+
+.strategy-input:hover {
+  border-color: #137fec !important;
+}
+
+.strategy-input:focus {
+  border-color: #137fec !important;
+  box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2) !important;
+}
+
+.strategy-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.strategy-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.strategy-actions .ant-btn {
+  background: #137fec !important;
+  border-color: #137fec !important;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.strategy-actions .ant-btn:hover {
+  background: #0f6fd4 !important;
+  border-color: #0f6fd4 !important;
+}
+
+.strategy-actions .ant-btn:disabled {
+  background: rgba(19, 127, 236, 0.3) !important;
+  border-color: rgba(19, 127, 236, 0.3) !important;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .chat-messages {
@@ -177,5 +247,9 @@
   .send-button {
     width: 100%;
     height: 36px;
+  }
+
+  .strategy-actions {
+    justify-content: center;
   }
 }

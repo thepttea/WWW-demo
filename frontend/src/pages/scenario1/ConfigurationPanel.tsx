@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Select, Input, Button, Space, Typography } from 'antd';
 import { ThunderboltOutlined, SendOutlined, RightOutlined, EyeOutlined, LockOutlined } from '@ant-design/icons';
 import { LLMOption, SimulationState } from '../../types';
@@ -15,6 +15,7 @@ interface ConfigurationPanelProps {
   onReset: () => void;
   onOpenDrawer: () => void;
   simulationState?: SimulationState;
+  confirmedStrategy?: string;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -24,6 +25,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onReset,
   onOpenDrawer,
   simulationState,
+  confirmedStrategy,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
   const [eventDescription, setEventDescription] = useState<string>('');
@@ -39,6 +41,19 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
     { value: 'claude-3-opus', label: 'Claude 3 Opus' },
     { value: 'gemini-pro', label: 'Gemini Pro' },
   ];
+
+  // 监听confirmedStrategy变化，自动填充策略输入框
+  useEffect(() => {
+    if (confirmedStrategy && confirmedStrategy.trim()) {
+      if (simulationState?.isRunning) {
+        // 如果模拟正在运行，填充下一轮策略
+        setNextRoundStrategy(confirmedStrategy);
+      } else {
+        // 如果模拟未开始，填充第一轮策略
+        setPrStrategy(confirmedStrategy);
+      }
+    }
+  }, [confirmedStrategy, simulationState?.isRunning]);
 
   const handleStartSimulation = () => {
     const config = {
