@@ -3,7 +3,7 @@ import { Typography, message } from 'antd';
 import ConfigurationPanel from './ConfigurationPanel';
 import VisualizationArea from './VisualizationArea';
 import StrategyRefinementDrawer from '../../components/StrategyRefinementDrawer';
-import { SimulationConfig, SimulationParameters } from '../../types';
+import { SimulationConfig, SimulationParameters, SimulationState } from '../../types';
 import './Scenario1Page.css';
 
 const { Title, Paragraph } = Typography;
@@ -12,6 +12,7 @@ const Scenario1Page: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [simulationResult, setSimulationResult] = useState<any>(null);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+  const [simulationState, setSimulationState] = useState<SimulationState | null>(null);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
     if (!config.eventDescription?.trim()) {
@@ -25,6 +26,21 @@ const Scenario1Page: React.FC = () => {
 
     setIsLoading(true);
     setSimulationResult(null);
+
+    // 设置模拟状态
+    setSimulationState({
+      isRunning: true,
+      currentRound: 1,
+      lockedConfig: {
+        llm: config.llm,
+        eventDescription: config.eventDescription || '',
+      },
+      strategyHistory: [{
+        round: 1,
+        strategy: config.strategy.content,
+        timestamp: new Date(),
+      }],
+    });
 
     try {
       // 模拟API调用
@@ -55,8 +71,52 @@ const Scenario1Page: React.FC = () => {
   };
 
 
+  const handleStartNextRound = async (strategy: string) => {
+    if (!strategy.trim()) {
+      message.warning('Please enter next round strategy first');
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      // 模拟下一轮API调用
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // 更新模拟状态，将当前策略添加到历史中
+      setSimulationState(prev => prev ? {
+        ...prev,
+        currentRound: prev.currentRound + 1,
+        strategyHistory: [
+          ...prev.strategyHistory,
+          {
+            round: prev.currentRound + 1,
+            strategy: strategy,
+            timestamp: new Date(),
+          }
+        ],
+        nextRoundStrategy: strategy,
+      } : null);
+
+      message.success(`Round ${simulationState?.currentRound ? simulationState.currentRound + 1 : 2} simulation started!`);
+    } catch (error) {
+      message.error('Next round simulation failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGenerateReport = () => {
+    if (!simulationResult) {
+      message.warning('Please run a simulation first');
+      return;
+    }
+    message.info('Generating public opinion report...');
+  };
+
   const handleReset = () => {
     setSimulationResult(null);
+    setSimulationState(null);
     message.success('Simulation reset');
   };
 
@@ -91,8 +151,11 @@ const Scenario1Page: React.FC = () => {
           <div className="config-column">
             <ConfigurationPanel
               onStartSimulation={handleStartSimulation}
+              onStartNextRound={handleStartNextRound}
+              onGenerateReport={handleGenerateReport}
               onReset={handleReset}
               onOpenDrawer={handleOpenDrawer}
+              simulationState={simulationState}
             />
           </div>
           <div className="visualization-column">

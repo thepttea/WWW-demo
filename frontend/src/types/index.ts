@@ -17,6 +17,21 @@ export interface SimulationConfig {
   enableRefinement: boolean;
 }
 
+export interface SimulationState {
+  isRunning: boolean;
+  currentRound: number;
+  lockedConfig: {
+    llm: string;
+    eventDescription: string;
+  };
+  strategyHistory: {
+    round: number;
+    strategy: string;
+    timestamp: Date;
+  }[];
+  nextRoundStrategy?: string;
+}
+
 export interface SimulationResult {
   success: boolean;
   score: number;
