@@ -13,6 +13,7 @@ const Scenario1Page: React.FC = () => {
   const [simulationResult, setSimulationResult] = useState<any>(null);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [simulationState, setSimulationState] = useState<SimulationState | null>(null);
+  const [resetTrigger, setResetTrigger] = useState<number>(0);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
     if (!config.eventDescription?.trim()) {
@@ -77,27 +78,27 @@ const Scenario1Page: React.FC = () => {
       return;
     }
 
+    // 立即更新策略历史，不等待模拟完成
+    setSimulationState(prev => prev ? {
+      ...prev,
+      currentRound: prev.currentRound + 1,
+      strategyHistory: [
+        ...prev.strategyHistory,
+        {
+          round: prev.currentRound + 1,
+          strategy: strategy,
+          timestamp: new Date(),
+        }
+      ],
+      nextRoundStrategy: strategy,
+    } : null);
+
     setIsLoading(true);
     
     try {
       // 模拟下一轮API调用
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // 更新模拟状态，将当前策略添加到历史中
-      setSimulationState(prev => prev ? {
-        ...prev,
-        currentRound: prev.currentRound + 1,
-        strategyHistory: [
-          ...prev.strategyHistory,
-          {
-            round: prev.currentRound + 1,
-            strategy: strategy,
-            timestamp: new Date(),
-          }
-        ],
-        nextRoundStrategy: strategy,
-      } : null);
-
       message.success(`Round ${simulationState?.currentRound ? simulationState.currentRound + 1 : 2} simulation started!`);
     } catch (error) {
       message.error('Next round simulation failed. Please try again.');
@@ -115,9 +116,14 @@ const Scenario1Page: React.FC = () => {
   };
 
   const handleReset = () => {
+    // 清空所有状态
     setSimulationResult(null);
     setSimulationState(null);
-    message.success('Simulation reset');
+    setIsLoading(false);
+    setIsDrawerVisible(false);
+    // 触发 ConfigurationPanel 内部重置
+    setResetTrigger(prev => prev + 1);
+    message.success('All data has been reset to initial state');
   };
 
   const handleOpenDrawer = () => {
@@ -156,6 +162,7 @@ const Scenario1Page: React.FC = () => {
               onReset={handleReset}
               onOpenDrawer={handleOpenDrawer}
               simulationState={simulationState}
+              resetTrigger={resetTrigger}
             />
           </div>
           <div className="visualization-column">

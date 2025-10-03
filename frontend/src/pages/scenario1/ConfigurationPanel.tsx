@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Select, Input, Button, Space, Typography } from 'antd';
 import { ThunderboltOutlined, SendOutlined, RightOutlined, EyeOutlined, LockOutlined } from '@ant-design/icons';
 import { LLMOption, SimulationState } from '../../types';
@@ -15,6 +15,7 @@ interface ConfigurationPanelProps {
   onReset: () => void;
   onOpenDrawer: () => void;
   simulationState?: SimulationState;
+  resetTrigger?: number; // 用于触发内部重置
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -24,6 +25,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onReset,
   onOpenDrawer,
   simulationState,
+  resetTrigger,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
   const [eventDescription, setEventDescription] = useState<string>('');
@@ -33,6 +35,23 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   // Modal states
   const [eventModalVisible, setEventModalVisible] = useState(false);
   const [strategyModalVisible, setStrategyModalVisible] = useState(false);
+
+  // 重置所有内部状态
+  const resetInternalState = () => {
+    setSelectedLLM('gpt-4-turbo');
+    setEventDescription('');
+    setPrStrategy('');
+    setNextRoundStrategy('');
+    setEventModalVisible(false);
+    setStrategyModalVisible(false);
+  };
+
+  // 监听 resetTrigger 变化，重置内部状态
+  useEffect(() => {
+    if (resetTrigger !== undefined) {
+      resetInternalState();
+    }
+  }, [resetTrigger]);
 
   const llmOptions: LLMOption[] = [
     { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
