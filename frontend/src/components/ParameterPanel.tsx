@@ -101,7 +101,7 @@ const ParameterPanel: React.FC<ParameterPanelProps> = ({
         ))}
         
         <div className="strategy-notice">
-          <p>PR strategy will be generated via the LLM chat on the right.</p>
+          <p>PR strategy will be generated via the LLM chat.</p>
         </div>
       </div>
     </Card>

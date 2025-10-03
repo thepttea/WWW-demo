@@ -16,6 +16,7 @@ interface ConfigurationPanelProps {
   onOpenDrawer: () => void;
   simulationState?: SimulationState;
   confirmedStrategy?: string;
+  onResetFields?: () => void;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -26,6 +27,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   onOpenDrawer,
   simulationState,
   confirmedStrategy,
+  onResetFields,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
   const [eventDescription, setEventDescription] = useState<string>('');
@@ -54,6 +56,21 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
       }
     }
   }, [confirmedStrategy, simulationState?.isRunning]);
+
+  // 重置所有字段
+  const resetFields = () => {
+    setSelectedLLM('gpt-4-turbo');
+    setEventDescription('');
+    setPrStrategy('');
+    setNextRoundStrategy('');
+  };
+
+  // 当父组件调用重置时，清空字段
+  useEffect(() => {
+    if (onResetFields) {
+      onResetFields();
+    }
+  }, [onResetFields]);
 
   const handleStartSimulation = () => {
     const config = {
@@ -165,13 +182,16 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
                 className="action-button secondary-button"
                 onClick={onGenerateReport}
               >
-                Generate Public Report
+                Generate Report & View Results
               </Button>
               
               <Button
                 size="large"
                 className="action-button secondary-button"
-                onClick={onReset}
+                onClick={() => {
+                  resetFields();
+                  onReset();
+                }}
               >
                 Reset
               </Button>
@@ -268,7 +288,10 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
           <Button
             size="large"
             className="action-button secondary-button"
-            onClick={onReset}
+            onClick={() => {
+              resetFields();
+              onReset();
+            }}
           >
             Reset
           </Button>

@@ -8,6 +8,7 @@ import uvicorn
 import chat_manager
 import case_manager
 import simulation_manager
+from logger import log_message
 
 # 初始化FastAPI应用
 app = FastAPI(
@@ -296,6 +297,28 @@ def generate_scenario1_report(request: GenerateReportRequest):
         import traceback
         print(f"❌ Error generating report: {str(e)}")
         print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=str(e))
+
+# --- 通用接口 ---
+
+@app.post("/api/simulation/{simulation_id}/reset", response_model=ApiResponse, tags=["General"])
+def reset_simulation(simulation_id: str):
+    """
+    重置模拟（通用接口）
+    """
+    try:
+        # 这里可以添加重置逻辑，比如清理模拟数据等
+        # 目前只是返回成功响应
+        log_message(f"Simulation {simulation_id} reset requested")
+        return ApiResponse(
+            success=True, 
+            data={
+                "simulationId": simulation_id,
+                "status": "reset",
+                "message": "Simulation has been reset successfully"
+            }
+        )
+    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 # --- [NEW] API Endpoints for 2. Scenario 2 ---

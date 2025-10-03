@@ -3,6 +3,7 @@ uvicorn[standard]
 python-multipart
 pydantic
 langchain
+langchain-core
 langchain-openai
 python-dotenv
 networkx

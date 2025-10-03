@@ -24,6 +24,27 @@
   margin-bottom: 16px;
 }
 
+.chat-title-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.new-session-button {
+  background: #137fec !important;
+  border-color: #137fec !important;
+  border-radius: 6px;
+  font-size: 12px;
+  height: 32px;
+  padding: 0 12px;
+}
+
+.new-session-button:hover {
+  background: #0f6fd4 !important;
+  border-color: #0f6fd4 !important;
+}
+
 .chat-title {
   margin-bottom: 8px !important;
   color: white !important;

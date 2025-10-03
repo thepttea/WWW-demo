@@ -21,7 +21,7 @@ const StrategyRefinementDrawer: React.FC<StrategyRefinementDrawerProps> = ({
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [parameters, setParameters] = useState<SimulationParameters>({
-    agents: 100,
+    agents: 10,
     interactionProbability: 0.5,
     positiveResponseProbability: 0.3,
     negativeResponseProbability: 0.3,
