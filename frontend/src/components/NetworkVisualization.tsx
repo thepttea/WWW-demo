@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NodeDetailModal from './NodeDetailModal';
-import EdgeDetailModal from './EdgeDetailModal';
+import MessageNotification from './MessageNotification';
 import './NetworkVisualization.css';
 
 interface User {
@@ -16,16 +16,6 @@ interface Platform {
   type: string;
   userCount: number;
   activeUsers: string[];
-  message_propagation?: Array<{
-    sender: string;
-    receivers: string[];
-    content: string;
-    sentiment: string;
-    timestamp: string;
-    likes: number;
-    shares: number;
-    comments: number;
-  }>;
 }
 
 interface NetworkVisualizationProps {
@@ -47,12 +37,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [selectedNodeType, setSelectedNodeType] = useState<'user' | 'platform' | null>(null);
-  
-  // 边详情弹窗状态
-  const [edgeModalVisible, setEdgeModalVisible] = useState(false);
-  const [selectedEdge, setSelectedEdge] = useState<any>(null);
 
-  // 消息传播步骤定义 - 以消息为主体，每个消息6秒
+  // 消息传播步骤定义 - 以消息为主体，每个消息6秒，包含具体内容
   const messageSteps = [
     // 消息1: Serena 发表消息到 Weibo，传播到其他用户
     { 
@@ -61,6 +47,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       sender: 'Serena', 
       platform: 'Weibo', 
       receivers: ['Journalist', 'Elon', 'Graham', 'Vivian'],
+      content: '这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。任何新技术都会面临质疑，这是正常的。',
       delay: 0,
       duration: 6000
     },
@@ -70,7 +57,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Journalist', 
       platform: 'Weibo', 
-      receivers: ['Serena', 'Elon', 'Graham', 'Vivian'],
+      receivers: ['Serena', 'Elon', 'Tom', 'Dev'],
+      content: '科技公司必须对用户数据负责，我们需要更多的透明度和监管。不能以创新为名忽视用户权益，这个AI产品的隐私问题需要深入调查。',
       delay: 6000,
       duration: 6000
     },
@@ -80,7 +68,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Elon', 
       platform: 'Weibo', 
-      receivers: ['Serena', 'Journalist', 'Graham', 'Vivian'],
+      receivers: ['Serena', 'Graham', 'Philosopher'],
+      content: 'AI技术是人类的未来，我们应该支持技术创新。任何技术都有风险，但收益更大，这个AI产品虽然存在争议，但技术本身是先进的。',
       delay: 12000,
       duration: 6000
     },
@@ -90,7 +79,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Alex', 
       platform: 'Weibo', 
-      receivers: ['Serena', 'Journalist', 'Elon', 'Graham'],
+      receivers: [],
+      content: '这个AI产品虽然存在争议，但技术本身是先进的。我们应该支持技术创新，而不是因为争议就否定它。',
       delay: 18000,
       duration: 6000
     },
@@ -100,7 +90,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Graham', 
       platform: 'WeChat', 
-      receivers: ['Serena', 'Elon', 'Vivian'],
+      receivers: ['Tom', 'Serena', 'Elon'],
+      content: '需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。技术本身不是问题，问题在于应用，我需要评估这个产品是否具有长期投资价值。',
       delay: 24000,
       duration: 6000
     },
@@ -110,7 +101,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Tom', 
       platform: 'WeChat', 
-      receivers: ['Serena', 'Elon', 'Graham'],
+      receivers: ['Graham', 'Journalist'],
+      content: '需要确保产品符合现有法规，监管框架需要跟上技术发展。平衡创新和风险很重要，我需要客观评估这个AI产品的合规性。',
       delay: 30000,
       duration: 6000
     },
@@ -120,7 +112,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Vivian', 
       platform: 'TikTok', 
-      receivers: ['Serena', 'Elon'],
+      receivers: ['Intern', 'Serena', 'Elon'],
+      content: 'AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。技术应该服务于创意，而不是替代，AI可以辅助艺术创作，但不能替代人文精神。',
       delay: 36000,
       duration: 6000
     },
@@ -130,7 +123,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Intern', 
       platform: 'TikTok', 
-      receivers: ['Serena', 'Elon'],
+      receivers: [],
+      content: '这个话题肯定会火，可以做成很多有趣的梗。AI产品争议性很强，适合传播，争议性话题总是更容易传播。',
       delay: 42000,
       duration: 6000
     },
@@ -140,7 +134,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Dev', 
       platform: 'Forum', 
-      receivers: ['Serena', 'Elon', 'Graham', 'Tom'],
+      receivers: ['Philosopher', 'Serena', 'Journalist', 'Graham'],
+      content: '又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。用户隐私问题确实需要重视，但很多公司为了商业利益而忽视这些问题。',
       delay: 48000,
       duration: 6000
     },
@@ -150,7 +145,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       type: 'message_flow', 
       sender: 'Philosopher', 
       platform: 'Forum', 
-      receivers: ['Serena', 'Elon', 'Graham', 'Tom'],
+      receivers: ['Dev', 'Elon', 'Graham', 'Tom'],
+      content: '这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。技术发展必须考虑道德责任，AI发展需要建立完善的伦理框架和道德边界。',
       delay: 54000,
       duration: 6000
     }
@@ -406,53 +402,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     setSelectedNodeType(null);
   };
 
-  // 处理边点击事件
-  const handleEdgeClick = (from: string, to: string) => {
-    console.log('Edge clicked:', from, '→', to);
-    
-    // 收集该通道的所有消息
-    const messages: any[] = [];
-    
-    // 遍历所有平台的消息传播数据
-    _platforms.forEach(platform => {
-      if (platform.message_propagation) {
-        platform.message_propagation.forEach((message: any) => {
-          // 检查是否匹配发送者到平台的边
-          if (message.sender === from && platform.name === to) {
-            messages.push({
-              ...message,
-              platform: platform.name
-            });
-          }
-          // 检查是否匹配平台到接收者的边
-          if (platform.name === from && message.receivers.includes(to)) {
-            messages.push({
-              ...message,
-              platform: platform.name
-            });
-          }
-        });
-      }
-    });
-    
-    console.log('Found messages for edge:', messages);
-    
-    if (messages.length > 0) {
-      setSelectedEdge({
-        from,
-        to,
-        messages
-      });
-      setEdgeModalVisible(true);
-    }
-  };
-
-  // 关闭边详情弹窗
-  const handleCloseEdgeModal = () => {
-    setEdgeModalVisible(false);
-    setSelectedEdge(null);
-  };
-
   // 获取所有路径和当前闪烁节点
   const allPaths = getAllStaticPaths();
   const flashingNodes = getCurrentFlashingNodes();
@@ -690,69 +639,16 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
         {/* 所有消息流动路径 */}
         <g id="message-flows">
-          {allPaths.map((path, index) => {
-            // 从路径ID中提取from和to信息
-            const pathParts = path.id.split('-');
-            let from = '';
-            let to = '';
-            
-            if (path.id.includes('sender-to-platform')) {
-              from = pathParts[3]; // sender (after 'sender-to-platform')
-              to = pathParts[4]; // platform
-            } else if (path.id.includes('platform-to-user')) {
-              from = pathParts[3]; // platform (after 'platform-to-user')
-              to = pathParts[4]; // user
-            }
-            
-            // 计算边的中点坐标用于显示编号
-            const pathData = path.d.split(' ');
-            const startX = parseFloat(pathData[1]);
-            const startY = parseFloat(pathData[2]);
-            const endX = parseFloat(pathData[4]);
-            const endY = parseFloat(pathData[5]);
-            const midX = (startX + endX) / 2;
-            const midY = (startY + endY) / 2;
-            
-            return (
-              <g key={path.id}>
-                <path
-                  className={`animated-flow ${path.isActive ? 'animate-flow' : ''}`}
-                  d={path.d}
-                  stroke={path.stroke}
-                  style={{ 
-                    animationDelay: `${path.delay / 1000}s`,
-                    strokeWidth: '3'
-                  }}
-                  fill="none"
-                />
-                {/* 边编号标注 */}
-                <circle
-                  cx={midX}
-                  cy={midY}
-                  r="12"
-                  fill="#1890ff"
-                  stroke="white"
-                  strokeWidth="2"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => {
-                    console.log('Edge number clicked:', index + 1, from, to);
-                    handleEdgeClick(from, to);
-                  }}
-                />
-                <text
-                  x={midX}
-                  y={midY + 4}
-                  textAnchor="middle"
-                  fill="white"
-                  fontSize="12"
-                  fontWeight="bold"
-                  style={{ cursor: 'pointer', pointerEvents: 'none' }}
-                >
-                  {index + 1}
-                </text>
-              </g>
-            );
-          })}
+          {allPaths.map((path) => (
+            <path
+              key={path.id}
+              className={`animated-flow ${path.isActive ? 'animate-flow' : ''}`}
+              d={path.d}
+              stroke={path.stroke}
+              style={{ animationDelay: `${path.delay / 1000}s` }}
+              fill="none"
+            />
+          ))}
         </g>
       </svg>
       
@@ -764,11 +660,10 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         nodeType={selectedNodeType}
       />
       
-      {/* 边详情弹窗 */}
-      <EdgeDetailModal
-        visible={edgeModalVisible}
-        onClose={handleCloseEdgeModal}
-        edgeData={selectedEdge}
+      {/* 消息通知 */}
+      <MessageNotification
+        currentStep={currentStep}
+        messageSteps={messageSteps}
       />
     </div>
   );
