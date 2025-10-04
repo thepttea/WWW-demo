@@ -97,23 +97,6 @@
       ]
     },
     {
-      "username": "Newbie_Investor",
-      "description": "刚入市的年轻人，喜欢在朋友圈分享跟风信息。",
-      "emotional_style": "激情支持型",
-      "influence_score": 20,
-      "primary_platform": "WeChat Moments-like",
-      "llm_model": "gemini-2.5-flash",
-      "llm_temperature": 0.7,
-      "objective_stance_score": 2,
-      "final_decision": "这个公司股票可能会涨，AI是未来趋势，应该投资。大家都在讨论，肯定有投资价值，跟着市场走应该没错。",
-      "contextual_memories": [
-        "作为新手投资者，我看到大家都在讨论这个AI产品，说明它很热门。AI是未来趋势，这个公司的股票可能会涨。虽然我不太懂技术细节，但跟着市场走应该没错。"
-      ],
-      "short_term_memories": [
-        "AI是热门话题，跟着市场投资应该没错"
-      ]
-    },
-    {
       "username": "ArtStudent_Vivian",
       "description": "艺术系学生，擅长用图片和短视频表达感性思考。",
       "emotional_style": "幽默讽刺型",
@@ -145,6 +128,23 @@
       ],
       "short_term_memories": [
         "争议性话题是制造热点的好机会"
+      ]
+    },
+    {
+      "username": "TechEnthusiast_Alex",
+      "description": "技术爱好者，喜欢在微博分享科技观点。",
+      "emotional_style": "激情支持型",
+      "influence_score": 45,
+      "primary_platform": "Weibo/Twitter-like",
+      "llm_model": "gpt-4o-mini",
+      "llm_temperature": 0.8,
+      "objective_stance_score": 2,
+      "final_decision": "这个AI产品虽然存在争议，但技术本身是先进的。我们应该支持技术创新，而不是因为争议就否定它。",
+      "contextual_memories": [
+        "作为技术爱好者，我认为这个AI产品虽然存在争议，但技术本身是先进的。我们应该支持技术创新，而不是因为争议就否定它。技术发展总是伴随着争议，这是正常的。"
+      ],
+      "short_term_memories": [
+        "技术发展总是伴随着争议，应该支持创新"
       ]
     },
     {
@@ -187,25 +187,186 @@
       "name": "Weibo/Twitter-like",
       "type": "social_media",
       "userCount": 4,
-      "activeUsers": ["MarketingPro_Serena", "Skeptical_Journalist", "TechBro_Elon", "SocialMedia_Intern"]
+      "activeUsers": ["MarketingPro_Serena", "Skeptical_Journalist", "TechBro_Elon", "TechEnthusiast_Alex"],
+      "message_propagation": [
+        {
+          "sender": "MarketingPro_Serena",
+          "receivers": ["Skeptical_Journalist", "TechBro_Elon", "ValueInvestor_Graham", "ArtStudent_Vivian"],
+          "content": "这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。任何新技术都会面临质疑，这是正常的。",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T10:00:00Z",
+          "likes": 45,
+          "shares": 12,
+          "comments": 8
+        },
+        {
+          "sender": "Skeptical_Journalist",
+          "receivers": ["MarketingPro_Serena", "TechBro_Elon", "Regulator_Tom", "Cynical_Dev"],
+          "content": "科技公司必须对用户数据负责，我们需要更多的透明度和监管。不能以创新为名忽视用户权益，这个AI产品的隐私问题需要深入调查。",
+          "sentiment": "negative",
+          "timestamp": "2024-10-03T10:15:00Z",
+          "likes": 38,
+          "shares": 15,
+          "comments": 12
+        },
+        {
+          "sender": "TechBro_Elon",
+          "receivers": ["MarketingPro_Serena", "ValueInvestor_Graham", "Ethical_Philosopher"],
+          "content": "AI技术是人类的未来，我们应该支持技术创新。任何技术都有风险，但收益更大，这个AI产品虽然存在争议，但技术本身是先进的。",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T10:30:00Z",
+          "likes": 52,
+          "shares": 18,
+          "comments": 6
+        },
+        {
+          "sender": "TechEnthusiast_Alex",
+          "receivers": [],
+          "content": "这个AI产品虽然存在争议，但技术本身是先进的。我们应该支持技术创新，而不是因为争议就否定它。",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T10:45:00Z",
+          "likes": 8,
+          "shares": 2,
+          "comments": 1
+        }
+      ]
     },
     {
       "name": "WeChat Moments-like",
       "type": "private_social",
-      "userCount": 3,
-      "activeUsers": ["ValueInvestor_Graham", "Regulator_Tom", "Newbie_Investor"]
+      "userCount": 2,
+      "activeUsers": ["ValueInvestor_Graham", "Regulator_Tom"],
+      "message_propagation": [
+        {
+          "sender": "ValueInvestor_Graham",
+          "receivers": ["Regulator_Tom", "MarketingPro_Serena", "TechBro_Elon"],
+          "content": "需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。技术本身不是问题，问题在于应用，我需要评估这个产品是否具有长期投资价值。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T11:00:00Z",
+          "likes": 8,
+          "shares": 2,
+          "comments": 5
+        },
+        {
+          "sender": "Regulator_Tom",
+          "receivers": ["ValueInvestor_Graham", "Skeptical_Journalist"],
+          "content": "需要确保产品符合现有法规，监管框架需要跟上技术发展。平衡创新和风险很重要，我需要客观评估这个AI产品的合规性。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T11:15:00Z",
+          "likes": 6,
+          "shares": 1,
+          "comments": 3
+        }
+      ]
     },
     {
       "name": "TikTok-like",
       "type": "short_video",
       "userCount": 2,
-      "activeUsers": ["ArtStudent_Vivian", "SocialMedia_Intern"]
+      "activeUsers": ["ArtStudent_Vivian", "SocialMedia_Intern"],
+      "message_propagation": [
+        {
+          "sender": "ArtStudent_Vivian",
+          "receivers": ["SocialMedia_Intern", "MarketingPro_Serena", "TechBro_Elon"],
+          "content": "AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。技术应该服务于创意，而不是替代，AI可以辅助艺术创作，但不能替代人文精神。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T12:00:00Z",
+          "likes": 25,
+          "shares": 5,
+          "comments": 4
+        },
+        {
+          "sender": "SocialMedia_Intern",
+          "receivers": [],
+          "content": "这个话题肯定会火，可以做成很多有趣的梗。AI产品争议性很强，适合传播，争议性话题总是更容易传播。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T12:15:00Z",
+          "likes": 12,
+          "shares": 2,
+          "comments": 1
+        }
+      ]
     },
     {
       "name": "Forum-like",
       "type": "discussion_forum",
       "userCount": 2,
-      "activeUsers": ["Cynical_Dev", "Ethical_Philosopher"]
+      "activeUsers": ["Cynical_Dev", "Ethical_Philosopher"],
+      "message_propagation": [
+        {
+          "sender": "Cynical_Dev",
+          "receivers": ["Ethical_Philosopher", "MarketingPro_Serena", "Skeptical_Journalist", "ValueInvestor_Graham"],
+          "content": "又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。用户隐私问题确实需要重视，但很多公司为了商业利益而忽视这些问题。",
+          "sentiment": "negative",
+          "timestamp": "2024-10-03T13:00:00Z",
+          "likes": 18,
+          "shares": 3,
+          "comments": 7
+        },
+        {
+          "sender": "Ethical_Philosopher",
+          "receivers": ["Cynical_Dev", "TechBro_Elon", "ValueInvestor_Graham", "Regulator_Tom"],
+          "content": "这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。技术发展必须考虑道德责任，AI发展需要建立完善的伦理框架和道德边界。",
+          "sentiment": "negative",
+          "timestamp": "2024-10-03T13:15:00Z",
+          "likes": 22,
+          "shares": 4,
+          "comments": 9
+        }
+      ]
+    }
+  ],
+  "cross_platform_propagation": [
+    {
+      "sender": "MarketingPro_Serena",
+      "sender_platform": "Weibo/Twitter-like",
+      "receivers": [
+        {
+          "username": "ValueInvestor_Graham",
+          "platform": "WeChat Moments-like"
+        },
+        {
+          "username": "ArtStudent_Vivian", 
+          "platform": "TikTok-like"
+        }
+      ],
+      "content": "这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。任何新技术都会面临质疑，这是正常的。",
+      "sentiment": "positive",
+      "timestamp": "2024-10-03T14:00:00Z"
+    },
+    {
+      "sender": "Skeptical_Journalist",
+      "sender_platform": "Weibo/Twitter-like", 
+      "receivers": [
+        {
+          "username": "Regulator_Tom",
+          "platform": "WeChat Moments-like"
+        },
+        {
+          "username": "Cynical_Dev",
+          "platform": "Forum-like"
+        }
+      ],
+      "content": "科技公司必须对用户数据负责，我们需要更多的透明度和监管。不能以创新为名忽视用户权益，这个AI产品的隐私问题需要深入调查。",
+      "sentiment": "negative",
+      "timestamp": "2024-10-03T14:15:00Z"
+    },
+    {
+      "sender": "ValueInvestor_Graham",
+      "sender_platform": "WeChat Moments-like",
+      "receivers": [
+        {
+          "username": "TechBro_Elon",
+          "platform": "Weibo/Twitter-like"
+        },
+        {
+          "username": "Ethical_Philosopher",
+          "platform": "Forum-like"
+        }
+      ],
+      "content": "需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。技术本身不是问题，问题在于应用，我需要评估这个产品是否具有长期投资价值。",
+      "sentiment": "neutral",
+      "timestamp": "2024-10-03T14:30:00Z"
     }
   ]
 }

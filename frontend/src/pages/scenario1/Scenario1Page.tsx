@@ -5,26 +5,26 @@ import VisualizationArea from './VisualizationArea';
 import StrategyRefinementDrawer from '../../components/StrategyRefinementDrawer';
 import Scenario1ResultsPageStatic from './Scenario1ResultsPageStatic';
 import { SimulationConfig, SimulationParameters, SimulationState } from '../../types';
-import { useStartSimulation, useAddPRStrategy, useSimulationStatus, useSimulationResult, useGenerateReport, useResetSimulation } from '../../hooks/useApi';
+// import { useStartSimulation, useAddPRStrategy, useSimulationStatus, useSimulationResult, useGenerateReport, useResetSimulation } from '../../hooks/useApi';
 import './Scenario1Page.css';
 
 const { Title, Paragraph } = Typography;
 
 const Scenario1Page: React.FC = () => {
-  const [simulationResult, setSimulationResult] = useState<any>(null);
+  const [_simulationResult, setSimulationResult] = useState<any>(null);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
-  const [simulationState, setSimulationState] = useState<SimulationState | null>(null);
+  const [simulationState, setSimulationState] = useState<SimulationState | undefined>(undefined);
   const [confirmedStrategy, setConfirmedStrategy] = useState<string>('');
-  const [simulationId, setSimulationId] = useState<string | null>(null);
+  const [_simulationId, setSimulationId] = useState<string | null>(null);
   const [showResults, setShowResults] = useState<boolean>(false);
 
-  // API hooks
-  const startSimulationMutation = useStartSimulation();
-  const addPRStrategyMutation = useAddPRStrategy();
-  const generateReportMutation = useGenerateReport();
-  const resetSimulationMutation = useResetSimulation();
-  const { data: simulationStatus } = useSimulationStatus(simulationId);
-  const { data: simulationResultData } = useSimulationResult(simulationId);
+  // API hooks - TODO: 后续集成后端API时取消注释
+  // const startSimulationMutation = useStartSimulation();
+  // const addPRStrategyMutation = useAddPRStrategy();
+  // const generateReportMutation = useGenerateReport();
+  // const resetSimulationMutation = useResetSimulation();
+  // const { data: _simulationStatus } = useSimulationStatus(simulationId);
+  // const { data: simulationResultData } = useSimulationResult(simulationId);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
     if (!config.eventDescription?.trim()) {
@@ -36,28 +36,7 @@ const Scenario1Page: React.FC = () => {
       return;
     }
 
-    try {
-      const result = await startSimulationMutation.mutateAsync({
-        initialTopic: config.eventDescription,
-        llmModel: config.llm,
-        simulationConfig: {
-          agents: 10,
-          num_rounds: 1,
-          interactionProbability: 0.5,
-          positiveResponseProbability: 0.3,
-          negativeResponseProbability: 0.3,
-          neutralResponseProbability: 0.4,
-          initialPositiveSentiment: 0.2,
-          initialNegativeSentiment: 0.6,
-          initialNeutralSentiment: 0.2,
-        },
-        prStrategy: config.strategy.content,  // 发送第一轮PR策略
-      });
-
-      if (result.success && result.data) {
-        setSimulationId(result.data.simulationId);
-        
-        // 设置模拟状态
+    // 使用静态数据，立即设置模拟状态
         setSimulationState({
           isRunning: true,
           currentRound: 1,
@@ -73,12 +52,32 @@ const Scenario1Page: React.FC = () => {
         });
 
         message.success('Simulation started successfully!');
-      } else {
-        message.error(result.error?.message || 'Failed to start simulation');
-      }
-    } catch (error) {
-      message.error('Failed to start simulation');
-    }
+
+    // TODO: 后续集成后端API时取消注释
+    // try {
+    //   const result = await startSimulationMutation.mutateAsync({
+    //     initialTopic: config.eventDescription,
+    //     llmModel: config.llm,
+    //     simulationConfig: {
+    //       agents: 10,
+    //       num_rounds: 1,
+    //       interactionProbability: 0.5,
+    //       positiveResponseProbability: 0.3,
+    //       negativeResponseProbability: 0.3,
+    //       neutralResponseProbability: 0.4,
+    //       initialPositiveSentiment: 0.2,
+    //       initialNegativeSentiment: 0.6,
+    //       initialNeutralSentiment: 0.2,
+    //     },
+    //     prStrategy: config.strategy.content,
+    //   });
+
+    //   if (result.success && result.data) {
+    //     setSimulationId(result.data.simulationId);
+    //   }
+    // } catch (error) {
+    //   console.error('Background API call failed:', error);
+    // }
   };
 
 
@@ -88,19 +87,7 @@ const Scenario1Page: React.FC = () => {
       return;
     }
 
-    if (!simulationId) {
-      message.error('No active simulation found');
-      return;
-    }
-
-    try {
-      const result = await addPRStrategyMutation.mutateAsync({
-        simulationId,
-        prStrategy: strategy,
-      });
-
-      if (result.success && result.data) {
-        // 更新模拟状态，将当前策略添加到历史中
+    // 使用静态数据，立即更新状态
         setSimulationState(prev => prev ? {
           ...prev,
           currentRound: prev.currentRound + 1,
@@ -113,66 +100,112 @@ const Scenario1Page: React.FC = () => {
             }
           ],
           nextRoundStrategy: strategy,
-        } : null);
+    } : undefined);
 
         message.success(`Round ${simulationState?.currentRound ? simulationState.currentRound + 1 : 2} simulation started!`);
-      } else {
-        message.error(result.error?.message || 'Failed to start next round');
-      }
-    } catch (error) {
-      message.error('Next round simulation failed. Please try again.');
-    }
+
+    // TODO: 后续集成后端API时取消注释
+    // if (!simulationId) {
+    //   message.error('No active simulation found');
+    //   return;
+    // }
+
+    // try {
+    //   const result = await addPRStrategyMutation.mutateAsync({
+    //     simulationId,
+    //     prStrategy: strategy,
+    //   });
+
+    //   if (result.success && result.data) {
+    //     // 更新模拟状态，将当前策略添加到历史中
+    //     setSimulationState(prev => prev ? {
+    //       ...prev,
+    //       currentRound: prev.currentRound + 1,
+    //       strategyHistory: [
+    //         ...prev.strategyHistory,
+    //         {
+    //           round: prev.currentRound + 1,
+    //           strategy: strategy,
+    //           timestamp: new Date(),
+    //         }
+    //       ],
+    //       nextRoundStrategy: strategy,
+    //     } : undefined);
+
+    //     message.success(`Round ${simulationState?.currentRound ? simulationState.currentRound + 1 : 2} simulation started!`);
+    //   } else {
+    //     message.error(result.error?.message || 'Failed to start next round');
+    //   }
+    // } catch (error) {
+    //   message.error('Next round simulation failed. Please try again.');
+    // }
   };
 
   const handleGenerateReport = async () => {
-    if (!simulationId) {
-      message.warning('Please run a simulation first');
-      return;
-    }
-
-    try {
-      const result = await generateReportMutation.mutateAsync({
-        simulationId,
-        reportType: 'comprehensive',
-        includeVisualizations: true,
-      });
-
-      if (result.success && result.data) {
+    // 使用静态数据，直接显示结果
         message.success('Report generated successfully!');
-        // 显示结果页面
         setShowResults(true);
-        console.log('Generated report:', result.data);
-      } else {
-        message.error(result.error?.message || 'Failed to generate report');
-      }
-    } catch (error) {
-      message.error('Failed to generate report');
-    }
+
+    // TODO: 后续集成后端API时取消注释
+    // if (!simulationId) {
+    //   message.warning('Please run a simulation first');
+    //   return;
+    // }
+
+    // try {
+    //   const result = await generateReportMutation.mutateAsync({
+    //     simulationId,
+    //     reportType: 'comprehensive',
+    //     includeVisualizations: true,
+    //   });
+
+    //   if (result.success && result.data) {
+    //     message.success('Report generated successfully!');
+    //     // 显示结果页面
+    //     setShowResults(true);
+    //     console.log('Generated report:', result.data);
+    //   } else {
+    //     message.error(result.error?.message || 'Failed to generate report');
+    //   }
+    // } catch (error) {
+    //   message.error('Failed to generate report');
+    // }
   };
 
   const handleReset = async () => {
-    try {
-      // 如果有活跃的模拟，先调用后端reset接口
-      if (simulationId) {
-        const result = await resetSimulationMutation.mutateAsync(simulationId);
-        if (!result.success) {
-          message.error(result.error?.message || 'Failed to reset simulation on server');
-          return;
-        }
-      }
-
-      // 重置所有前端状态
+    // 使用静态数据，直接重置前端状态
       setSimulationResult(null);
-      setSimulationState(null);
+    setSimulationState(undefined);
       setSimulationId(null);
       setConfirmedStrategy('');
       setIsDrawerVisible(false);
       setShowResults(false); // 隐藏结果页面
       
       message.success('Simulation reset successfully');
-    } catch (error) {
-      message.error('Failed to reset simulation');
-    }
+
+    // TODO: 后续集成后端API时取消注释
+    // try {
+    //   // 如果有活跃的模拟，先调用后端reset接口
+    //   if (simulationId) {
+    //     const result = await resetSimulationMutation.mutateAsync(simulationId);
+    //     if (!result.success) {
+    //       message.error(result.error?.message || 'Failed to reset simulation on server');
+    //       return;
+    //     }
+    //   }
+
+    //   // 重置所有前端状态
+    //   setSimulationResult(null);
+    //   setSimulationState(undefined);
+    //   setSimulationId(null);
+    //   setConfirmedStrategy('');
+    //   setIsDrawerVisible(false);
+    //   setShowResults(false); // 隐藏结果页面
+      
+    //   message.success('Simulation reset successfully');
+    // } catch (error) {
+    //   message.error('Failed to reset simulation');
+    // }
   };
 
   const handleOpenDrawer = () => {
@@ -201,10 +234,10 @@ const Scenario1Page: React.FC = () => {
 
   // 如果显示结果页面，渲染结果组件
   if (showResults) {
-    console.log('Scenario1Page - simulationResultData:', simulationResultData);
+    console.log('Scenario1Page - simulationResultData:', undefined);
     return (
       <Scenario1ResultsPageStatic
-        simulationResults={simulationResultData?.data}
+        simulationResults={undefined}
         onBack={handleBackToSimulation}
         onClose={handleCloseResults}
         onReset={handleReset}
@@ -238,9 +271,156 @@ const Scenario1Page: React.FC = () => {
           </div>
           <div className="visualization-column">
             <VisualizationArea
-              isLoading={startSimulationMutation.isPending || addPRStrategyMutation.isPending}
-              networkData={simulationResultData?.data}
-              simulationResult={simulationResultData?.data}
+              isLoading={false}
+              networkData={simulationState?.isRunning ? {
+                users: [
+                  {
+                    username: "MarketingPro_Serena",
+                    influence_score: 90,
+                    primary_platform: "Weibo/Twitter-like",
+                    emotional_style: "激情支持型",
+                    final_decision: "这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。"
+                  },
+                  {
+                    username: "Skeptical_Journalist", 
+                    influence_score: 80,
+                    primary_platform: "Weibo/Twitter-like",
+                    emotional_style: "尖锐批评型",
+                    final_decision: "科技公司必须对用户数据负责，我们需要更多的透明度和监管。"
+                  },
+                  {
+                    username: "TechBro_Elon",
+                    influence_score: 85,
+                    primary_platform: "Weibo/Twitter-like",
+                    emotional_style: "激情支持型",
+                    final_decision: "AI技术是人类的未来，我们应该支持技术创新。"
+                  },
+                  {
+                    username: "TechEnthusiast_Alex",
+                    influence_score: 45,
+                    primary_platform: "Weibo/Twitter-like",
+                    emotional_style: "激情支持型",
+                    final_decision: "这个AI产品虽然存在争议，但技术本身是先进的。"
+                  },
+                  {
+                    username: "ValueInvestor_Graham",
+                    influence_score: 70,
+                    primary_platform: "WeChat Moments-like",
+                    emotional_style: "尖锐批评型",
+                    final_decision: "需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。"
+                  },
+                  {
+                    username: "Regulator_Tom",
+                    influence_score: 60,
+                    primary_platform: "WeChat Moments-like",
+                    emotional_style: "冷静分析型",
+                    final_decision: "需要确保产品符合现有法规，监管框架需要跟上技术发展。"
+                  },
+                  {
+                    username: "ArtStudent_Vivian",
+                    influence_score: 40,
+                    primary_platform: "TikTok-like",
+                    emotional_style: "幽默讽刺型",
+                    final_decision: "AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。"
+                  },
+                  {
+                    username: "SocialMedia_Intern",
+                    influence_score: 35,
+                    primary_platform: "TikTok-like",
+                    emotional_style: "幽默讽刺型",
+                    final_decision: "这个话题肯定会火，可以做成很多有趣的梗。"
+                  },
+                  {
+                    username: "Cynical_Dev",
+                    influence_score: 55,
+                    primary_platform: "Forum-like",
+                    emotional_style: "幽默讽刺型",
+                    final_decision: "又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。"
+                  },
+                  {
+                    username: "Ethical_Philosopher",
+                    influence_score: 65,
+                    primary_platform: "Forum-like",
+                    emotional_style: "冷静分析型",
+                    final_decision: "这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。"
+                  }
+                ],
+                platforms: [
+                  {
+                    name: "Weibo/Twitter-like",
+                    type: "social_media",
+                    userCount: 4,
+                    activeUsers: ["MarketingPro_Serena", "Skeptical_Journalist", "TechBro_Elon", "TechEnthusiast_Alex"],
+                    message_propagation: [
+                      {
+                        sender: "MarketingPro_Serena",
+                        receivers: ["Skeptical_Journalist", "TechBro_Elon", "ValueInvestor_Graham", "ArtStudent_Vivian"],
+                        content: "这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。",
+                        sentiment: "positive",
+                        timestamp: "2024-10-03T10:00:00Z",
+                        likes: 45,
+                        shares: 12,
+                        comments: 8
+                      }
+                    ]
+                  },
+                  {
+                    name: "WeChat Moments-like",
+                    type: "private_social", 
+                    userCount: 2,
+                    activeUsers: ["ValueInvestor_Graham", "Regulator_Tom"],
+                    message_propagation: [
+                      {
+                        sender: "ValueInvestor_Graham",
+                        receivers: ["Regulator_Tom", "MarketingPro_Serena", "TechBro_Elon"],
+                        content: "需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。",
+                        sentiment: "neutral",
+                        timestamp: "2024-10-03T11:00:00Z",
+                        likes: 8,
+                        shares: 2,
+                        comments: 5
+                      }
+                    ]
+                  },
+                  {
+                    name: "TikTok-like",
+                    type: "short_video",
+                    userCount: 2,
+                    activeUsers: ["ArtStudent_Vivian", "SocialMedia_Intern"],
+                    message_propagation: [
+                      {
+                        sender: "ArtStudent_Vivian",
+                        receivers: ["SocialMedia_Intern", "MarketingPro_Serena", "TechBro_Elon"],
+                        content: "AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。",
+                        sentiment: "neutral",
+                        timestamp: "2024-10-03T12:00:00Z",
+                        likes: 25,
+                        shares: 5,
+                        comments: 4
+                      }
+                    ]
+                  },
+                  {
+                    name: "Forum-like",
+                    type: "discussion_forum",
+                    userCount: 2,
+                    activeUsers: ["Cynical_Dev", "Ethical_Philosopher"],
+                    message_propagation: [
+                      {
+                        sender: "Cynical_Dev",
+                        receivers: ["Ethical_Philosopher", "MarketingPro_Serena", "Skeptical_Journalist", "ValueInvestor_Graham"],
+                        content: "又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。",
+                        sentiment: "negative",
+                        timestamp: "2024-10-03T13:00:00Z",
+                        likes: 18,
+                        shares: 3,
+                        comments: 7
+                      }
+                    ]
+                  }
+                ]
+              } : undefined}
+              simulationResult={undefined}
             />
           </div>
         </div>

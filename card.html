@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<title>Opinion Simulator - Agent Details</title>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#137fec",
+            "background-light": "#f6f7f8",
+            "background-dark": "#101922",
+          },
+          fontFamily: {
+            "display": ["Space Grotesk"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+<div class="relative min-h-screen">
+<div class="absolute inset-0 bg-cover bg-center z-0" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCAsL0U-Ska5vIUgdFd32z61mwPHnfJT7K5TqRbimhGOrxWm42IxtJmlWC82rrgKDQOEvW8qXIfSWqdfHJ_ayyq-2eZdvbHZ-PIECChftNavMcDr9sk-BaR8WFvqwbpZc5gWX2TKoU6iBpzFSD7FaF2bX-YSmx4MhW6doUYSJzILt1_x2-SvgOHwkLubrTl7lMmXd7bDCYr4qOfsTY-uN5buIgqCyArMelkaKXHd4f60Ocz-karjzPAyI8t9kvOgJ9mXJGMPmGFdEM');">
+<div class="absolute inset-0 bg-black/30"></div>
+</div>
+<div class="relative flex items-center justify-center min-h-screen p-4">
+<div class="absolute" style="top: 35%; left: 55%;">
+<div class="w-8 h-8 bg-primary rounded-full animate-pulse"></div>
+</div>
+<div class="absolute w-72 backdrop-blur-xl bg-background-light/70 dark:bg-background-dark/70 border border-white/10 dark:border-white/20 rounded-xl shadow-2xl" style="top: 35%; left: calc(55% + 2.5rem); transform: translateY(-50%);">
+<div class="p-5">
+<div class="flex justify-between items-start mb-4">
+<div>
+<p class="text-xs text-primary font-bold uppercase">Agent 007</p>
+<h3 class="text-xl font-bold text-gray-900 dark:text-white">Sophia Chen</h3>
+</div>
+<button class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="space-y-3 text-sm">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-base mr-2 text-primary">badge</span>
+<div>
+<p class="text-gray-500 dark:text-gray-400 text-xs">Identity</p>
+<p class="font-medium text-gray-800 dark:text-gray-200">KOL</p>
+</div>
+</div>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-base mr-2 text-primary">psychology</span>
+<div>
+<p class="text-gray-500 dark:text-gray-400 text-xs">Personality</p>
+<p class="font-medium text-gray-800 dark:text-gray-200">Emotional</p>
+</div>
+</div>
+<div>
+<p class="text-gray-500 dark:text-gray-400 text-xs mb-1 flex items-center">
+<span class="material-symbols-outlined text-base mr-2 text-primary">forum</span>
+                Opinion on Current Topic
+              </p>
+<p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                Strongly opposes the new policy, believing it will disproportionately harm marginalized communities.
+              </p>
+</div>
+</div>
+</div>
+<div class="bg-primary/20 dark:bg-primary/30 h-1 rounded-b-lg"></div>
+</div>
+</div>
+</div>
+
+</body></html>

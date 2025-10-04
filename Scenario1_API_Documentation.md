@@ -1,15 +1,5 @@
 # Scenario 1 API 接口文档
 
-## 概述
-
-Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入公关场景和策略，通过LLM优化策略，并模拟舆论传播过程。本文档详细描述了Scenario 1的所有API接口。
-
-## 基础信息
-
-- **API基础URL**: `http://localhost:8000/api`
-- **内容类型**: `application/json`
-- **字符编码**: `UTF-8`
-
 ## 通用响应格式
 
 所有API接口都遵循统一的响应格式：
@@ -130,10 +120,14 @@ Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入
 **描述**: 启动Scenario 1模拟，支持用户输入初始话题
 
 **请求体**:
+
+> 这里的配置应该只会用到 agents 数量，甚至都不用。先放着，后端反正不处理就行
+
 ```json
 {
   "initialTopic": "某科技公司数据泄露事件",
   "llmModel": "gpt-4o-mini",
+  "prStrategy": "the content of the strategy"
   "simulationConfig": {
     "agents": 10,
     "num_rounds": 1,
@@ -177,43 +171,16 @@ Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入
 ```
 
 **响应示例**:
+
+> 与实现的不一致，待修改。没有 agents, propagationPath等详细信息，相当于启动下一轮，和start语义差不多。
+
 ```json
 {
   "success": true,
   "data": {
     "simulationId": "sim_scenario1_5a54fbeb-41c7-43f1-809a-4d09e6cbd313",
-    "status": "completed",
-    "round": 4,
-    "summary": {
-      "totalAgents": 10,
-      "activeAgents": 8,
-      "totalPosts": 15,
-      "positiveSentiment": 0.3,
-      "negativeSentiment": 0.4,
-      "neutralSentiment": 0.3
-    },
-    "agents": [
-      {
-        "agentId": "sim_scenario1_5a54fbeb-41c7-43f1-809a-4d09e6cbd313_agent_0",
-        "username": "Skeptical_Journalist",
-        "description": "追求真相的调查记者，习惯于公开质疑。",
-        "influenceScore": 80,
-        "primaryPlatform": "Weibo/Twitter-like",
-        "emotionalStyle": "尖锐批评型",
-        "stanceScore": -2,
-        "postsSent": 3,
-        "latestPost": "#科技安全# 官方声明能否完全消除公众疑虑？",
-        "isActive": true
-      }
-    ],
-    "propagationPaths": [
-      {
-        "from": "sim_scenario1_5a54fbeb-41c7-43f1-809a-4d09e6cbd313_agent_0",
-        "content": "#科技安全# 官方声明能否完全消除公众疑虑？",
-        "round": 4,
-        "stance": -2
-      }
-    ]
+    "status": "running",
+    "round": 4
   }
 }
 ```
@@ -228,15 +195,16 @@ Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入
 - `simulationId`: 模拟ID
 
 **响应示例**:
+
+> 目前是轮询实现，但是没有用。这个接口肯定要改，可以改成判断后端当前轮次是否跑完。如果跑完了去调result拿数据渲染map
+
 ```json
 {
   "success": true,
   "data": {
     "simulationId": "sim_scenario1_5a54fbeb-41c7-43f1-809a-4d09e6cbd313",
     "status": "running",
-    "currentRound": 4,
-    "activeAgents": 8,
-    "totalPosts": 15
+    "currentRound": 4
   }
 }
 ```
@@ -292,27 +260,6 @@ Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入
 }
 ```
 
-### 2.5 停止模拟
-
-**接口**: `POST /api/scenario1/simulation/{simulationId}/stop`
-
-**描述**: 手动停止模拟
-
-**路径参数**:
-- `simulationId`: 模拟ID
-
-**响应示例**:
-```json
-{
-  "success": true,
-  "data": {
-    "simulationId": "sim_scenario1_5a54fbeb-41c7-43f1-809a-4d09e6cbd313",
-    "status": "stopped",
-    "message": "Simulation stopped successfully"
-  }
-}
-```
-
 ## 3. 网络可视化接口
 
 ### 3.1 获取网络拓扑数据
@@ -323,6 +270,8 @@ Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入
 
 **路径参数**:
 - `simulationId`: 模拟ID
+
+> 照理说这个接口只会在第一轮开始时被调用，用来构建静态网络拓扑（包括点和边，平台信息，可选人物身份信息，身份信息可以在一轮结束后再传过来）
 
 **响应示例**:
 ```json
@@ -358,7 +307,10 @@ Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入
 
 **描述**: 生成Scenario 1的舆情分析报告
 
+> 只有在轮次之间可以调用（设置按钮逻辑）
+
 **请求体**:
+
 ```json
 {
   "simulationId": "sim_scenario1_5a54fbeb-41c7-43f1-809a-4d09e6cbd313",
@@ -401,7 +353,10 @@ Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入
 **路径参数**:
 - `simulationId`: 模拟ID
 
+> 只需要告诉后端停下来，重置即可
+
 **响应示例**:
+
 ```json
 {
   "success": true,
@@ -423,31 +378,3 @@ Scenario 1 是多智能体舆论模拟系统的核心场景，支持用户输入
 | `CASE_NOT_FOUND` | 案例不存在 | 404 |
 | `NETWORK_ERROR` | 网络连接错误 | - |
 | `INTERNAL_ERROR` | 服务器内部错误 | 500 |
-
-## 使用流程
-
-### 典型的Scenario 1使用流程：
-
-1. **初始化聊天会话** - 调用 `GET /api/scenario1/chat/init`
-2. **优化策略** - 通过 `POST /api/scenario1/chat/message` 与LLM交互
-3. **启动模拟** - 调用 `POST /api/scenario1/simulation/start`
-4. **添加策略** - 调用 `POST /api/scenario1/simulation/{simulationId}/add-strategy`
-5. **查看结果** - 调用 `GET /api/scenario1/simulation/{simulationId}/result`
-6. **生成报告** - 调用 `POST /api/scenario1/reports/generate`
-7. **重置系统** - 调用 `POST /api/simulation/{simulationId}/reset`
-
-## 注意事项
-
-1. **会话管理**: 聊天会话ID在整个策略优化过程中需要保持
-2. **模拟状态**: 模拟状态包括 `running`, `completed`, `stopped`, `error`
-3. **并发限制**: 建议同时只运行一个模拟实例
-4. **数据持久化**: 模拟数据在服务器重启后会丢失
-5. **错误处理**: 所有接口都包含详细的错误信息，便于调试
-
-## 更新日志
-
-- **v1.0.0** (2024-01-01): 初始版本，包含所有核心功能
-- 支持LLM策略优化
-- 支持多轮模拟执行
-- 支持网络可视化
-- 支持报告生成
