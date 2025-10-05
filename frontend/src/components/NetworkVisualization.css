@@ -69,6 +69,11 @@
   pointer-events: none;
 }
 
+/* 立场颜色变化动画 */
+.stance-color-transition {
+  transition: fill 1.5s ease-in-out, stroke 1.5s ease-in-out;
+}
+
 /* 动画流样式 */
 .animated-flow {
   stroke-dasharray: 12, 24;
@@ -77,6 +82,12 @@
 
 .animate-flow {
   animation: flow 3s linear infinite;
+  opacity: 1;
+}
+
+.inactive-flow {
+  opacity: 0.2;
+  stroke-width: 2;
 }
 
 @keyframes flow {
@@ -94,6 +105,50 @@
   }
   50% {
     opacity: 0.7;
+  }
+}
+
+/* 消息历史按钮容器 */
+.message-history-button-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  animation: slideInFromTop 0.5s ease-out;
+}
+
+.message-history-button {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-weight: 500;
+  height: 40px;
+  padding: 0 20px;
+  transition: all 0.3s ease;
+  color: #bdc3c7;
+}
+
+.message-history-button:hover {
+  background: linear-gradient(135deg, #34495e, #2c3e50);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  color: #ecf0f1;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.message-history-button:active {
+  transform: translateY(0);
+}
+
+@keyframes slideInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -115,6 +170,17 @@
   
   .agent-node {
     r: 15;
+  }
+
+  .message-history-button-container {
+    top: 10px;
+    right: 10px;
+  }
+
+  .message-history-button {
+    height: 36px;
+    padding: 0 16px;
+    font-size: 12px;
   }
 }
 
@@ -158,8 +224,8 @@
   }
   100% {
     stroke: #4ade80; /* 绿色 - 发送者 */
-    stroke-width: 6;
-    r: 35; /* 放大半径，保持圆心不变 */
+    stroke-width: 4;
+    r: 30; /* 减小放大半径 */
   }
 }
 
@@ -171,8 +237,8 @@
   }
   100% {
     stroke: #3b82f6; /* 蓝色 - 平台 */
-    stroke-width: 6;
-    r: 45; /* 放大半径，保持圆心不变 */
+    stroke-width: 4;
+    r: 40; /* 减小放大半径 */
   }
 }
 
@@ -184,7 +250,7 @@
   }
   100% {
     stroke: #f59e0b; /* 橙色 - 接收者 */
-    stroke-width: 6;
-    r: 30; /* 放大半径，保持圆心不变 */
+    stroke-width: 4;
+    r: 25; /* 减小放大半径 */
   }
 }

@@ -279,70 +279,80 @@ const Scenario1Page: React.FC = () => {
                     influence_score: 90,
                     primary_platform: "Weibo/Twitter-like",
                     emotional_style: "激情支持型",
-                    final_decision: "这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。"
+                    final_decision: "这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。",
+                    objective_stance_score: 2
                   },
                   {
                     username: "Skeptical_Journalist", 
                     influence_score: 80,
                     primary_platform: "Weibo/Twitter-like",
                     emotional_style: "尖锐批评型",
-                    final_decision: "科技公司必须对用户数据负责，我们需要更多的透明度和监管。"
+                    final_decision: "科技公司必须对用户数据负责，我们需要更多的透明度和监管。",
+                    objective_stance_score: -2
                   },
                   {
                     username: "TechBro_Elon",
                     influence_score: 85,
                     primary_platform: "Weibo/Twitter-like",
                     emotional_style: "激情支持型",
-                    final_decision: "AI技术是人类的未来，我们应该支持技术创新。"
+                    final_decision: "AI技术是人类的未来，我们应该支持技术创新。",
+                    objective_stance_score: 3
                   },
                   {
                     username: "TechEnthusiast_Alex",
                     influence_score: 45,
                     primary_platform: "Weibo/Twitter-like",
                     emotional_style: "激情支持型",
-                    final_decision: "这个AI产品虽然存在争议，但技术本身是先进的。"
+                    final_decision: "这个AI产品虽然存在争议，但技术本身是先进的。",
+                    objective_stance_score: 2
                   },
                   {
                     username: "ValueInvestor_Graham",
                     influence_score: 70,
                     primary_platform: "WeChat Moments-like",
                     emotional_style: "尖锐批评型",
-                    final_decision: "需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。"
+                    final_decision: "需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。",
+                    objective_stance_score: 0
                   },
                   {
                     username: "Regulator_Tom",
                     influence_score: 60,
                     primary_platform: "WeChat Moments-like",
                     emotional_style: "冷静分析型",
-                    final_decision: "需要确保产品符合现有法规，监管框架需要跟上技术发展。"
+                    final_decision: "需要确保产品符合现有法规，监管框架需要跟上技术发展。",
+                    objective_stance_score: 1
                   },
                   {
                     username: "ArtStudent_Vivian",
                     influence_score: 40,
                     primary_platform: "TikTok-like",
                     emotional_style: "幽默讽刺型",
-                    final_decision: "AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。"
+                    final_decision: "AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。",
+                    objective_stance_score: 0
                   },
                   {
                     username: "SocialMedia_Intern",
                     influence_score: 35,
                     primary_platform: "TikTok-like",
                     emotional_style: "幽默讽刺型",
-                    final_decision: "这个话题肯定会火，可以做成很多有趣的梗。"
+                    final_decision: "这个话题肯定会火，可以做成很多有趣的梗。",
+                    objective_stance_score: 1
                   },
                   {
                     username: "Cynical_Dev",
                     influence_score: 55,
                     primary_platform: "Forum-like",
                     emotional_style: "幽默讽刺型",
-                    final_decision: "又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。"
+                    final_decision: "又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。",
+                    objective_stance_score: -1
                   },
                   {
                     username: "Ethical_Philosopher",
                     influence_score: 65,
                     primary_platform: "Forum-like",
                     emotional_style: "冷静分析型",
-                    final_decision: "这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。"
+                    final_decision: "这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。",
+                    objective_stance_score: -1
                   }
                 ],
                 platforms: [
@@ -357,10 +367,30 @@ const Scenario1Page: React.FC = () => {
                         receivers: ["Skeptical_Journalist", "TechBro_Elon", "ValueInvestor_Graham", "ArtStudent_Vivian"],
                         content: "这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。",
                         sentiment: "positive",
-                        timestamp: "2024-10-03T10:00:00Z",
+                        timestamp: new Date().toISOString(),
                         likes: 45,
                         shares: 12,
                         comments: 8
+                      },
+                      {
+                        sender: "Skeptical_Journalist",
+                        receivers: ["MarketingPro_Serena", "TechBro_Elon", "Regulator_Tom", "Cynical_Dev"],
+                        content: "科技公司必须对用户数据负责，我们需要更多的透明度和监管。",
+                        sentiment: "negative",
+                        timestamp: new Date(Date.now() + 6000).toISOString(),
+                        likes: 38,
+                        shares: 15,
+                        comments: 12
+                      },
+                      {
+                        sender: "TechBro_Elon",
+                        receivers: ["MarketingPro_Serena", "ValueInvestor_Graham", "Ethical_Philosopher"],
+                        content: "AI技术是人类的未来，我们应该支持技术创新。",
+                        sentiment: "positive",
+                        timestamp: new Date(Date.now() + 12000).toISOString(),
+                        likes: 52,
+                        shares: 18,
+                        comments: 6
                       }
                     ]
                   },
@@ -375,10 +405,20 @@ const Scenario1Page: React.FC = () => {
                         receivers: ["Regulator_Tom", "MarketingPro_Serena", "TechBro_Elon"],
                         content: "需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。",
                         sentiment: "neutral",
-                        timestamp: "2024-10-03T11:00:00Z",
+                        timestamp: new Date(Date.now() + 18000).toISOString(),
                         likes: 8,
                         shares: 2,
                         comments: 5
+                      },
+                      {
+                        sender: "Regulator_Tom",
+                        receivers: ["ValueInvestor_Graham", "Skeptical_Journalist"],
+                        content: "需要确保产品符合现有法规，监管框架需要跟上技术发展。",
+                        sentiment: "neutral",
+                        timestamp: new Date(Date.now() + 24000).toISOString(),
+                        likes: 6,
+                        shares: 1,
+                        comments: 3
                       }
                     ]
                   },
@@ -393,10 +433,20 @@ const Scenario1Page: React.FC = () => {
                         receivers: ["SocialMedia_Intern", "MarketingPro_Serena", "TechBro_Elon"],
                         content: "AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。",
                         sentiment: "neutral",
-                        timestamp: "2024-10-03T12:00:00Z",
+                        timestamp: new Date(Date.now() + 30000).toISOString(),
                         likes: 25,
                         shares: 5,
                         comments: 4
+                      },
+                      {
+                        sender: "SocialMedia_Intern",
+                        receivers: [],
+                        content: "这个话题肯定会火，可以做成很多有趣的梗。",
+                        sentiment: "neutral",
+                        timestamp: new Date(Date.now() + 36000).toISOString(),
+                        likes: 12,
+                        shares: 2,
+                        comments: 1
                       }
                     ]
                   },
@@ -411,10 +461,20 @@ const Scenario1Page: React.FC = () => {
                         receivers: ["Ethical_Philosopher", "MarketingPro_Serena", "Skeptical_Journalist", "ValueInvestor_Graham"],
                         content: "又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。",
                         sentiment: "negative",
-                        timestamp: "2024-10-03T13:00:00Z",
+                        timestamp: new Date(Date.now() + 42000).toISOString(),
                         likes: 18,
                         shares: 3,
                         comments: 7
+                      },
+                      {
+                        sender: "Ethical_Philosopher",
+                        receivers: ["Cynical_Dev", "TechBro_Elon", "ValueInvestor_Graham", "Regulator_Tom"],
+                        content: "这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。",
+                        sentiment: "negative",
+                        timestamp: new Date(Date.now() + 48000).toISOString(),
+                        likes: 22,
+                        shares: 4,
+                        comments: 9
                       }
                     ]
                   }

@@ -1,7 +1,7 @@
 /* 消息通知容器 - 固定在NetworkVisualization顶部，避开标题 */
 .message-notification-container {
   position: absolute;
-  top: 60px; /* 下移到标题下方 */
+  top: 10px; /* 上移到更靠近顶部的位置 */
   left: 0;
   right: 0;
   z-index: 1000;
@@ -38,6 +38,39 @@
     transform: translateX(0);
     opacity: 1;
   }
+}
+
+/* 渐入动画 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 渐出动画 */
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* 应用渐入渐出动画 */
+.message-notification.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.message-notification.fade-out {
+  animation: fadeOut 0.3s ease-in;
 }
 
 /* 通知图标 */
