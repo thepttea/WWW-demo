@@ -46,6 +46,17 @@
   filter: brightness(1.2);
 }
 
+/* 平台图标样式 */
+.platform-icon {
+  pointer-events: none;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.platform-node:hover .platform-icon {
+  opacity: 1;
+}
+
 .platform-label {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 600;
@@ -78,16 +89,28 @@
 .animated-flow {
   stroke-dasharray: 12, 24;
   stroke-width: 3;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
 }
 
 .animate-flow {
   animation: flow 3s linear infinite;
   opacity: 1;
+  stroke-width: 3;
+  stroke-opacity: 1;
 }
 
 .inactive-flow {
-  opacity: 0.2;
+  opacity: 0.4;
   stroke-width: 2;
+  stroke-opacity: 0.5;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: none;
+}
+
+/* 过渡中的边样式 */
+.animated-flow.transitioning {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 @keyframes flow {

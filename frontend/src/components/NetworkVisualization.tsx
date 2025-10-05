@@ -62,6 +62,17 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   // 消息历史弹窗状态
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [animationCompleted, setAnimationCompleted] = useState(false);
+  
+  // 边过渡动画状态
+  const [edgeTransitionStep, setEdgeTransitionStep] = useState(-1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [activeEdges, setActiveEdges] = useState<{
+    senderToPlatform: boolean;
+    platformToReceivers: boolean;
+  }>({
+    senderToPlatform: false,
+    platformToReceivers: false
+  });
 
   // 消息传播步骤定义 - 以消息为主体，每个消息6秒，包含具体内容
   const messageSteps = React.useMemo(() => [
@@ -374,28 +385,33 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       messageSteps.forEach((step, index) => {
         const messageStartTime = step.delay;
         
-        // 阶段1: 闪烁发送者 (1s)
+        // 阶段1: 闪烁发送者 (1s) - 边不激活
         const phase1Timer = setTimeout(() => {
           setCurrentStep(index);
           setCurrentPhase(0);
-          console.log(`Phase 1 - Message ${index + 1}: Flashing sender ${step.sender}`);
+          setEdgeTransitionStep(index);
+          setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+          console.log(`Phase 1 - Message ${index + 1}: Flashing sender ${step.sender}, edges inactive`);
         }, messageStartTime);
         
-        // 阶段2: 闪烁发送者和平台 (1s)
+        // 阶段2: 闪烁发送者和平台 (1s) - 激活发送者到平台的边
         const phase2Timer = setTimeout(() => {
           setCurrentPhase(1);
-          console.log(`Phase 2 - Message ${index + 1}: Flashing sender and platform`);
+          setActiveEdges({ senderToPlatform: true, platformToReceivers: false });
+          console.log(`Phase 2 - Message ${index + 1}: Flashing sender and platform, activating sender-to-platform edge`);
         }, messageStartTime + 1000);
         
-        // 阶段3: 闪烁发送者、平台和接收者 (1s)
+        // 阶段3: 闪烁发送者、平台和接收者 (1s) - 激活平台到接收者的边
         const phase3Timer = setTimeout(() => {
           setCurrentPhase(2);
-          console.log(`Phase 3 - Message ${index + 1}: Flashing sender, platform and receivers`);
+          setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
+          console.log(`Phase 3 - Message ${index + 1}: Flashing sender, platform and receivers, activating platform-to-receivers edges`);
         }, messageStartTime + 2000);
         
-        // 阶段4: 开始流动边 (3s)
+        // 阶段4: 开始流动边 (3s) - 保持所有边激活
         const phase4Timer = setTimeout(() => {
           setCurrentPhase(3);
+          setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
           console.log(`Phase 4 - Message ${index + 1}: Starting flow animation`);
         }, messageStartTime + 3000);
         
@@ -412,6 +428,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           setIsAnimating(false);
           setCurrentStep(-1); // 重置为-1表示没有当前消息
           setCurrentPhase(0);
+          setEdgeTransitionStep(-1); // 重置边过渡步骤
+          setActiveEdges({ senderToPlatform: false, platformToReceivers: false }); // 重置边激活状态
           setAnimationCompleted(true); // 标记动画完成
         }, animationEndTime);
         
@@ -429,6 +447,9 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setIsAnimating(false);
       setAnimationStartTime(null);
       setAnimationCompleted(false);
+      setEdgeTransitionStep(-1);
+      setIsTransitioning(false);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
     }
   }, [_users.length]);
 
@@ -501,31 +522,35 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       }
     });
 
-    // 然后根据当前步骤激活相应的边
-    if (currentStep >= 0 && currentStep < messageSteps.length) {
-      const currentStepData = messageSteps[currentStep];
+    // 然后根据当前步骤和边激活状态激活相应的边
+    if (edgeTransitionStep >= 0 && edgeTransitionStep < messageSteps.length) {
+      const currentStepData = messageSteps[edgeTransitionStep];
       if (currentStepData.type === 'message_flow') {
         const senderCoords = getUserCoordinates(currentStepData.sender);
         const platformCoords = getPlatformCoordinates(currentStepData.platform);
         
         if (senderCoords && platformCoords) {
-          // 激活发送者到平台的路径
-          const senderToPlatformId = `sender-to-platform-${currentStepData.sender}-${currentStepData.platform}`;
-          const senderToPlatformPath = allPaths.find(path => path.id === senderToPlatformId);
-          if (senderToPlatformPath) {
-            senderToPlatformPath.isActive = true;
-            senderToPlatformPath.messageId = currentStepData.id;
+          // 根据activeEdges状态激活发送者到平台的路径
+          if (activeEdges.senderToPlatform) {
+            const senderToPlatformId = `sender-to-platform-${currentStepData.sender}-${currentStepData.platform}`;
+            const senderToPlatformPath = allPaths.find(path => path.id === senderToPlatformId);
+            if (senderToPlatformPath) {
+              senderToPlatformPath.isActive = true;
+              senderToPlatformPath.messageId = currentStepData.id;
+            }
           }
           
-          // 激活平台到接收者的路径
-          currentStepData.receivers.forEach(receiver => {
-            const platformToUserId = `platform-to-user-${currentStepData.platform}-${receiver}`;
-            const platformToUserPath = allPaths.find(path => path.id === platformToUserId);
-            if (platformToUserPath) {
-              platformToUserPath.isActive = true;
-              platformToUserPath.messageId = currentStepData.id;
-            }
-          });
+          // 根据activeEdges状态激活平台到接收者的路径
+          if (activeEdges.platformToReceivers) {
+            currentStepData.receivers.forEach(receiver => {
+              const platformToUserId = `platform-to-user-${currentStepData.platform}-${receiver}`;
+              const platformToUserPath = allPaths.find(path => path.id === platformToUserId);
+              if (platformToUserPath) {
+                platformToUserPath.isActive = true;
+                platformToUserPath.messageId = currentStepData.id;
+              }
+            });
+          }
         }
       }
     }
@@ -627,6 +652,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   // 获取所有路径和当前闪烁节点
   const allPaths = getAllStaticPaths();
   const flashingNodes = getCurrentFlashingNodes();
+  
+  // 强制重新渲染当activeEdges状态变化时
+  useEffect(() => {
+    setForceUpdate(prev => prev + 1);
+  }, [activeEdges, edgeTransitionStep]);
 
   // 使用forceUpdate来触发重新渲染
   void forceUpdate;
@@ -639,55 +669,99 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         {/* 平台节点 */}
         <g id="platforms">
           {/* Weibo平台 */}
-          <circle 
-            cx={getPlatformCoordinates('Weibo').x} 
-            cy={getPlatformCoordinates('Weibo').y} 
-            r="30" 
-            fill="#1DA1F2" 
-            opacity="0.8" 
+          <g 
             className={`platform-node ${flashingNodes.platform === 'Weibo' ? 'flashing-platform' : ''}`}
             onClick={() => handleNodeClick('platform', 'Weibo/Twitter-like')}
             style={{ cursor: 'pointer' }}
-          />
+          >
+            <circle 
+              cx={getPlatformCoordinates('Weibo').x} 
+              cy={getPlatformCoordinates('Weibo').y} 
+              r="30" 
+              fill="#1DA1F2" 
+              opacity="0.8" 
+            />
+            <image
+              x={getPlatformCoordinates('Weibo').x - 20}
+              y={getPlatformCoordinates('Weibo').y - 20}
+              width="40"
+              height="40"
+              href="/data/icons/weibo.png"
+              className="platform-icon"
+            />
+          </g>
           <text x={getPlatformCoordinates('Weibo').x} y={getPlatformCoordinates('Weibo').y + 50} fill="white" fontSize="14" textAnchor="middle" className="platform-label">Weibo</text>
           
           {/* WeChat平台 */}
-          <circle 
-            cx={getPlatformCoordinates('WeChat').x} 
-            cy={getPlatformCoordinates('WeChat').y} 
-            r="30" 
-            fill="#07C160" 
-            opacity="0.8" 
+          <g 
             className={`platform-node ${flashingNodes.platform === 'WeChat' ? 'flashing-platform' : ''}`}
             onClick={() => handleNodeClick('platform', 'WeChat Moments-like')}
             style={{ cursor: 'pointer' }}
-          />
+          >
+            <circle 
+              cx={getPlatformCoordinates('WeChat').x} 
+              cy={getPlatformCoordinates('WeChat').y} 
+              r="30" 
+              fill="#07C160" 
+              opacity="0.8" 
+            />
+            <image
+              x={getPlatformCoordinates('WeChat').x - 20}
+              y={getPlatformCoordinates('WeChat').y - 20}
+              width="40"
+              height="40"
+              href="/data/icons/wechat.png"
+              className="platform-icon"
+            />
+          </g>
           <text x={getPlatformCoordinates('WeChat').x} y={getPlatformCoordinates('WeChat').y + 50} fill="white" fontSize="14" textAnchor="middle" className="platform-label">WeChat</text>
           
           {/* TikTok平台 */}
-          <circle 
-            cx={getPlatformCoordinates('TikTok').x} 
-            cy={getPlatformCoordinates('TikTok').y} 
-            r="30" 
-            fill="#FF6B9D" 
-            opacity="0.8" 
+          <g 
             className={`platform-node ${flashingNodes.platform === 'TikTok' ? 'flashing-platform' : ''}`}
             onClick={() => handleNodeClick('platform', 'TikTok-like')}
             style={{ cursor: 'pointer' }}
-          />
+          >
+            <circle 
+              cx={getPlatformCoordinates('TikTok').x} 
+              cy={getPlatformCoordinates('TikTok').y} 
+              r="30" 
+              fill="#FF6B9D" 
+              opacity="0.8" 
+            />
+            <image
+              x={getPlatformCoordinates('TikTok').x - 20}
+              y={getPlatformCoordinates('TikTok').y - 20}
+              width="40"
+              height="40"
+              href="/data/icons/tiktok.png"
+              className="platform-icon"
+            />
+          </g>
           <text x={getPlatformCoordinates('TikTok').x} y={getPlatformCoordinates('TikTok').y + 50} fill="white" fontSize="14" textAnchor="middle" className="platform-label">TikTok</text>
           
           {/* Forum平台 */}
-          <circle 
-            cx={getPlatformCoordinates('Forum').x} 
-            cy={getPlatformCoordinates('Forum').y} 
-            r="30" 
-            fill="#8B5CF6" 
-            opacity="0.8" 
+          <g 
             className={`platform-node ${flashingNodes.platform === 'Forum' ? 'flashing-platform' : ''}`}
             onClick={() => handleNodeClick('platform', 'Forum-like')}
             style={{ cursor: 'pointer' }}
-          />
+          >
+            <circle 
+              cx={getPlatformCoordinates('Forum').x} 
+              cy={getPlatformCoordinates('Forum').y} 
+              r="30" 
+              fill="#8B5CF6" 
+              opacity="0.8" 
+            />
+            <image
+              x={getPlatformCoordinates('Forum').x - 20}
+              y={getPlatformCoordinates('Forum').y - 20}
+              width="40"
+              height="40"
+              href="/data/icons/forum.png"
+              className="platform-icon"
+            />
+          </g>
           <text x={getPlatformCoordinates('Forum').x} y={getPlatformCoordinates('Forum').y + 50} fill="white" fontSize="14" textAnchor="middle" className="platform-label">Forum</text>
         </g>
 
@@ -869,7 +943,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           {allPaths.map((path) => (
             <path
               key={path.id}
-              className={`animated-flow ${path.isActive ? 'animate-flow' : 'inactive-flow'}`}
+              className={`animated-flow ${path.isActive ? 'animate-flow' : 'inactive-flow'} ${isTransitioning ? 'transitioning' : ''}`}
               d={path.d}
               stroke={path.stroke}
               style={{ animationDelay: `${path.delay / 1000}s` }}
