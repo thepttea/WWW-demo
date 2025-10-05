@@ -1,9 +1,9 @@
 import React from 'react';
-import { Drawer, Typography, Card, Tag, Space, Divider } from 'antd';
+import { Drawer, Typography, Card, Tag, Space } from 'antd';
 import { MessageOutlined, UserOutlined, ClockCircleOutlined, ShareAltOutlined } from '@ant-design/icons';
 import './MessageHistoryModal.css';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 interface MessageStep {
   id: string;
