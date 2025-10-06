@@ -245,6 +245,23 @@ class ApiClient {
       method: 'POST',
     });
   }
+
+  // 获取模拟数据相关API
+  async getSimulationData(simulationId: string): Promise<ApiResponse<any>> {
+    return this.request(`/scenario1/simulation/${simulationId}/data`, {
+      method: 'GET',
+    });
+  }
+
+  async getNetworkVisualizationData(simulationId: string): Promise<ApiResponse<{
+    users: any[];
+    platforms: any[];
+    crossPlatformPropagation: any[];
+  }>> {
+    return this.request(`/scenario1/simulation/${simulationId}/network-data`, {
+      method: 'GET',
+    });
+  }
 }
 
 // 导出API客户端实例

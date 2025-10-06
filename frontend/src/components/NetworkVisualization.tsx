@@ -41,13 +41,23 @@ interface NetworkVisualizationProps {
   users?: User[];
   platforms?: Platform[];
   isLoading?: boolean;
+  networkData?: {
+    users: User[];
+    platforms: Platform[];
+  };
+  simulationResult?: any;
 }
 
 const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   users: _users = [],
   platforms: _platforms = [],
-  isLoading: _isLoading = false
+  isLoading: _isLoading = false,
+  networkData,
+  simulationResult: _simulationResult
 }) => {
+  // 优先使用networkData，如果没有则使用传入的users和platforms
+  const users = networkData?.users || _users;
+  const platforms = networkData?.platforms || _platforms;
   const [currentStep, setCurrentStep] = useState(0);
   const [_isAnimating, setIsAnimating] = useState(false);
   const [currentPhase, setCurrentPhase] = useState(0); // 0: 发送者, 1: 发送者+平台, 2: 发送者+平台+接收者, 3: 流动边
@@ -74,119 +84,76 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     platformToReceivers: false
   });
 
-  // 消息传播步骤定义 - 以消息为主体，每个消息6秒，包含具体内容
-  const messageSteps = React.useMemo(() => [
-    // 消息1: Serena 发表消息到 Weibo，传播到其他用户
-    { 
-      id: 'message1',
-      type: 'message_flow', 
-      sender: 'Serena', 
-      platform: 'Weibo', 
-      receivers: ['Journalist', 'Elon', 'Graham', 'Vivian'],
-      content: '这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。任何新技术都会面临质疑，这是正常的。',
-      delay: 0,
-      duration: 6000
-    },
-    // 消息2: Journalist 发表消息到 Weibo，传播到其他用户
-    { 
-      id: 'message2',
-      type: 'message_flow', 
-      sender: 'Journalist', 
-      platform: 'Weibo', 
-      receivers: ['Serena', 'Elon', 'Tom', 'Dev'],
-      content: '科技公司必须对用户数据负责，我们需要更多的透明度和监管。不能以创新为名忽视用户权益，这个AI产品的隐私问题需要深入调查。',
-      delay: 6000,
-      duration: 6000
-    },
-    // 消息3: Elon 发表消息到 Weibo，传播到其他用户
-    { 
-      id: 'message3',
-      type: 'message_flow', 
-      sender: 'Elon', 
-      platform: 'Weibo', 
-      receivers: ['Serena', 'Graham', 'Philosopher'],
-      content: 'AI技术是人类的未来，我们应该支持技术创新。任何技术都有风险，但收益更大，这个AI产品虽然存在争议，但技术本身是先进的。',
-      delay: 12000,
-      duration: 6000
-    },
-    // 消息4: Alex 发表消息到 Weibo，传播到其他用户
-    { 
-      id: 'message4',
-      type: 'message_flow', 
-      sender: 'Alex', 
-      platform: 'Weibo', 
-      receivers: [],
-      content: '这个AI产品虽然存在争议，但技术本身是先进的。我们应该支持技术创新，而不是因为争议就否定它。',
-      delay: 18000,
-      duration: 6000
-    },
-    // 消息5: Graham 发表消息到 WeChat，传播到其他用户
-    { 
-      id: 'message5',
-      type: 'message_flow', 
-      sender: 'Graham', 
-      platform: 'WeChat', 
-      receivers: ['Tom', 'Serena', 'Elon'],
-      content: '需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。技术本身不是问题，问题在于应用，我需要评估这个产品是否具有长期投资价值。',
-      delay: 24000,
-      duration: 6000
-    },
-    // 消息6: Tom 发表消息到 WeChat，传播到其他用户
-    { 
-      id: 'message6',
-      type: 'message_flow', 
-      sender: 'Tom', 
-      platform: 'WeChat', 
-      receivers: ['Graham', 'Journalist'],
-      content: '需要确保产品符合现有法规，监管框架需要跟上技术发展。平衡创新和风险很重要，我需要客观评估这个AI产品的合规性。',
-      delay: 30000,
-      duration: 6000
-    },
-    // 消息7: Vivian 发表消息到 TikTok，传播到其他用户
-    { 
-      id: 'message7',
-      type: 'message_flow', 
-      sender: 'Vivian', 
-      platform: 'TikTok', 
-      receivers: ['Intern', 'Serena', 'Elon'],
-      content: 'AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。技术应该服务于创意，而不是替代，AI可以辅助艺术创作，但不能替代人文精神。',
-      delay: 36000,
-      duration: 6000
-    },
-    // 消息8: Intern 发表消息到 TikTok，传播到其他用户
-    { 
-      id: 'message8',
-      type: 'message_flow', 
-      sender: 'Intern', 
-      platform: 'TikTok', 
-      receivers: [],
-      content: '这个话题肯定会火，可以做成很多有趣的梗。AI产品争议性很强，适合传播，争议性话题总是更容易传播。',
-      delay: 42000,
-      duration: 6000
-    },
-    // 消息9: Dev 发表消息到 Forum，传播到其他用户
-    { 
-      id: 'message9',
-      type: 'message_flow', 
-      sender: 'Dev', 
-      platform: 'Forum', 
-      receivers: ['Philosopher', 'Serena', 'Journalist', 'Graham'],
-      content: '又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。用户隐私问题确实需要重视，但很多公司为了商业利益而忽视这些问题。',
-      delay: 48000,
-      duration: 6000
-    },
-    // 消息10: Philosopher 发表消息到 Forum，传播到其他用户
-    { 
-      id: 'message10',
-      type: 'message_flow', 
-      sender: 'Philosopher', 
-      platform: 'Forum', 
-      receivers: ['Dev', 'Elon', 'Graham', 'Tom'],
-      content: '这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。技术发展必须考虑道德责任，AI发展需要建立完善的伦理框架和道德边界。',
-      delay: 54000,
-      duration: 6000
+  // 从实际数据生成消息传播步骤
+  const messageSteps = React.useMemo(() => {
+    if (!platforms || platforms.length === 0) {
+      return [];
     }
-  ], []);
+
+    const steps: Array<{
+      id: string;
+      type: string;
+      sender: string;
+      platform: string;
+      receivers: string[];
+      content: string;
+      delay: number;
+      duration: number;
+    }> = [];
+
+    let currentDelay = 0;
+    let messageIndex = 1;
+
+    // 用户名映射
+    const usernameMapping: { [key: string]: string } = {
+      'MarketingPro_Serena': 'Serena',
+      'Skeptical_Journalist': 'Journalist',
+      'TechBro_Elon': 'Elon',
+      'TechEnthusiast_Alex': 'Alex',
+      'ValueInvestor_Graham': 'Graham',
+      'Regulator_Tom': 'Tom',
+      'ArtStudent_Vivian': 'Vivian',
+      'SocialMedia_Intern': 'Intern',
+      'Cynical_Dev': 'Dev',
+      'Ethical_Philosopher': 'Philosopher'
+    };
+
+    // 平台名映射
+    const platformMapping: { [key: string]: string } = {
+      'Weibo/Twitter-like': 'Weibo',
+      'WeChat Moments-like': 'WeChat',
+      'TikTok-like': 'TikTok',
+      'Forum-like': 'Forum'
+    };
+
+    platforms.forEach(platform => {
+      if (platform.message_propagation && Array.isArray(platform.message_propagation)) {
+        platform.message_propagation.forEach(message => {
+          const shortSender = usernameMapping[message.sender] || message.sender;
+          const shortPlatform = platformMapping[platform.name] || platform.name;
+          const shortReceivers = message.receivers.map(receiver => 
+            usernameMapping[receiver] || receiver
+          );
+
+          steps.push({
+            id: `message${messageIndex}`,
+            type: 'message_flow',
+            sender: shortSender,
+            platform: shortPlatform,
+            receivers: shortReceivers,
+            content: message.content,
+            delay: currentDelay,
+            duration: 6000
+          });
+
+          currentDelay += 6000;
+          messageIndex++;
+        });
+      }
+    });
+
+    return steps;
+  }, [platforms]);
 
   // 获取用户坐标 - 优化为现代美学的不规则圆形分布
   const getUserCoordinates = (username: string) => {
@@ -261,12 +228,12 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   // 计算总动画时长 - 根据消息数量动态计算
   const getTotalAnimationDuration = () => {
     // 优先使用实际的后端数据计算时长
-    if (_users.length > 0 && _platforms.length > 0) {
+    if (users.length > 0 && platforms.length > 0) {
       // 从平台数据中提取所有消息传播信息
       let maxEndTime = 0;
       let hasMessages = false;
       
-      _platforms.forEach(platform => {
+      platforms.forEach(platform => {
         // 检查不同的消息字段名
         const messages = platform.message_propagation || platform.message_flow || [];
         
@@ -300,7 +267,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 获取动态颜色 - 根据动画进度从初始颜色渐变到最终颜色
   const getDynamicColor = (username: string) => {
-    const user = _users.find(u => {
+    const user = users.find(u => {
       const usernameMapping: { [key: string]: string } = {
         'Serena': 'MarketingPro_Serena',
         'Journalist': 'Skeptical_Journalist',
@@ -371,13 +338,16 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 开始动画序列 - 当有网络数据时自动开始
   useEffect(() => {
-    console.log('NetworkVisualization - has network data:', !!_users.length);
-    if (_users.length > 0) {
+    console.log('NetworkVisualization - has network data:', !!users.length);
+    console.log('NetworkVisualization - users:', users.length, 'platforms:', platforms?.length);
+    console.log('NetworkVisualization - messageSteps:', messageSteps.length);
+    if (users.length > 0) {
       console.log('Starting animation sequence');
       setIsAnimating(true);
       setCurrentStep(0);
       setCurrentPhase(0);
       setAnimationStartTime(Date.now()); // 设置动画开始时间
+      setAnimationCompleted(false); // 重置动画完成状态
       
       // 使用 setTimeout 来精确控制每个消息的显示时机
       const timers: NodeJS.Timeout[] = [];
@@ -431,6 +401,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           setEdgeTransitionStep(-1); // 重置边过渡步骤
           setActiveEdges({ senderToPlatform: false, platformToReceivers: false }); // 重置边激活状态
           setAnimationCompleted(true); // 标记动画完成
+          // 强制重新渲染以重置所有路径状态
+          setForceUpdate(prev => prev + 1);
         }, animationEndTime);
         
         timers.push(endTimer);
@@ -451,7 +423,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setIsTransitioning(false);
       setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
     }
-  }, [_users.length]);
+  }, [users.length, platforms]);
 
   // 颜色动画定时器 - 每100ms更新一次颜色
   useEffect(() => {
@@ -553,6 +525,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           }
         }
       }
+    } else {
+      // 如果没有活跃的步骤，确保所有路径都是不激活的
+      allPaths.forEach(path => {
+        path.isActive = false;
+      });
     }
 
     return allPaths;
@@ -611,11 +588,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   // 处理节点点击事件
   const handleNodeClick = (nodeType: 'user' | 'platform', nodeName: string) => {
     console.log('Node clicked:', nodeType, nodeName);
-    console.log('Available users:', _users.map(u => u.username));
-    console.log('Available platforms:', _platforms.map(p => p.name));
+    console.log('Available users:', users.map(u => u.username));
+    console.log('Available platforms:', platforms.map(p => p.name));
     
     if (nodeType === 'user') {
-      const user = _users.find(u => u.username === nodeName);
+      const user = users.find(u => u.username === nodeName);
       console.log('Found user:', user);
       if (user) {
         setSelectedNode(user);
@@ -623,7 +600,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         setModalVisible(true);
       }
     } else if (nodeType === 'platform') {
-      const platform = _platforms.find(p => p.name === nodeName);
+      const platform = platforms.find(p => p.name === nodeName);
       console.log('Found platform:', platform);
       if (platform) {
         setSelectedNode(platform);

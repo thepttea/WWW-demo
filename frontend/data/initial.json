@@ -315,58 +315,5 @@
         }
       ]
     }
-  ],
-  "cross_platform_propagation": [
-    {
-      "sender": "MarketingPro_Serena",
-      "sender_platform": "Weibo/Twitter-like",
-      "receivers": [
-        {
-          "username": "ValueInvestor_Graham",
-          "platform": "WeChat Moments-like"
-        },
-        {
-          "username": "ArtStudent_Vivian", 
-          "platform": "TikTok-like"
-        }
-      ],
-      "content": "这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。任何新技术都会面临质疑，这是正常的。",
-      "sentiment": "positive",
-      "timestamp": "2024-10-03T14:00:00Z"
-    },
-    {
-      "sender": "Skeptical_Journalist",
-      "sender_platform": "Weibo/Twitter-like", 
-      "receivers": [
-        {
-          "username": "Regulator_Tom",
-          "platform": "WeChat Moments-like"
-        },
-        {
-          "username": "Cynical_Dev",
-          "platform": "Forum-like"
-        }
-      ],
-      "content": "科技公司必须对用户数据负责，我们需要更多的透明度和监管。不能以创新为名忽视用户权益，这个AI产品的隐私问题需要深入调查。",
-      "sentiment": "negative",
-      "timestamp": "2024-10-03T14:15:00Z"
-    },
-    {
-      "sender": "ValueInvestor_Graham",
-      "sender_platform": "WeChat Moments-like",
-      "receivers": [
-        {
-          "username": "TechBro_Elon",
-          "platform": "Weibo/Twitter-like"
-        },
-        {
-          "username": "Ethical_Philosopher",
-          "platform": "Forum-like"
-        }
-      ],
-      "content": "需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。技术本身不是问题，问题在于应用，我需要评估这个产品是否具有长期投资价值。",
-      "sentiment": "neutral",
-      "timestamp": "2024-10-03T14:30:00Z"
-    }
   ]
 }

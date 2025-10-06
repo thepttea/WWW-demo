@@ -141,12 +141,6 @@
           "platform": "Weibo/Twitter-like",
           "content": "完全同意！开源是最好的策略，显示了技术自信！",
           "timestamp": "2024-10-03T13:18:00Z"
-        },
-        {
-          "from": "Newbie_Investor",
-          "platform": "Weibo/Twitter-like",
-          "content": "开源策略太棒了！这样的公司值得投资！",
-          "timestamp": "2024-10-03T13:21:00Z"
         }
       ]
     },
@@ -221,43 +215,6 @@
           "platform": "WeChat Moments-like",
           "content": "同意，开源策略可以降低监管风险。",
           "timestamp": "2024-10-03T13:23:00Z"
-        }
-      ]
-    },
-    {
-      "username": "Newbie_Investor",
-      "description": "刚入市的年轻人，喜欢在朋友圈分享跟风信息。",
-      "emotional_style": "激情支持型",
-      "influence_score": 20,
-      "primary_platform": "WeChat Moments-like",
-      "llm_model": "gemini-2.5-flash",
-      "llm_temperature": 0.7,
-      "objective_stance_score": 3,
-      "final_decision": "公司这次开源策略太棒了！开源会吸引更多开发者，这样的公司值得投资！我相信股价会涨！",
-      "contextual_memories": [
-        "作为新手投资者，我看到公司这次开源策略太棒了！开源会吸引更多开发者，这样的公司值得投资！我相信股价会涨！开源是技术公司的未来。"
-      ],
-      "short_term_memories": [
-        "开源策略太棒了，会吸引更多开发者，值得投资"
-      ],
-      "platform_posts": [
-        {
-          "platform": "WeChat Moments-like",
-          "content": "公司这次开源策略太棒了！开源会吸引更多开发者，这样的公司值得投资！我相信股价会涨！",
-          "timestamp": "2024-10-03T13:21:00Z",
-          "reactions": {
-            "likes": 7,
-            "shares": 2,
-            "comments": 1
-          }
-        }
-      ],
-      "received_messages": [
-        {
-          "from": "TechBro_Elon",
-          "platform": "WeChat Moments-like",
-          "content": "开源策略太棒了！这样的公司值得投资！",
-          "timestamp": "2024-10-03T13:21:00Z"
         }
       ]
     },
@@ -428,44 +385,84 @@
       "type": "social_media",
       "userCount": 4,
       "activeUsers": ["MarketingPro_Serena", "Skeptical_Journalist", "TechBro_Elon", "SocialMedia_Intern"],
-      "message_flow": [
+      "message_propagation": [
         {
-          "from": "MarketingPro_Serena",
-          "to": ["TechBro_Elon", "SocialMedia_Intern"],
-          "timestamp": "2024-10-03T13:15:00Z"
+          "sender": "MarketingPro_Serena",
+          "receivers": ["TechBro_Elon", "SocialMedia_Intern", "Skeptical_Journalist"],
+          "content": "公司这次开源策略太棒了！开源产品并让全球开发者参与，这显示了真正的技术自信。这种透明度和社区参与的方式会赢得更多支持者！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T13:15:00Z",
+          "likes": 89,
+          "shares": 23,
+          "comments": 15
         },
         {
-          "from": "Skeptical_Journalist",
-          "to": ["Cynical_Dev", "Ethical_Philosopher"],
-          "timestamp": "2024-10-03T13:17:00Z"
+          "sender": "Skeptical_Journalist",
+          "receivers": ["Cynical_Dev", "Ethical_Philosopher", "Regulator_Tom"],
+          "content": "开源策略值得肯定，但我们需要看到具体的审计结果和实时监控数据。透明度不能只是口号，要有实质性的行动。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T13:17:00Z",
+          "likes": 67,
+          "shares": 18,
+          "comments": 22
         },
         {
-          "from": "TechBro_Elon",
-          "to": ["MarketingPro_Serena", "Newbie_Investor"],
-          "timestamp": "2024-10-03T13:16:00Z"
+          "sender": "TechBro_Elon",
+          "receivers": ["MarketingPro_Serena", "TechEnthusiast_Alex", "SocialMedia_Intern"],
+          "content": "公司这次开源策略显示了真正的技术自信！开源让全球开发者参与，这是技术发展的正确方向。我相信经过社区参与，产品会变得更加完善！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T13:16:00Z",
+          "likes": 156,
+          "shares": 34,
+          "comments": 28
+        },
+        {
+          "sender": "TechEnthusiast_Alex",
+          "receivers": ["TechBro_Elon", "MarketingPro_Serena", "ArtStudent_Vivian"],
+          "content": "开源策略太棒了！这显示了公司对技术的真正自信。开源让更多开发者参与，会推动技术发展。这是最好的危机公关策略！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T13:18:00Z",
+          "likes": 78,
+          "shares": 19,
+          "comments": 12
+        },
+        {
+          "sender": "SocialMedia_Intern",
+          "receivers": ["MarketingPro_Serena", "ArtStudent_Vivian"],
+          "content": "开源策略确实很棒！这种透明度和社区参与的方式会赢得更多支持者。公司这次策略显示了真正的技术自信！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T13:19:00Z",
+          "likes": 45,
+          "shares": 12,
+          "comments": 8
         }
       ]
     },
     {
       "name": "WeChat Moments-like",
       "type": "private_social",
-      "userCount": 3,
-      "activeUsers": ["ValueInvestor_Graham", "Regulator_Tom", "Newbie_Investor"],
-      "message_flow": [
+      "userCount": 2,
+      "activeUsers": ["ValueInvestor_Graham", "Regulator_Tom"],
+      "message_propagation": [
         {
-          "from": "ValueInvestor_Graham",
-          "to": ["Regulator_Tom"],
-          "timestamp": "2024-10-03T13:19:00Z"
+          "sender": "ValueInvestor_Graham",
+          "receivers": ["Regulator_Tom"],
+          "content": "开源策略确实是个好选择，可以降低监管风险，同时吸引更多开发者参与。这种透明度会赢得投资者信心。",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T13:19:00Z",
+          "likes": 23,
+          "shares": 5,
+          "comments": 3
         },
         {
-          "from": "Regulator_Tom",
-          "to": ["ValueInvestor_Graham"],
-          "timestamp": "2024-10-03T13:20:00Z"
-        },
-        {
-          "from": "Newbie_Investor",
-          "to": ["TechBro_Elon"],
-          "timestamp": "2024-10-03T13:21:00Z"
+          "sender": "Regulator_Tom",
+          "receivers": ["ValueInvestor_Graham"],
+          "content": "同意，开源策略可以降低监管风险。透明度报告和实时监控系统是必要的，我们需要看到具体的实施细节。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T13:20:00Z",
+          "likes": 18,
+          "shares": 4,
+          "comments": 6
         }
       ]
     },
@@ -474,16 +471,26 @@
       "type": "short_video",
       "userCount": 2,
       "activeUsers": ["ArtStudent_Vivian", "SocialMedia_Intern"],
-      "message_flow": [
+      "message_propagation": [
         {
-          "from": "ArtStudent_Vivian",
-          "to": ["SocialMedia_Intern"],
-          "timestamp": "2024-10-03T13:22:00Z"
+          "sender": "ArtStudent_Vivian",
+          "receivers": ["SocialMedia_Intern"],
+          "content": "公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T13:22:00Z",
+          "likes": 34,
+          "shares": 8,
+          "comments": 5
         },
         {
-          "from": "SocialMedia_Intern",
-          "to": ["ArtStudent_Vivian"],
-          "timestamp": "2024-10-03T13:23:00Z"
+          "sender": "SocialMedia_Intern",
+          "receivers": ["ArtStudent_Vivian"],
+          "content": "开源策略确实很棒！这种透明度和社区参与的方式会赢得更多支持者。公司这次策略显示了真正的技术自信！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T13:23:00Z",
+          "likes": 28,
+          "shares": 6,
+          "comments": 4
         }
       ]
     },
@@ -492,16 +499,26 @@
       "type": "discussion_forum",
       "userCount": 2,
       "activeUsers": ["Cynical_Dev", "Ethical_Philosopher"],
-      "message_flow": [
+      "message_propagation": [
         {
-          "from": "Cynical_Dev",
-          "to": ["Skeptical_Journalist", "Ethical_Philosopher"],
-          "timestamp": "2024-10-03T13:24:00Z"
+          "sender": "Cynical_Dev",
+          "receivers": ["Skeptical_Journalist", "Ethical_Philosopher"],
+          "content": "开源策略听起来不错，但我们需要看到具体的实施细节。透明度报告和实时监控系统是必要的，不能只是口号。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T13:24:00Z",
+          "likes": 42,
+          "shares": 9,
+          "comments": 7
         },
         {
-          "from": "Ethical_Philosopher",
-          "to": ["Skeptical_Journalist", "Cynical_Dev"],
-          "timestamp": "2024-10-03T13:25:00Z"
+          "sender": "Ethical_Philosopher",
+          "receivers": ["Skeptical_Journalist", "Cynical_Dev"],
+          "content": "开源策略体现了技术发展的正确方向。透明度和社区参与是解决技术争议的最佳方式，这显示了真正的技术自信。",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T13:25:00Z",
+          "likes": 56,
+          "shares": 12,
+          "comments": 9
         }
       ]
     }
