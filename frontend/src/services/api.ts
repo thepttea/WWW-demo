@@ -125,6 +125,40 @@ export interface ReportResponse {
   generatedAt: string;
 }
 
+export interface SimulationResultData {
+  overallSentiment: number;
+  engagementRate: number;
+  reach: number;
+  sentimentTrend: string;
+  prEffectiveness: number;
+  keyInsights: string;
+  recommendations: string[];
+  influentialNodes: Array<{
+    node: string;
+    influence_score: number;
+    sentiment: string;
+    reach: number;
+  }>;
+  sentimentDistribution: {
+    positive: number;
+    neutral: number;
+    negative: number;
+  };
+  trendData: {
+    positive: string;
+    engagement: string;
+    reach: string;
+  };
+  effectivenessRating: {
+    score: number;
+    rating: string;
+    thresholds: {
+      excellent: number;
+      good: number;
+    };
+  };
+}
+
 // API客户端类
 class ApiClient {
   private baseURL: string;
@@ -217,6 +251,12 @@ class ApiClient {
 
   async getSimulationResult(simulationId: string): Promise<ApiResponse<SimulationResult>> {
     return this.request<SimulationResult>(`/scenario1/simulation/${simulationId}/result`, {
+      method: 'GET',
+    });
+  }
+
+  async getSimulationResultData(simulationId: string): Promise<ApiResponse<SimulationResultData>> {
+    return this.request<SimulationResultData>(`/scenario1/simulation/${simulationId}/analysis`, {
       method: 'GET',
     });
   }

@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiClient, type StartSimulationRequest, type ReportRequest } from '../services/api';
+import { apiClient, type StartSimulationRequest, type ReportRequest, type SimulationResultData } from '../services/api';
 
 // LLM Chat相关hooks
 export const useInitChatSession = () => {
@@ -91,6 +91,15 @@ export const useNetworkData = (simulationId: string | null) => {
     queryFn: () => apiClient.getNetworkData(simulationId!),
     enabled: !!simulationId,
     staleTime: 60 * 1000, // 1分钟
+  });
+};
+
+export const useSimulationResultData = (simulationId: string | null) => {
+  return useQuery({
+    queryKey: ['simulationResultData', simulationId],
+    queryFn: () => apiClient.getSimulationResultData(simulationId!),
+    enabled: !!simulationId,
+    staleTime: 30 * 1000, // 30秒
   });
 };
 

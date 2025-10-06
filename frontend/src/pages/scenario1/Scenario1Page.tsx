@@ -6,7 +6,7 @@ import StrategyRefinementDrawer from '../../components/StrategyRefinementDrawer'
 import Scenario1ResultsPageStatic from './Scenario1ResultsPageStatic';
 import { SimulationConfig, SimulationParameters, SimulationState } from '../../types';
 import { mockApiClient, MockSimulationData, SimulationStatus } from '../../services/mockApi';
-// import { useStartSimulation, useAddPRStrategy, useSimulationStatus, useSimulationResult, useGenerateReport, useResetSimulation } from '../../hooks/useApi';
+// import { useStartSimulation, useAddPRStrategy, useSimulationStatus, useSimulationResult, useSimulationResultData, useGenerateReport, useResetSimulation } from '../../hooks/useApi';
 import './Scenario1Page.css';
 
 const { Title, Paragraph } = Typography;

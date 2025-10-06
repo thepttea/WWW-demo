@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Typography, Button, Table, Tag, Row, Col, Statistic, Progress } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined, ReloadOutlined } from '@ant-design/icons';
 import { mockApiClient, SimulationResultData } from '../../services/mockApi';
+// import { useSimulationResultData } from '../../hooks/useApi';
 import './Scenario1ResultsPage.css';
 
 const { Title, Text } = Typography;
