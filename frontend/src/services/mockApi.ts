@@ -1,7 +1,7 @@
 // 模拟API服务 - 用于开发阶段，模拟后端返回数据
-import initialData from '../../data/initial.json';
-import round1Data from '../../data/round1.json';
-import round2Data from '../../data/round2.json';
+import round1Data from '../../data/round1.json';  // 第一轮数据
+import round2Data from '../../data/round2.json';  // 第二轮数据
+import round3Data from '../../data/round3.json';  // 第三轮数据
 
 export interface MockSimulationData {
   simulationId: string;
@@ -64,9 +64,9 @@ class MockApiClient {
   }): Promise<MockSimulationData> {
     console.log('Mock API: Starting simulation with config:', config);
     
-    // 返回initial.json的数据，但更新一些字段
+    // 返回round1.json的数据（第一轮），但更新一些字段
     const simulationData: MockSimulationData = {
-      ...initialData,
+      ...round1Data,
       simulationId: `sim_${Date.now()}`,
       status: 'running',
       currentRound: 1,
@@ -84,9 +84,9 @@ class MockApiClient {
   async getSimulationResult(simulationId: string): Promise<MockSimulationData> {
     console.log('Mock API: Getting simulation result for:', simulationId);
     
-    // 返回initial.json的数据
+    // 返回round1.json的数据（第一轮）
     const simulationData: MockSimulationData = {
-      ...initialData,
+      ...round1Data,
       simulationId,
       status: 'completed',
       currentRound: 1
@@ -104,16 +104,16 @@ class MockApiClient {
     let targetRound;
     
     if (currentRound === 1) {
-      // 第二轮：返回round1.json的数据
-      baseData = round1Data;
+      // 第二轮：返回round2.json的数据
+      baseData = round2Data;
       targetRound = 2;
     } else if (currentRound === 2) {
-      // 第三轮：返回round2.json的数据
-      baseData = round2Data;
+      // 第三轮：返回round3.json的数据
+      baseData = round3Data;
       targetRound = 3;
     } else {
-      // 默认返回round1.json
-      baseData = round1Data;
+      // 默认返回round2.json
+      baseData = round2Data;
       targetRound = 2;
     }
     

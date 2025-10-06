@@ -1,6 +1,6 @@
 import React from 'react';
 import { Drawer, Typography, Card, Tag, Space } from 'antd';
-import { MessageOutlined, UserOutlined, ClockCircleOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { MessageOutlined, UserOutlined, ShareAltOutlined } from '@ant-design/icons';
 import './MessageHistoryModal.css';
 
 const { Text, Paragraph } = Typography;
@@ -132,12 +132,6 @@ const MessageHistoryModal: React.FC<MessageHistoryModalProps> = ({
                   </Text>
                 </div>
 
-                <div className="message-timing">
-                  <ClockCircleOutlined style={{ marginRight: 6, color: '#8c8c8c' }} />
-                  <Text type="secondary">
-                    Delay: {(step.delay / 1000).toFixed(1)}s | Duration: {(step.duration / 1000).toFixed(1)}s
-                  </Text>
-                </div>
               </Card>
             );
           })}

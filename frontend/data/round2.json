@@ -1,7 +1,7 @@
 {
   "simulationId": "sim_scenario1_demo_001",
   "status": "running",
-  "currentRound": 3,
+  "currentRound": 2,
   "eventDescription": "某知名科技公司发布了一款具有争议性的AI产品，该产品被指控存在隐私泄露风险，引发了广泛的公众讨论和媒体关注。",
   "prStrategies": [
     {
@@ -13,11 +13,6 @@
       "round": 2,
       "strategy": "我们决定暂停该AI产品的商业化推广，并邀请第三方安全机构进行全面审计。同时，我们将建立用户数据保护委员会，定期发布透明度报告，确保用户隐私得到最大程度的保护。",
       "timestamp": "2024-10-03T11:30:00Z"
-    },
-    {
-      "round": 3,
-      "strategy": "经过与监管部门的深入沟通，我们决定将产品开源，让全球开发者共同参与安全改进。同时，我们承诺将审计结果完全公开，并建立用户数据使用情况的实时监控系统。我们相信透明度和社区参与是解决技术争议的最佳方式。",
-      "timestamp": "2024-10-03T13:00:00Z"
     }
   ],
   "users": [
@@ -29,23 +24,23 @@
       "primary_platform": "Weibo/Twitter-like",
       "llm_model": "gpt-4o-mini",
       "llm_temperature": 0.8,
-      "objective_stance_score": 2,
-      "final_decision": "公司这次策略太棒了！开源产品并让全球开发者参与，这显示了真正的技术自信。这种透明度和社区参与的方式会赢得更多支持者。",
+      "objective_stance_score": 1,
+      "final_decision": "公司这次回应很有诚意，暂停推广并邀请第三方审计是明智之举。这显示了公司对用户负责的态度，我相信这会让公众重新审视这个产品。",
       "contextual_memories": [
-        "作为营销专家，我看到公司这次策略太棒了！开源产品并让全球开发者参与，这显示了真正的技术自信。这种透明度和社区参与的方式会赢得更多支持者。这是最好的危机公关策略。"
+        "作为营销专家，我看到公司这次回应策略很聪明。暂停推广并邀请第三方审计，这比之前的强硬态度要好得多。这种主动承担责任的做法更容易获得公众谅解。我需要帮助塑造公司负责任的企业形象。"
       ],
       "short_term_memories": [
-        "开源策略显示了真正的技术自信，会赢得更多支持者"
+        "公司主动承担责任的做法更容易获得公众谅解"
       ],
       "platform_posts": [
         {
           "platform": "Weibo/Twitter-like",
-          "content": "公司这次策略太棒了！开源产品并让全球开发者参与，这显示了真正的技术自信。这种透明度和社区参与的方式会赢得更多支持者！",
-          "timestamp": "2024-10-03T13:15:00Z",
+          "content": "公司这次回应很有诚意！暂停推广并邀请第三方审计，这显示了负责任的态度。相信经过严格审计后，这个AI产品会变得更加安全可靠。",
+          "timestamp": "2024-10-03T11:45:00Z",
           "reactions": {
-            "likes": 189,
-            "shares": 34,
-            "comments": 12
+            "likes": 156,
+            "shares": 23,
+            "comments": 8
           }
         }
       ],
@@ -53,14 +48,14 @@
         {
           "from": "TechBro_Elon",
           "platform": "Weibo/Twitter-like",
-          "content": "完全同意！开源是最好的策略，显示了技术自信！",
-          "timestamp": "2024-10-03T13:18:00Z"
+          "content": "同意！这种主动承担责任的做法值得赞赏。技术发展需要这样的透明度。",
+          "timestamp": "2024-10-03T11:50:00Z"
         },
         {
           "from": "SocialMedia_Intern",
           "platform": "Weibo/Twitter-like",
-          "content": "这个策略太聪明了！开源会吸引更多开发者！",
-          "timestamp": "2024-10-03T13:20:00Z"
+          "content": "这个回应策略确实很聪明，比之前的强硬态度好多了！",
+          "timestamp": "2024-10-03T11:52:00Z"
         }
       ]
     },
@@ -72,23 +67,23 @@
       "primary_platform": "Weibo/Twitter-like",
       "llm_model": "gpt-4o-mini",
       "llm_temperature": 0.7,
-      "objective_stance_score": 0,
-      "final_decision": "公司这次开源策略值得肯定，但我们需要看到具体的审计结果和实时监控数据。开源并不意味着问题解决，我们需要持续监督。",
+      "objective_stance_score": -1,
+      "final_decision": "虽然公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。我会继续跟踪这个事件。",
       "contextual_memories": [
-        "作为记者，我看到公司这次开源策略值得肯定，但我们需要看到具体的审计结果和实时监控数据。开源并不意味着问题解决，我们需要持续监督。这种透明度是好的开始，但需要持续关注。"
+        "作为记者，我看到公司这次回应有所改善，但我的职业直觉告诉我，这可能是危机公关的策略。我需要继续深入调查，确保第三方审计是真正独立的，而不是公司自己选择的。公众需要看到具体的审计结果，而不是空头承诺。"
       ],
       "short_term_memories": [
-        "开源策略值得肯定，但需要看到具体的审计结果和实时监控数据"
+        "需要确保第三方审计是真正独立的，不是公司自己选择的"
       ],
       "platform_posts": [
         {
           "platform": "Weibo/Twitter-like",
-          "content": "公司这次开源策略值得肯定，但我们需要看到具体的审计结果和实时监控数据。开源并不意味着问题解决，我们需要持续监督。",
-          "timestamp": "2024-10-03T13:17:00Z",
+          "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。我会继续跟踪这个事件，确保公众了解真相。",
+          "timestamp": "2024-10-03T11:48:00Z",
           "reactions": {
-            "likes": 67,
-            "shares": 28,
-            "comments": 9
+            "likes": 89,
+            "shares": 45,
+            "comments": 12
           }
         }
       ],
@@ -96,14 +91,14 @@
         {
           "from": "Cynical_Dev",
           "platform": "Weibo/Twitter-like",
-          "content": "同意！开源并不意味着问题解决，需要持续监督。",
-          "timestamp": "2024-10-03T13:22:00Z"
+          "content": "说得对！第三方审计必须是真正独立的，不能是公司自己选择的。",
+          "timestamp": "2024-10-03T11:55:00Z"
         },
         {
           "from": "Ethical_Philosopher",
           "platform": "Weibo/Twitter-like",
-          "content": "开源是好的开始，但需要持续关注和监督。",
-          "timestamp": "2024-10-03T13:25:00Z"
+          "content": "同意，我们需要确保审计的独立性和透明度。",
+          "timestamp": "2024-10-03T11:58:00Z"
         }
       ]
     },
@@ -115,23 +110,23 @@
       "primary_platform": "Weibo/Twitter-like",
       "llm_model": "gpt-4o-mini",
       "llm_temperature": 0.9,
-      "objective_stance_score": 3,
-      "final_decision": "太棒了！开源是最好的策略！让全球开发者共同参与安全改进，这显示了真正的技术自信。我相信开源会让这个产品变得更好！",
+      "objective_stance_score": 2,
+      "final_decision": "公司这次回应显示了技术人的担当！暂停推广并邀请第三方审计，这是正确的技术发展路径。我相信经过严格审计后，这个AI产品会变得更加完善。",
       "contextual_memories": [
-        "作为技术专家，我看到公司这次开源策略太棒了！让全球开发者共同参与安全改进，这显示了真正的技术自信。我相信开源会让这个产品变得更好！这是技术发展的正确方向。"
+        "作为技术专家，我看到公司这次回应显示了技术人的担当。暂停推广并邀请第三方审计，这是正确的技术发展路径。技术发展需要这样的透明度和责任感。我相信经过严格审计后，这个AI产品会变得更加完善。"
       ],
       "short_term_memories": [
-        "开源是最好的策略，显示了真正的技术自信"
+        "技术发展需要透明度和责任感，第三方审计是正确的路径"
       ],
       "platform_posts": [
         {
           "platform": "Weibo/Twitter-like",
-          "content": "太棒了！开源是最好的策略！让全球开发者共同参与安全改进，这显示了真正的技术自信。我相信开源会让这个产品变得更好！",
-          "timestamp": "2024-10-03T13:16:00Z",
+          "content": "公司这次回应显示了技术人的担当！暂停推广并邀请第三方审计，这是正确的技术发展路径。我相信经过严格审计后，这个AI产品会变得更加完善。技术发展需要这样的透明度！",
+          "timestamp": "2024-10-03T11:47:00Z",
           "reactions": {
-            "likes": 312,
-            "shares": 89,
-            "comments": 23
+            "likes": 234,
+            "shares": 67,
+            "comments": 15
           }
         }
       ],
@@ -139,8 +134,8 @@
         {
           "from": "MarketingPro_Serena",
           "platform": "Weibo/Twitter-like",
-          "content": "完全同意！开源是最好的策略，显示了技术自信！",
-          "timestamp": "2024-10-03T13:18:00Z"
+          "content": "同意！这种主动承担责任的做法值得赞赏。技术发展需要这样的透明度。",
+          "timestamp": "2024-10-03T11:50:00Z"
         }
       ]
     },
@@ -152,23 +147,23 @@
       "primary_platform": "WeChat Moments-like",
       "llm_model": "gpt-4o-mini",
       "llm_temperature": 0.8,
-      "objective_stance_score": 2,
-      "final_decision": "公司这次开源策略显示了真正的技术自信和商业智慧。开源可以降低监管风险，同时建立开发者社区，这是长期价值的体现。",
+      "objective_stance_score": 1,
+      "final_decision": "公司这次回应策略有所改善，但监管风险仍然存在。我需要评估这个产品是否具有长期投资价值，以及公司是否有能力应对监管挑战。",
       "contextual_memories": [
-        "从投资角度分析，公司这次开源策略显示了真正的技术自信和商业智慧。开源可以降低监管风险，同时建立开发者社区，这是长期价值的体现。这种策略值得肯定。"
+        "从投资角度分析，公司这次回应策略有所改善，但监管风险仍然存在。暂停推广并邀请第三方审计，这显示了公司对监管的重视。我需要评估这个产品是否具有长期投资价值，以及公司是否有能力应对监管挑战。"
       ],
       "short_term_memories": [
-        "开源策略显示了技术自信和商业智慧，可以降低监管风险"
+        "公司对监管的重视是积极的，但监管风险仍然存在"
       ],
       "platform_posts": [
         {
           "platform": "WeChat Moments-like",
-          "content": "公司这次开源策略显示了真正的技术自信和商业智慧。开源可以降低监管风险，同时建立开发者社区，这是长期价值的体现。",
-          "timestamp": "2024-10-03T13:19:00Z",
+          "content": "公司这次回应策略有所改善，但监管风险仍然存在。暂停推广并邀请第三方审计，这显示了公司对监管的重视。需要继续观察监管部门的反应。",
+          "timestamp": "2024-10-03T11:46:00Z",
           "reactions": {
-            "likes": 15,
-            "shares": 4,
-            "comments": 3
+            "likes": 12,
+            "shares": 3,
+            "comments": 2
           }
         }
       ],
@@ -176,8 +171,8 @@
         {
           "from": "Regulator_Tom",
           "platform": "WeChat Moments-like",
-          "content": "同意，开源策略可以降低监管风险。",
-          "timestamp": "2024-10-03T13:23:00Z"
+          "content": "同意，需要继续观察监管部门的反应。",
+          "timestamp": "2024-10-03T11:49:00Z"
         }
       ]
     },
@@ -190,22 +185,22 @@
       "llm_model": "gpt-4o-mini",
       "llm_temperature": 0.8,
       "objective_stance_score": 2,
-      "final_decision": "公司这次开源策略值得肯定，开源可以降低监管风险，同时建立开发者社区。我们需要确保审计结果和实时监控数据的透明度。",
+      "final_decision": "公司这次回应显示了良好的合规意识。暂停推广并邀请第三方审计，这符合监管要求。我们需要确保审计的独立性和透明度，同时也要考虑如何平衡创新和监管。",
       "contextual_memories": [
-        "作为监管人员，我看到公司这次开源策略值得肯定，开源可以降低监管风险，同时建立开发者社区。我们需要确保审计结果和实时监控数据的透明度。这种策略符合监管要求。"
+        "作为监管人员，我看到公司这次回应显示了良好的合规意识。暂停推广并邀请第三方审计，这符合监管要求。我们需要确保审计的独立性和透明度，同时也要考虑如何平衡创新和监管。这种主动承担责任的做法值得肯定。"
       ],
       "short_term_memories": [
-        "开源策略值得肯定，可以降低监管风险，需要确保透明度"
+        "公司显示了良好的合规意识，主动承担责任的做法值得肯定"
       ],
       "platform_posts": [
         {
           "platform": "WeChat Moments-like",
-          "content": "公司这次开源策略值得肯定，开源可以降低监管风险，同时建立开发者社区。我们需要确保审计结果和实时监控数据的透明度。",
-          "timestamp": "2024-10-03T13:20:00Z",
+          "content": "公司这次回应显示了良好的合规意识。暂停推广并邀请第三方审计，这符合监管要求。我们需要确保审计的独立性和透明度。",
+          "timestamp": "2024-10-03T11:44:00Z",
           "reactions": {
-            "likes": 11,
-            "shares": 3,
-            "comments": 2
+            "likes": 8,
+            "shares": 2,
+            "comments": 1
           }
         }
       ],
@@ -213,8 +208,8 @@
         {
           "from": "ValueInvestor_Graham",
           "platform": "WeChat Moments-like",
-          "content": "同意，开源策略可以降低监管风险。",
-          "timestamp": "2024-10-03T13:23:00Z"
+          "content": "同意，需要继续观察监管部门的反应。",
+          "timestamp": "2024-10-03T11:49:00Z"
         }
       ]
     },
@@ -227,22 +222,22 @@
       "llm_model": "gpt-4o-mini",
       "llm_temperature": 0.8,
       "objective_stance_score": 1,
-      "final_decision": "公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。",
+      "final_decision": "公司这次回应有所改善，但我们需要看到具体的审计结果。AI技术可以辅助艺术创作，但不能替代人文精神。我希望看到更多关于技术伦理的讨论。",
       "contextual_memories": [
-        "作为艺术学生，我看到公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。开源是技术发展的正确方向。"
+        "作为艺术学生，我看到公司这次回应有所改善，但我们需要看到具体的审计结果。AI技术可以辅助艺术创作，但不能替代人文精神。我希望看到更多关于技术伦理的讨论，这涉及到艺术创作的本质。"
       ],
       "short_term_memories": [
-        "开源策略值得肯定，可以让更多开发者参与，需要看到具体数据"
+        "需要看到具体的审计结果，希望看到更多关于技术伦理的讨论"
       ],
       "platform_posts": [
         {
           "platform": "TikTok-like",
-          "content": "公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。",
-          "timestamp": "2024-10-03T13:22:00Z",
+          "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。AI技术可以辅助艺术创作，但不能替代人文精神。希望看到更多关于技术伦理的讨论！",
+          "timestamp": "2024-10-03T11:49:00Z",
           "reactions": {
-            "likes": 28,
-            "shares": 9,
-            "comments": 4
+            "likes": 23,
+            "shares": 8,
+            "comments": 3
           }
         }
       ],
@@ -250,8 +245,8 @@
         {
           "from": "SocialMedia_Intern",
           "platform": "TikTok-like",
-          "content": "同意！开源是技术发展的正确方向！",
-          "timestamp": "2024-10-03T13:25:00Z"
+          "content": "同意！技术伦理的讨论很重要！",
+          "timestamp": "2024-10-03T11:54:00Z"
         }
       ]
     },
@@ -264,22 +259,22 @@
       "llm_model": "gemini-2.5-flash",
       "llm_temperature": 0.9,
       "objective_stance_score": 2,
-      "final_decision": "公司这次开源策略太棒了！开源会吸引更多开发者，这个话题肯定会火！可以做成很多有趣的内容！",
+      "final_decision": "公司这次回应策略很聪明！暂停推广并邀请第三方审计，这比之前的强硬态度好多了。这个话题肯定会火，可以做成很多有趣的内容！",
       "contextual_memories": [
-        "作为社交媒体从业者，我看到公司这次开源策略太棒了！开源会吸引更多开发者，这个话题肯定会火！可以做成很多有趣的内容！开源是技术发展的未来。"
+        "作为社交媒体从业者，我看到公司这次回应策略很聪明！暂停推广并邀请第三方审计，这比之前的强硬态度好多了。这个话题肯定会火，可以做成很多有趣的内容！争议性话题总是更容易传播。"
       ],
       "short_term_memories": [
-        "开源策略太棒了，会吸引更多开发者，话题肯定会火"
+        "公司回应策略很聪明，这个话题肯定会火"
       ],
       "platform_posts": [
         {
           "platform": "TikTok-like",
-          "content": "公司这次开源策略太棒了！开源会吸引更多开发者，这个话题肯定会火！可以做成很多有趣的内容！",
-          "timestamp": "2024-10-03T13:23:00Z",
+          "content": "公司这次回应策略很聪明！暂停推广并邀请第三方审计，这比之前的强硬态度好多了。这个话题肯定会火，可以做成很多有趣的内容！",
+          "timestamp": "2024-10-03T11:50:00Z",
           "reactions": {
-            "likes": 52,
-            "shares": 15,
-            "comments": 8
+            "likes": 45,
+            "shares": 12,
+            "comments": 6
           }
         }
       ],
@@ -287,8 +282,8 @@
         {
           "from": "ArtStudent_Vivian",
           "platform": "TikTok-like",
-          "content": "同意！开源是技术发展的正确方向！",
-          "timestamp": "2024-10-03T13:25:00Z"
+          "content": "同意！技术伦理的讨论很重要！",
+          "timestamp": "2024-10-03T11:54:00Z"
         }
       ]
     },
@@ -300,23 +295,23 @@
       "primary_platform": "Forum-like",
       "llm_model": "gpt-4o-mini",
       "llm_temperature": 0.8,
-      "objective_stance_score": 1,
-      "final_decision": "公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。",
+      "objective_stance_score": 0,
+      "final_decision": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。技术本身可能没问题，但营销宣传往往夸大其词。",
       "contextual_memories": [
-        "作为资深程序员，我看到公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。开源是技术发展的正确方向。"
+        "作为资深程序员，我看到公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。技术本身可能没问题，但营销宣传往往夸大其词。我需要保持警惕。"
       ],
       "short_term_memories": [
-        "开源策略值得肯定，可以让更多开发者参与，需要看到具体数据"
+        "需要看到具体的审计结果，第三方审计必须是真正独立的"
       ],
       "platform_posts": [
         {
           "platform": "Forum-like",
-          "content": "公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。",
-          "timestamp": "2024-10-03T13:24:00Z",
+          "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。技术本身可能没问题，但营销宣传往往夸大其词。",
+          "timestamp": "2024-10-03T11:52:00Z",
           "reactions": {
-            "likes": 25,
-            "shares": 8,
-            "comments": 6
+            "likes": 18,
+            "shares": 5,
+            "comments": 4
           }
         }
       ],
@@ -324,14 +319,14 @@
         {
           "from": "Skeptical_Journalist",
           "platform": "Forum-like",
-          "content": "同意！开源并不意味着问题解决，需要持续监督。",
-          "timestamp": "2024-10-03T13:22:00Z"
+          "content": "说得对！第三方审计必须是真正独立的，不能是公司自己选择的。",
+          "timestamp": "2024-10-03T11:55:00Z"
         },
         {
           "from": "Ethical_Philosopher",
           "platform": "Forum-like",
-          "content": "开源是好的开始，但需要持续关注和监督。",
-          "timestamp": "2024-10-03T13:25:00Z"
+          "content": "同意，我们需要确保审计的独立性和透明度。",
+          "timestamp": "2024-10-03T11:58:00Z"
         }
       ]
     },
@@ -343,23 +338,23 @@
       "primary_platform": "Forum-like",
       "llm_model": "gpt-4o-mini",
       "llm_temperature": 0.8,
-      "objective_stance_score": 1,
-      "final_decision": "公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。",
+      "objective_stance_score": 0,
+      "final_decision": "公司这次回应显示了良好的合规意识，但我们需要确保审计的独立性和透明度。这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。",
       "contextual_memories": [
-        "作为哲学教授，我看到公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。开源是技术发展的正确方向。"
+        "作为哲学教授，我看到公司这次回应显示了良好的合规意识，但我们需要确保审计的独立性和透明度。这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。技术发展不能忽视道德责任。"
       ],
       "short_term_memories": [
-        "开源策略值得肯定，可以让更多开发者参与，需要看到具体数据"
+        "公司显示了良好的合规意识，但需要确保审计的独立性和透明度"
       ],
       "platform_posts": [
         {
           "platform": "Forum-like",
-          "content": "公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。",
-          "timestamp": "2024-10-03T13:25:00Z",
+          "content": "公司这次回应显示了良好的合规意识，但我们需要确保审计的独立性和透明度。这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。",
+          "timestamp": "2024-10-03T11:53:00Z",
           "reactions": {
-            "likes": 31,
-            "shares": 10,
-            "comments": 7
+            "likes": 22,
+            "shares": 7,
+            "comments": 5
           }
         }
       ],
@@ -367,14 +362,14 @@
         {
           "from": "Skeptical_Journalist",
           "platform": "Forum-like",
-          "content": "开源是好的开始，但需要持续关注和监督。",
-          "timestamp": "2024-10-03T13:25:00Z"
+          "content": "同意，我们需要确保审计的独立性和透明度。",
+          "timestamp": "2024-10-03T11:58:00Z"
         },
         {
           "from": "Cynical_Dev",
           "platform": "Forum-like",
-          "content": "开源是好的开始，但需要持续关注和监督。",
-          "timestamp": "2024-10-03T13:25:00Z"
+          "content": "同意，我们需要确保审计的独立性和透明度。",
+          "timestamp": "2024-10-03T11:58:00Z"
         }
       ]
     }
@@ -388,53 +383,63 @@
       "message_propagation": [
         {
           "sender": "MarketingPro_Serena",
-          "receivers": ["TechBro_Elon", "SocialMedia_Intern", "Skeptical_Journalist"],
-          "content": "公司这次开源策略太棒了！开源产品并让全球开发者参与，这显示了真正的技术自信。这种透明度和社区参与的方式会赢得更多支持者！",
+          "receivers": ["TechBro_Elon", "SocialMedia_Intern", "ValueInvestor_Graham", "ArtStudent_Vivian"],
+          "content": "公司这次回应很有诚意！暂停推广并邀请第三方审计，这显示了负责任的态度。相信经过严格审计后，这个AI产品会变得更加安全可靠。",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T13:15:00Z",
-          "likes": 89,
+          "timestamp": "2024-10-03T11:45:00Z",
+          "likes": 156,
           "shares": 23,
+          "comments": 8
+        },
+        {
+          "sender": "Skeptical_Journalist",
+          "receivers": ["MarketingPro_Serena", "TechBro_Elon", "Regulator_Tom", "Cynical_Dev"],
+          "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。我会继续跟踪这个事件，确保公众了解真相。",
+          "sentiment": "negative",
+          "timestamp": "2024-10-03T11:48:00Z",
+          "likes": 89,
+          "shares": 45,
+          "comments": 12
+        },
+        {
+          "sender": "TechBro_Elon",
+          "receivers": ["MarketingPro_Serena", "ValueInvestor_Graham", "Ethical_Philosopher"],
+          "content": "公司这次回应显示了技术人的担当！暂停推广并邀请第三方审计，这是正确的技术发展路径。我相信经过严格审计后，这个AI产品会变得更加完善。技术发展需要这样的透明度！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T11:47:00Z",
+          "likes": 234,
+          "shares": 67,
           "comments": 15
+        },
+        {
+          "sender": "SocialMedia_Intern",
+          "receivers": ["ArtStudent_Vivian", "MarketingPro_Serena", "TechBro_Elon"],
+          "content": "公司这次回应策略很聪明！暂停推广并邀请第三方审计，这比之前的强硬态度好多了。这个话题肯定会火，可以做成很多有趣的内容！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T11:50:00Z",
+          "likes": 45,
+          "shares": 12,
+          "comments": 6
+        },
+        {
+          "sender": "MarketingPro_Serena",
+          "receivers": ["Skeptical_Journalist", "TechBro_Elon", "ValueInvestor_Graham"],
+          "content": "同意！这种主动承担责任的做法值得赞赏。技术发展需要这样的透明度。",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T11:50:00Z",
+          "likes": 67,
+          "shares": 15,
+          "comments": 4
         },
         {
           "sender": "Skeptical_Journalist",
           "receivers": ["Cynical_Dev", "Ethical_Philosopher", "Regulator_Tom"],
-          "content": "开源策略值得肯定，但我们需要看到具体的审计结果和实时监控数据。透明度不能只是口号，要有实质性的行动。",
-          "sentiment": "neutral",
-          "timestamp": "2024-10-03T13:17:00Z",
-          "likes": 67,
+          "content": "说得对！第三方审计必须是真正独立的，不能是公司自己选择的。",
+          "sentiment": "negative",
+          "timestamp": "2024-10-03T11:55:00Z",
+          "likes": 34,
           "shares": 18,
-          "comments": 22
-        },
-        {
-          "sender": "TechBro_Elon",
-          "receivers": ["MarketingPro_Serena", "TechEnthusiast_Alex", "SocialMedia_Intern"],
-          "content": "公司这次开源策略显示了真正的技术自信！开源让全球开发者参与，这是技术发展的正确方向。我相信经过社区参与，产品会变得更加完善！",
-          "sentiment": "positive",
-          "timestamp": "2024-10-03T13:16:00Z",
-          "likes": 156,
-          "shares": 34,
-          "comments": 28
-        },
-        {
-          "sender": "TechEnthusiast_Alex",
-          "receivers": ["TechBro_Elon", "MarketingPro_Serena", "ArtStudent_Vivian"],
-          "content": "开源策略太棒了！这显示了公司对技术的真正自信。开源让更多开发者参与，会推动技术发展。这是最好的危机公关策略！",
-          "sentiment": "positive",
-          "timestamp": "2024-10-03T13:18:00Z",
-          "likes": 78,
-          "shares": 19,
-          "comments": 12
-        },
-        {
-          "sender": "SocialMedia_Intern",
-          "receivers": ["MarketingPro_Serena", "ArtStudent_Vivian"],
-          "content": "开源策略确实很棒！这种透明度和社区参与的方式会赢得更多支持者。公司这次策略显示了真正的技术自信！",
-          "sentiment": "positive",
-          "timestamp": "2024-10-03T13:19:00Z",
-          "likes": 45,
-          "shares": 12,
-          "comments": 8
+          "comments": 7
         }
       ]
     },
@@ -446,23 +451,43 @@
       "message_propagation": [
         {
           "sender": "ValueInvestor_Graham",
+          "receivers": ["Regulator_Tom", "MarketingPro_Serena", "TechBro_Elon"],
+          "content": "公司这次回应策略有所改善，但监管风险仍然存在。暂停推广并邀请第三方审计，这显示了公司对监管的重视。需要继续观察监管部门的反应。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T11:46:00Z",
+          "likes": 12,
+          "shares": 3,
+          "comments": 2
+        },
+        {
+          "sender": "Regulator_Tom",
+          "receivers": ["ValueInvestor_Graham", "Skeptical_Journalist", "Ethical_Philosopher"],
+          "content": "公司这次回应显示了良好的合规意识。暂停推广并邀请第三方审计，这符合监管要求。我们需要确保审计的独立性和透明度。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T11:44:00Z",
+          "likes": 8,
+          "shares": 2,
+          "comments": 1
+        },
+        {
+          "sender": "ValueInvestor_Graham",
           "receivers": ["Regulator_Tom"],
-          "content": "开源策略确实是个好选择，可以降低监管风险，同时吸引更多开发者参与。这种透明度会赢得投资者信心。",
-          "sentiment": "positive",
-          "timestamp": "2024-10-03T13:19:00Z",
-          "likes": 23,
-          "shares": 5,
-          "comments": 3
+          "content": "同意，需要继续观察监管部门的反应。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T11:49:00Z",
+          "likes": 3,
+          "shares": 0,
+          "comments": 1
         },
         {
           "sender": "Regulator_Tom",
           "receivers": ["ValueInvestor_Graham"],
-          "content": "同意，开源策略可以降低监管风险。透明度报告和实时监控系统是必要的，我们需要看到具体的实施细节。",
+          "content": "同意，需要继续观察监管部门的反应。",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T13:20:00Z",
-          "likes": 18,
-          "shares": 4,
-          "comments": 6
+          "timestamp": "2024-10-03T11:49:00Z",
+          "likes": 2,
+          "shares": 0,
+          "comments": 0
         }
       ]
     },
@@ -474,23 +499,43 @@
       "message_propagation": [
         {
           "sender": "ArtStudent_Vivian",
-          "receivers": ["SocialMedia_Intern"],
-          "content": "公司这次开源策略值得肯定，开源可以让更多开发者参与，这有助于技术发展。但我们需要看到具体的审计结果和实时监控数据。",
+          "receivers": ["SocialMedia_Intern", "MarketingPro_Serena", "TechBro_Elon"],
+          "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。AI技术可以辅助艺术创作，但不能替代人文精神。希望看到更多关于技术伦理的讨论！",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T13:22:00Z",
-          "likes": 34,
+          "timestamp": "2024-10-03T11:49:00Z",
+          "likes": 23,
           "shares": 8,
-          "comments": 5
+          "comments": 3
+        },
+        {
+          "sender": "SocialMedia_Intern",
+          "receivers": ["ArtStudent_Vivian", "MarketingPro_Serena", "TechBro_Elon"],
+          "content": "公司这次回应策略很聪明！暂停推广并邀请第三方审计，这比之前的强硬态度好多了。这个话题肯定会火，可以做成很多有趣的内容！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T11:50:00Z",
+          "likes": 45,
+          "shares": 12,
+          "comments": 6
+        },
+        {
+          "sender": "ArtStudent_Vivian",
+          "receivers": ["SocialMedia_Intern"],
+          "content": "同意！技术伦理的讨论很重要！",
+          "sentiment": "positive",
+          "timestamp": "2024-10-03T11:54:00Z",
+          "likes": 12,
+          "shares": 3,
+          "comments": 1
         },
         {
           "sender": "SocialMedia_Intern",
           "receivers": ["ArtStudent_Vivian"],
-          "content": "开源策略确实很棒！这种透明度和社区参与的方式会赢得更多支持者。公司这次策略显示了真正的技术自信！",
+          "content": "同意！技术伦理的讨论很重要！",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T13:23:00Z",
-          "likes": 28,
-          "shares": 6,
-          "comments": 4
+          "timestamp": "2024-10-03T11:54:00Z",
+          "likes": 8,
+          "shares": 2,
+          "comments": 0
         }
       ]
     },
@@ -502,23 +547,53 @@
       "message_propagation": [
         {
           "sender": "Cynical_Dev",
-          "receivers": ["Skeptical_Journalist", "Ethical_Philosopher"],
-          "content": "开源策略听起来不错，但我们需要看到具体的实施细节。透明度报告和实时监控系统是必要的，不能只是口号。",
-          "sentiment": "neutral",
-          "timestamp": "2024-10-03T13:24:00Z",
-          "likes": 42,
-          "shares": 9,
-          "comments": 7
+          "receivers": ["Skeptical_Journalist", "Ethical_Philosopher", "MarketingPro_Serena", "ValueInvestor_Graham"],
+          "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。技术本身可能没问题，但营销宣传往往夸大其词。",
+          "sentiment": "negative",
+          "timestamp": "2024-10-03T11:52:00Z",
+          "likes": 18,
+          "shares": 5,
+          "comments": 4
+        },
+        {
+          "sender": "Ethical_Philosopher",
+          "receivers": ["Cynical_Dev", "TechBro_Elon", "ValueInvestor_Graham", "Regulator_Tom"],
+          "content": "公司这次回应显示了良好的合规意识，但我们需要确保审计的独立性和透明度。这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。",
+          "sentiment": "negative",
+          "timestamp": "2024-10-03T11:53:00Z",
+          "likes": 22,
+          "shares": 7,
+          "comments": 5
+        },
+        {
+          "sender": "Skeptical_Journalist",
+          "receivers": ["Cynical_Dev", "Ethical_Philosopher"],
+          "content": "说得对！第三方审计必须是真正独立的，不能是公司自己选择的。",
+          "sentiment": "negative",
+          "timestamp": "2024-10-03T11:55:00Z",
+          "likes": 15,
+          "shares": 8,
+          "comments": 3
         },
         {
           "sender": "Ethical_Philosopher",
           "receivers": ["Skeptical_Journalist", "Cynical_Dev"],
-          "content": "开源策略体现了技术发展的正确方向。透明度和社区参与是解决技术争议的最佳方式，这显示了真正的技术自信。",
-          "sentiment": "positive",
-          "timestamp": "2024-10-03T13:25:00Z",
-          "likes": 56,
-          "shares": 12,
-          "comments": 9
+          "content": "同意，我们需要确保审计的独立性和透明度。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T11:58:00Z",
+          "likes": 12,
+          "shares": 3,
+          "comments": 2
+        },
+        {
+          "sender": "Cynical_Dev",
+          "receivers": ["Skeptical_Journalist", "Ethical_Philosopher"],
+          "content": "同意，我们需要确保审计的独立性和透明度。",
+          "sentiment": "neutral",
+          "timestamp": "2024-10-03T11:58:00Z",
+          "likes": 8,
+          "shares": 2,
+          "comments": 1
         }
       ]
     }

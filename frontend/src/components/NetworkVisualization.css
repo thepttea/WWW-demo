@@ -66,7 +66,7 @@
 /* 用户节点样式 */
 .agent-node {
   cursor: pointer;
-  transition: all 0.3s ease;
+  /* 移除transition，让stance-color-transition控制颜色变化 */
   animation: nodePulse 2s infinite ease-in-out;
 }
 
@@ -80,9 +80,9 @@
   pointer-events: none;
 }
 
-/* 立场颜色变化动画 */
+/* 立场颜色变化动画 - 由JavaScript控制动画时机 */
 .stance-color-transition {
-  transition: fill 1.5s ease-in-out, stroke 1.5s ease-in-out;
+  /* 移除固定过渡时间，让JavaScript完全控制动画时机 */
 }
 
 /* 动画流样式 */
