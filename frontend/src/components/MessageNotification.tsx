@@ -52,12 +52,12 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
       console.log('MessageNotification - showing notification for step:', step);
       
       const receiverList = step.receivers.length > 0 
-        ? step.receivers.join('、') 
-        : '无接收者';
+        ? step.receivers.join(', ') 
+        : 'No receivers';
       
       const newNotification = {
-        title: `📢 消息传播 - 第${currentStep + 1}轮`,
-        description: `${step.sender} 通过 ${step.platform} 向 ${step.receivers.length} 位用户发送消息`,
+        title: `📢 Message Propagation - Round ${currentStep + 1}`,
+        description: `${step.sender} sent message to ${step.receivers.length} users via ${step.platform}`,
         visible: true,
         content: step.content,
         receivers: receiverList
@@ -145,10 +145,10 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
             {notificationData.description}
           </div>
           <div className="message-notification-receivers">
-            <strong>接收者：</strong>{notificationData.receivers}
+            <strong>Receivers: </strong>{notificationData.receivers}
           </div>
           <div className="message-notification-content-text">
-            <strong>消息内容：</strong>
+            <strong>Message Content: </strong>
             <div className="message-content-preview">
               {notificationData.content.length > 100 
                 ? `${notificationData.content.substring(0, 100)}...` 

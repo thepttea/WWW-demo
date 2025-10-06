@@ -27,9 +27,6 @@ interface Platform {
     content: string;
     sentiment: string;
     timestamp: string;
-    likes: number;
-    shares: number;
-    comments: number;
   }>;
 }
 

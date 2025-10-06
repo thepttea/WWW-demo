@@ -36,12 +36,7 @@
         {
           "platform": "Weibo/Twitter-like",
           "content": "公司这次回应很有诚意！暂停推广并邀请第三方审计，这显示了负责任的态度。相信经过严格审计后，这个AI产品会变得更加安全可靠。",
-          "timestamp": "2024-10-03T11:45:00Z",
-          "reactions": {
-            "likes": 156,
-            "shares": 23,
-            "comments": 8
-          }
+          "timestamp": "2024-10-03T11:45:00Z"
         }
       ],
       "received_messages": [
@@ -79,12 +74,7 @@
         {
           "platform": "Weibo/Twitter-like",
           "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。我会继续跟踪这个事件，确保公众了解真相。",
-          "timestamp": "2024-10-03T11:48:00Z",
-          "reactions": {
-            "likes": 89,
-            "shares": 45,
-            "comments": 12
-          }
+          "timestamp": "2024-10-03T11:48:00Z"
         }
       ],
       "received_messages": [
@@ -122,12 +112,7 @@
         {
           "platform": "Weibo/Twitter-like",
           "content": "公司这次回应显示了技术人的担当！暂停推广并邀请第三方审计，这是正确的技术发展路径。我相信经过严格审计后，这个AI产品会变得更加完善。技术发展需要这样的透明度！",
-          "timestamp": "2024-10-03T11:47:00Z",
-          "reactions": {
-            "likes": 234,
-            "shares": 67,
-            "comments": 15
-          }
+          "timestamp": "2024-10-03T11:47:00Z"
         }
       ],
       "received_messages": [
@@ -159,12 +144,7 @@
         {
           "platform": "WeChat Moments-like",
           "content": "公司这次回应策略有所改善，但监管风险仍然存在。暂停推广并邀请第三方审计，这显示了公司对监管的重视。需要继续观察监管部门的反应。",
-          "timestamp": "2024-10-03T11:46:00Z",
-          "reactions": {
-            "likes": 12,
-            "shares": 3,
-            "comments": 2
-          }
+          "timestamp": "2024-10-03T11:46:00Z"
         }
       ],
       "received_messages": [
@@ -196,12 +176,7 @@
         {
           "platform": "WeChat Moments-like",
           "content": "公司这次回应显示了良好的合规意识。暂停推广并邀请第三方审计，这符合监管要求。我们需要确保审计的独立性和透明度。",
-          "timestamp": "2024-10-03T11:44:00Z",
-          "reactions": {
-            "likes": 8,
-            "shares": 2,
-            "comments": 1
-          }
+          "timestamp": "2024-10-03T11:44:00Z"
         }
       ],
       "received_messages": [
@@ -233,12 +208,7 @@
         {
           "platform": "TikTok-like",
           "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。AI技术可以辅助艺术创作，但不能替代人文精神。希望看到更多关于技术伦理的讨论！",
-          "timestamp": "2024-10-03T11:49:00Z",
-          "reactions": {
-            "likes": 23,
-            "shares": 8,
-            "comments": 3
-          }
+          "timestamp": "2024-10-03T11:49:00Z"
         }
       ],
       "received_messages": [
@@ -270,12 +240,7 @@
         {
           "platform": "TikTok-like",
           "content": "公司这次回应策略很聪明！暂停推广并邀请第三方审计，这比之前的强硬态度好多了。这个话题肯定会火，可以做成很多有趣的内容！",
-          "timestamp": "2024-10-03T11:50:00Z",
-          "reactions": {
-            "likes": 45,
-            "shares": 12,
-            "comments": 6
-          }
+          "timestamp": "2024-10-03T11:50:00Z"
         }
       ],
       "received_messages": [
@@ -307,12 +272,7 @@
         {
           "platform": "Forum-like",
           "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。技术本身可能没问题，但营销宣传往往夸大其词。",
-          "timestamp": "2024-10-03T11:52:00Z",
-          "reactions": {
-            "likes": 18,
-            "shares": 5,
-            "comments": 4
-          }
+          "timestamp": "2024-10-03T11:52:00Z"
         }
       ],
       "received_messages": [
@@ -350,12 +310,7 @@
         {
           "platform": "Forum-like",
           "content": "公司这次回应显示了良好的合规意识，但我们需要确保审计的独立性和透明度。这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。",
-          "timestamp": "2024-10-03T11:53:00Z",
-          "reactions": {
-            "likes": 22,
-            "shares": 7,
-            "comments": 5
-          }
+          "timestamp": "2024-10-03T11:53:00Z"
         }
       ],
       "received_messages": [
@@ -379,67 +334,80 @@
       "name": "Weibo/Twitter-like",
       "type": "social_media",
       "userCount": 4,
-      "activeUsers": ["MarketingPro_Serena", "Skeptical_Journalist", "TechBro_Elon", "SocialMedia_Intern"],
+      "activeUsers": [
+        "MarketingPro_Serena",
+        "Skeptical_Journalist",
+        "TechBro_Elon",
+        "SocialMedia_Intern"
+      ],
       "message_propagation": [
         {
           "sender": "MarketingPro_Serena",
-          "receivers": ["TechBro_Elon", "SocialMedia_Intern", "ValueInvestor_Graham", "ArtStudent_Vivian"],
+          "receivers": [
+            "TechBro_Elon",
+            "SocialMedia_Intern",
+            "ValueInvestor_Graham",
+            "ArtStudent_Vivian"
+          ],
           "content": "公司这次回应很有诚意！暂停推广并邀请第三方审计，这显示了负责任的态度。相信经过严格审计后，这个AI产品会变得更加安全可靠。",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T11:45:00Z",
-          "likes": 156,
-          "shares": 23,
-          "comments": 8
+          "timestamp": "2024-10-03T11:45:00Z"
         },
         {
           "sender": "Skeptical_Journalist",
-          "receivers": ["MarketingPro_Serena", "TechBro_Elon", "Regulator_Tom", "Cynical_Dev"],
+          "receivers": [
+            "MarketingPro_Serena",
+            "TechBro_Elon",
+            "Regulator_Tom",
+            "Cynical_Dev"
+          ],
           "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。我会继续跟踪这个事件，确保公众了解真相。",
           "sentiment": "negative",
-          "timestamp": "2024-10-03T11:48:00Z",
-          "likes": 89,
-          "shares": 45,
-          "comments": 12
+          "timestamp": "2024-10-03T11:48:00Z"
         },
         {
           "sender": "TechBro_Elon",
-          "receivers": ["MarketingPro_Serena", "ValueInvestor_Graham", "Ethical_Philosopher"],
+          "receivers": [
+            "MarketingPro_Serena",
+            "ValueInvestor_Graham",
+            "Ethical_Philosopher"
+          ],
           "content": "公司这次回应显示了技术人的担当！暂停推广并邀请第三方审计，这是正确的技术发展路径。我相信经过严格审计后，这个AI产品会变得更加完善。技术发展需要这样的透明度！",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T11:47:00Z",
-          "likes": 234,
-          "shares": 67,
-          "comments": 15
+          "timestamp": "2024-10-03T11:47:00Z"
         },
         {
           "sender": "SocialMedia_Intern",
-          "receivers": ["ArtStudent_Vivian", "MarketingPro_Serena", "TechBro_Elon"],
+          "receivers": [
+            "ArtStudent_Vivian",
+            "MarketingPro_Serena",
+            "TechBro_Elon"
+          ],
           "content": "公司这次回应策略很聪明！暂停推广并邀请第三方审计，这比之前的强硬态度好多了。这个话题肯定会火，可以做成很多有趣的内容！",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T11:50:00Z",
-          "likes": 45,
-          "shares": 12,
-          "comments": 6
+          "timestamp": "2024-10-03T11:50:00Z"
         },
         {
           "sender": "MarketingPro_Serena",
-          "receivers": ["Skeptical_Journalist", "TechBro_Elon", "ValueInvestor_Graham"],
+          "receivers": [
+            "Skeptical_Journalist",
+            "TechBro_Elon",
+            "ValueInvestor_Graham"
+          ],
           "content": "同意！这种主动承担责任的做法值得赞赏。技术发展需要这样的透明度。",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T11:50:00Z",
-          "likes": 67,
-          "shares": 15,
-          "comments": 4
+          "timestamp": "2024-10-03T11:50:00Z"
         },
         {
           "sender": "Skeptical_Journalist",
-          "receivers": ["Cynical_Dev", "Ethical_Philosopher", "Regulator_Tom"],
+          "receivers": [
+            "Cynical_Dev",
+            "Ethical_Philosopher",
+            "Regulator_Tom"
+          ],
           "content": "说得对！第三方审计必须是真正独立的，不能是公司自己选择的。",
           "sentiment": "negative",
-          "timestamp": "2024-10-03T11:55:00Z",
-          "likes": 34,
-          "shares": 18,
-          "comments": 7
+          "timestamp": "2024-10-03T11:55:00Z"
         }
       ]
     },
@@ -447,47 +415,50 @@
       "name": "WeChat Moments-like",
       "type": "private_social",
       "userCount": 2,
-      "activeUsers": ["ValueInvestor_Graham", "Regulator_Tom"],
+      "activeUsers": [
+        "ValueInvestor_Graham",
+        "Regulator_Tom"
+      ],
       "message_propagation": [
         {
           "sender": "ValueInvestor_Graham",
-          "receivers": ["Regulator_Tom", "MarketingPro_Serena", "TechBro_Elon"],
+          "receivers": [
+            "Regulator_Tom",
+            "MarketingPro_Serena",
+            "TechBro_Elon"
+          ],
           "content": "公司这次回应策略有所改善，但监管风险仍然存在。暂停推广并邀请第三方审计，这显示了公司对监管的重视。需要继续观察监管部门的反应。",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T11:46:00Z",
-          "likes": 12,
-          "shares": 3,
-          "comments": 2
+          "timestamp": "2024-10-03T11:46:00Z"
         },
         {
           "sender": "Regulator_Tom",
-          "receivers": ["ValueInvestor_Graham", "Skeptical_Journalist", "Ethical_Philosopher"],
+          "receivers": [
+            "ValueInvestor_Graham",
+            "Skeptical_Journalist",
+            "Ethical_Philosopher"
+          ],
           "content": "公司这次回应显示了良好的合规意识。暂停推广并邀请第三方审计，这符合监管要求。我们需要确保审计的独立性和透明度。",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T11:44:00Z",
-          "likes": 8,
-          "shares": 2,
-          "comments": 1
+          "timestamp": "2024-10-03T11:44:00Z"
         },
         {
           "sender": "ValueInvestor_Graham",
-          "receivers": ["Regulator_Tom"],
+          "receivers": [
+            "Regulator_Tom"
+          ],
           "content": "同意，需要继续观察监管部门的反应。",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T11:49:00Z",
-          "likes": 3,
-          "shares": 0,
-          "comments": 1
+          "timestamp": "2024-10-03T11:49:00Z"
         },
         {
           "sender": "Regulator_Tom",
-          "receivers": ["ValueInvestor_Graham"],
+          "receivers": [
+            "ValueInvestor_Graham"
+          ],
           "content": "同意，需要继续观察监管部门的反应。",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T11:49:00Z",
-          "likes": 2,
-          "shares": 0,
-          "comments": 0
+          "timestamp": "2024-10-03T11:49:00Z"
         }
       ]
     },
@@ -495,47 +466,50 @@
       "name": "TikTok-like",
       "type": "short_video",
       "userCount": 2,
-      "activeUsers": ["ArtStudent_Vivian", "SocialMedia_Intern"],
+      "activeUsers": [
+        "ArtStudent_Vivian",
+        "SocialMedia_Intern"
+      ],
       "message_propagation": [
         {
           "sender": "ArtStudent_Vivian",
-          "receivers": ["SocialMedia_Intern", "MarketingPro_Serena", "TechBro_Elon"],
+          "receivers": [
+            "SocialMedia_Intern",
+            "MarketingPro_Serena",
+            "TechBro_Elon"
+          ],
           "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。AI技术可以辅助艺术创作，但不能替代人文精神。希望看到更多关于技术伦理的讨论！",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T11:49:00Z",
-          "likes": 23,
-          "shares": 8,
-          "comments": 3
+          "timestamp": "2024-10-03T11:49:00Z"
         },
         {
           "sender": "SocialMedia_Intern",
-          "receivers": ["ArtStudent_Vivian", "MarketingPro_Serena", "TechBro_Elon"],
+          "receivers": [
+            "ArtStudent_Vivian",
+            "MarketingPro_Serena",
+            "TechBro_Elon"
+          ],
           "content": "公司这次回应策略很聪明！暂停推广并邀请第三方审计，这比之前的强硬态度好多了。这个话题肯定会火，可以做成很多有趣的内容！",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T11:50:00Z",
-          "likes": 45,
-          "shares": 12,
-          "comments": 6
+          "timestamp": "2024-10-03T11:50:00Z"
         },
         {
           "sender": "ArtStudent_Vivian",
-          "receivers": ["SocialMedia_Intern"],
+          "receivers": [
+            "SocialMedia_Intern"
+          ],
           "content": "同意！技术伦理的讨论很重要！",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T11:54:00Z",
-          "likes": 12,
-          "shares": 3,
-          "comments": 1
+          "timestamp": "2024-10-03T11:54:00Z"
         },
         {
           "sender": "SocialMedia_Intern",
-          "receivers": ["ArtStudent_Vivian"],
+          "receivers": [
+            "ArtStudent_Vivian"
+          ],
           "content": "同意！技术伦理的讨论很重要！",
           "sentiment": "positive",
-          "timestamp": "2024-10-03T11:54:00Z",
-          "likes": 8,
-          "shares": 2,
-          "comments": 0
+          "timestamp": "2024-10-03T11:54:00Z"
         }
       ]
     },
@@ -543,57 +517,64 @@
       "name": "Forum-like",
       "type": "discussion_forum",
       "userCount": 2,
-      "activeUsers": ["Cynical_Dev", "Ethical_Philosopher"],
+      "activeUsers": [
+        "Cynical_Dev",
+        "Ethical_Philosopher"
+      ],
       "message_propagation": [
         {
           "sender": "Cynical_Dev",
-          "receivers": ["Skeptical_Journalist", "Ethical_Philosopher", "MarketingPro_Serena", "ValueInvestor_Graham"],
+          "receivers": [
+            "Skeptical_Journalist",
+            "Ethical_Philosopher",
+            "MarketingPro_Serena",
+            "ValueInvestor_Graham"
+          ],
           "content": "公司这次回应有所改善，但我们需要看到具体的审计结果。第三方审计必须是真正独立的，不能是公司自己选择的。技术本身可能没问题，但营销宣传往往夸大其词。",
           "sentiment": "negative",
-          "timestamp": "2024-10-03T11:52:00Z",
-          "likes": 18,
-          "shares": 5,
-          "comments": 4
+          "timestamp": "2024-10-03T11:52:00Z"
         },
         {
           "sender": "Ethical_Philosopher",
-          "receivers": ["Cynical_Dev", "TechBro_Elon", "ValueInvestor_Graham", "Regulator_Tom"],
+          "receivers": [
+            "Cynical_Dev",
+            "TechBro_Elon",
+            "ValueInvestor_Graham",
+            "Regulator_Tom"
+          ],
           "content": "公司这次回应显示了良好的合规意识，但我们需要确保审计的独立性和透明度。这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。",
           "sentiment": "negative",
-          "timestamp": "2024-10-03T11:53:00Z",
-          "likes": 22,
-          "shares": 7,
-          "comments": 5
+          "timestamp": "2024-10-03T11:53:00Z"
         },
         {
           "sender": "Skeptical_Journalist",
-          "receivers": ["Cynical_Dev", "Ethical_Philosopher"],
+          "receivers": [
+            "Cynical_Dev",
+            "Ethical_Philosopher"
+          ],
           "content": "说得对！第三方审计必须是真正独立的，不能是公司自己选择的。",
           "sentiment": "negative",
-          "timestamp": "2024-10-03T11:55:00Z",
-          "likes": 15,
-          "shares": 8,
-          "comments": 3
+          "timestamp": "2024-10-03T11:55:00Z"
         },
         {
           "sender": "Ethical_Philosopher",
-          "receivers": ["Skeptical_Journalist", "Cynical_Dev"],
+          "receivers": [
+            "Skeptical_Journalist",
+            "Cynical_Dev"
+          ],
           "content": "同意，我们需要确保审计的独立性和透明度。",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T11:58:00Z",
-          "likes": 12,
-          "shares": 3,
-          "comments": 2
+          "timestamp": "2024-10-03T11:58:00Z"
         },
         {
           "sender": "Cynical_Dev",
-          "receivers": ["Skeptical_Journalist", "Ethical_Philosopher"],
+          "receivers": [
+            "Skeptical_Journalist",
+            "Ethical_Philosopher"
+          ],
           "content": "同意，我们需要确保审计的独立性和透明度。",
           "sentiment": "neutral",
-          "timestamp": "2024-10-03T11:58:00Z",
-          "likes": 8,
-          "shares": 2,
-          "comments": 1
+          "timestamp": "2024-10-03T11:58:00Z"
         }
       ]
     }
