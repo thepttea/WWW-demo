@@ -76,7 +76,7 @@ export interface SimulationResult {
     agentId: string;
     username: string;
     description: string;
-    influenceScore: number;
+    influence_score: number;
     primaryPlatform: string;
     emotionalStyle: string;
     stanceScore: number;
@@ -97,7 +97,7 @@ export interface NetworkData {
     id: string;
     username: string;
     platform: string;
-    influenceScore: number;
+    influence_score: number;
     sentiment: string;
   }>;
   edges: Array<{
@@ -193,7 +193,7 @@ class ApiClient {
   }
 
   // 模拟相关API
-  async startSimulation(request: StartSimulationRequest): Promise<ApiResponse<{ simulationId: string; status: string; websocketUrl: string }>> {
+  async startSimulation(request: StartSimulationRequest): Promise<ApiResponse<{ simulationId: string; status: string }>> {
     return this.request('/scenario1/simulation/start', {
       method: 'POST',
       body: JSON.stringify(request),

@@ -31,8 +31,12 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
         setLoading(true);
         // 使用simulationResults中的simulationId，如果没有则使用默认值
         const simulationId = simulationResults?.simulationId || 'default_simulation';
-        const data = await mockApiClient.getSimulationResultData(simulationId);
-        setResultData(data);
+        const response = await mockApiClient.getSimulationResultData(simulationId);
+        if (response.success && response.data) {
+          setResultData(response.data);
+        } else {
+          throw new Error(response.error?.message || 'Failed to fetch result data');
+        }
       } catch (error) {
         console.error('Failed to fetch result data:', error);
         // 如果API调用失败，使用默认数据
@@ -50,10 +54,10 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
             "Consider expanding the message to reach additional demographic segments"
           ],
           influentialNodes: [
-            { node: 'Media Outlet A', influenceScore: 95, sentiment: 'Positive', reach: 120 },
-            { node: 'Industry Expert B', influenceScore: 88, sentiment: 'Positive', reach: 85 },
-            { node: 'Social Media Influencer C', influenceScore: 82, sentiment: 'Neutral', reach: 200 },
-            { node: 'Community Leader D', influenceScore: 78, sentiment: 'Positive', reach: 65 },
+            { node: 'Media Outlet A', influence_score: 95, sentiment: 'Positive', reach: 120 },
+            { node: 'Industry Expert B', influence_score: 88, sentiment: 'Positive', reach: 85 },
+            { node: 'Social Media Influencer C', influence_score: 82, sentiment: 'Neutral', reach: 200 },
+            { node: 'Community Leader D', influence_score: 78, sentiment: 'Positive', reach: 65 },
           ],
           sentimentDistribution: {
             positive: 45,
@@ -244,8 +248,8 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
             },
             {
               title: 'Influence Score',
-              dataIndex: 'influenceScore',
-              key: 'influenceScore',
+              dataIndex: 'influence_score',
+              key: 'influence_score',
               render: (score: number) => (
                 <Progress 
                   percent={score} 

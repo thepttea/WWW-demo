@@ -68,30 +68,42 @@ const Scenario1Page: React.FC = () => {
     pollingIntervalRef.current = setInterval(async () => {
       try {
         pollCount++;
-        const status = await mockApiClient.getSimulationStatus(id);
-        setPollingStatus(status);
-        setPollingError(null); // 清除之前的错误
-        
-        if (status.status === 'completed') {
-          // 模拟完成，获取结果
-          try {
-            const result = await mockApiClient.getSimulationResult(id);
-            setSimulationResult(result);
-            clearPolling();
-            message.success('Simulation completed successfully!');
-          } catch (error) {
-            console.error('Failed to get simulation result:', error);
-            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-            setPollingError(`Failed to get simulation result: ${errorMessage}`);
-            message.error(`Failed to get simulation result: ${errorMessage}`);
+        const statusResponse = await mockApiClient.getSimulationStatus(id);
+        if (statusResponse.success && statusResponse.data) {
+          setPollingStatus(statusResponse.data);
+          setPollingError(null); // 清除之前的错误
+          
+          if (statusResponse.data.status === 'completed') {
+            // 模拟完成，获取结果
+            try {
+              const resultResponse = await mockApiClient.getSimulationResult(id);
+              if (resultResponse.success && resultResponse.data) {
+                setSimulationResult(resultResponse.data);
+              } else {
+                throw new Error(resultResponse.error?.message || 'Failed to get simulation result');
+              }
+              clearPolling();
+              message.success('Simulation completed successfully!');
+            } catch (error) {
+              console.error('Failed to get simulation result:', error);
+              const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+              setPollingError(`Failed to get simulation result: ${errorMessage}`);
+              message.error(`Failed to get simulation result: ${errorMessage}`);
+              clearPolling();
+            }
+          } else if (statusResponse.data.status === 'error') {
+            const errorMessage = statusResponse.data.message || 'Unknown error';
+            setPollingError(`Simulation failed: ${errorMessage}`);
+            message.error(`Simulation failed: ${errorMessage}`);
             clearPolling();
           }
-        } else if (status.status === 'error') {
-          const errorMessage = status.message || 'Unknown error';
-          setPollingError(`Simulation failed: ${errorMessage}`);
-          message.error(`Simulation failed: ${errorMessage}`);
+        } else {
+          setPollingError('Failed to get simulation status');
+          message.error('Failed to get simulation status');
           clearPolling();
-        } else if (pollCount >= maxPolls) {
+        }
+        
+        if (pollCount >= maxPolls) {
           setPollingError('Simulation timeout - please try again');
           message.error('Simulation timeout - please try again');
           clearPolling();
@@ -143,11 +155,17 @@ const Scenario1Page: React.FC = () => {
     setIsLoading(true);
     try {
       // 使用模拟API调用启动模拟
-      const result = await mockApiClient.startSimulation({
+      const response = await mockApiClient.startSimulation({
         eventDescription: config.eventDescription,
         llm: config.llm,
         strategy: config.strategy.content
       });
+      
+      if (!response.success || !response.data) {
+        throw new Error(response.error?.message || 'Failed to start simulation');
+      }
+      
+      const result = response.data;
 
       // 设置模拟状态
       setSimulationState({
@@ -199,7 +217,10 @@ const Scenario1Page: React.FC = () => {
       console.log('Frontend: Starting next round, current round:', currentRound);
       
       // 使用模拟API调用添加下一轮策略
-      await mockApiClient.addNextRoundStrategy(simulationId, strategy, currentRound);
+      const response = await mockApiClient.addNextRoundStrategy(simulationId, strategy, currentRound);
+      if (!response.success) {
+        throw new Error(response.error?.message || 'Failed to add next round strategy');
+      }
 
       // 更新模拟状态
       setSimulationState(prev => prev ? {
@@ -237,11 +258,14 @@ const Scenario1Page: React.FC = () => {
     setIsLoading(true);
     try {
       // 使用模拟API调用生成报告
-      const result = await mockApiClient.generateReport(simulationId);
+      const response = await mockApiClient.generateReport(simulationId);
+      if (!response.success || !response.data) {
+        throw new Error(response.error?.message || 'Failed to generate report');
+      }
       
       message.success('Report generated successfully!');
       setShowResults(true);
-      console.log('Generated report:', result);
+      console.log('Generated report:', response.data);
     } catch (error) {
       console.error('Failed to generate report:', error);
       message.error('Failed to generate report');
@@ -258,7 +282,10 @@ const Scenario1Page: React.FC = () => {
       
       // 如果有活跃的模拟，先调用模拟API重置
       if (simulationId) {
-        await mockApiClient.resetSimulation(simulationId);
+        const response = await mockApiClient.resetSimulation(simulationId);
+        if (!response.success) {
+          throw new Error(response.error?.message || 'Failed to reset simulation');
+        }
       }
 
       // 重置所有前端状态
@@ -347,7 +374,7 @@ const Scenario1Page: React.FC = () => {
             <VisualizationArea
               isLoading={isLoading}
               networkData={simulationResult ? {
-                users: simulationResult.users.map(user => ({
+                users: simulationResult.users.map((user: any) => ({
                   username: user.username,
                   influence_score: user.influence_score,
                   primary_platform: user.primary_platform,

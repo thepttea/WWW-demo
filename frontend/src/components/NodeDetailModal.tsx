@@ -8,8 +8,6 @@ interface User {
   emotional_style: string;
   influence_score: number;
   primary_platform: string;
-  llm_model: string;
-  llm_temperature: number;
   objective_stance_score: number;
   final_decision: string;
   contextual_memories: string[];

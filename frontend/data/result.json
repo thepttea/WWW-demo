@@ -14,25 +14,25 @@
   "influentialNodes": [
     {
       "node": "Media Outlet A",
-      "influenceScore": 95,
+      "influence_score": 95,
       "sentiment": "Positive",
       "reach": 120
     },
     {
       "node": "Industry Expert B",
-      "influenceScore": 88,
+      "influence_score": 88,
       "sentiment": "Positive",
       "reach": 85
     },
     {
       "node": "Social Media Influencer C",
-      "influenceScore": 82,
+      "influence_score": 82,
       "sentiment": "Neutral",
       "reach": 200
     },
     {
       "node": "Community Leader D",
-      "influenceScore": 78,
+      "influence_score": 78,
       "sentiment": "Positive",
       "reach": 65
     }

@@ -3,6 +3,7 @@ import round1Data from '../../data/round1.json';  // 第一轮数据
 import round2Data from '../../data/round2.json';  // 第二轮数据
 import round3Data from '../../data/round3.json';  // 第三轮数据
 import resultData from '../../data/result.json';  // 模拟结果数据
+import { ApiResponse } from './api';
 
 export interface MockSimulationData {
   simulationId: string;
@@ -20,8 +21,6 @@ export interface MockSimulationData {
     emotional_style: string;
     influence_score: number;
     primary_platform: string;
-    llm_model: string;
-    llm_temperature: number;
     objective_stance_score: number;
     final_decision: string;
     contextual_memories: string[];
@@ -62,7 +61,7 @@ export interface SimulationResultData {
   recommendations: string[];
   influentialNodes: Array<{
     node: string;
-    influenceScore: number;
+    influence_score: number;
     sentiment: string;
     reach: number;
   }>;
@@ -104,10 +103,13 @@ class MockApiClient {
     void baseURL;
   }
 
-  private async mockRequest<T>(data: T, delay: number = 500): Promise<T> {
+  private async mockRequest<T>(data: T, delay: number = 500): Promise<ApiResponse<T>> {
     // 模拟网络延迟
     await new Promise(resolve => setTimeout(resolve, delay));
-    return data;
+    return {
+      success: true,
+      data: data
+    };
   }
 
   // 模拟开始模拟的API调用
@@ -115,7 +117,7 @@ class MockApiClient {
     eventDescription: string;
     llm: string;
     strategy: string;
-  }): Promise<{ simulationId: string; status: string }> {
+  }): Promise<ApiResponse<{ simulationId: string; status: string }>> {
     console.log('Mock API: Starting simulation with config:', config);
     
     const simulationId = `sim_${Date.now()}`;
@@ -136,7 +138,7 @@ class MockApiClient {
 
 
   // 模拟添加下一轮策略的API调用
-  async addNextRoundStrategy(simulationId: string, strategy: string, currentRound: number = 1): Promise<{ simulationId: string; status: string }> {
+  async addNextRoundStrategy(simulationId: string, strategy: string, currentRound: number = 1): Promise<ApiResponse<{ simulationId: string; status: string }>> {
     console.log('Mock API: Adding next round strategy:', strategy, 'for round:', currentRound + 1);
     
     const targetRound = currentRound + 1;
@@ -170,7 +172,7 @@ class MockApiClient {
   }
 
   // 模拟生成报告的API调用
-  async generateReport(simulationId: string): Promise<{
+  async generateReport(simulationId: string): Promise<ApiResponse<{
     reportId: string;
     content: string;
     summary: {
@@ -179,7 +181,7 @@ class MockApiClient {
       improvements: string[];
     };
     generatedAt: string;
-  }> {
+  }>> {
     console.log('Mock API: Generating report for:', simulationId);
     
     const reportData = {
@@ -205,14 +207,14 @@ class MockApiClient {
   }
 
   // 获取模拟结果数据的API调用
-  async getSimulationResultData(simulationId: string): Promise<SimulationResultData> {
+  async getSimulationResultData(simulationId: string): Promise<ApiResponse<SimulationResultData>> {
     console.log('Mock API: Getting simulation result data for:', simulationId);
     
     return this.mockRequest(resultData, 500);
   }
 
   // 模拟重置模拟的API调用
-  async resetSimulation(simulationId: string): Promise<{ success: boolean; message: string }> {
+  async resetSimulation(simulationId: string): Promise<ApiResponse<{ success: boolean; message: string }>> {
     console.log('Mock API: Resetting simulation:', simulationId);
     
     return this.mockRequest({
@@ -222,19 +224,19 @@ class MockApiClient {
   }
 
   // 轮询API - 获取模拟状态
-  async getSimulationStatus(simulationId: string): Promise<SimulationStatus> {
+  async getSimulationStatus(simulationId: string): Promise<ApiResponse<SimulationStatus>> {
     console.log('Mock API: Getting simulation status for:', simulationId);
     
     const state = this.simulationStates.get(simulationId);
     
     if (!state) {
-      return {
+      return this.mockRequest({
         simulationId,
         status: 'error',
         progress: 0,
         currentRound: 0,
         message: 'Simulation not found'
-      };
+      }, 100);
     }
 
     // 如果状态是running，模拟进度更新
@@ -288,7 +290,7 @@ class MockApiClient {
   }
 
   // 轮询API - 获取模拟结果
-  async getSimulationResult(simulationId: string): Promise<MockSimulationData> {
+  async getSimulationResult(simulationId: string): Promise<ApiResponse<MockSimulationData>> {
     console.log('Mock API: Getting simulation result for:', simulationId);
     
     const state = this.simulationStates.get(simulationId);
