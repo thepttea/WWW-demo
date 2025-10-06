@@ -67,6 +67,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   
   // 颜色状态持久化 - 记录每个用户的上一次颜色状态
   const [userColorStates, setUserColorStates] = useState<{ [username: string]: { r: number; g: number; b: number } }>({});
+  // 动画开始时的初始颜色 - 用于颜色渐变计算
+  const [animationInitialColors, setAnimationInitialColors] = useState<{ [username: string]: { r: number; g: number; b: number } }>({});
   
   // 节点详情弹窗状态
   const [modalVisible, setModalVisible] = useState(false);
@@ -91,9 +93,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 从实际数据生成消息传播步骤 - 前端随机排序并生成相对时间戳
   const messageSteps = React.useMemo(() => {
-    console.log('NetworkVisualization - messageSteps recalculating, platforms:', platforms);
     if (!platforms || platforms.length === 0) {
-      console.log('NetworkVisualization - No platforms or empty platforms array');
       return [];
     }
 
@@ -139,7 +139,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
     platforms.forEach(platform => {
       if (platform.message_propagation && Array.isArray(platform.message_propagation)) {
-        console.log(`NetworkVisualization - Platform ${platform.name} has ${platform.message_propagation.length} messages`);
         platform.message_propagation.forEach(message => {
           allMessages.push({
             platform: platform.name,
@@ -149,8 +148,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         });
       }
     });
-
-    console.log('NetworkVisualization - Total messages collected:', allMessages.length);
 
     // 前端随机排序消息
     const shuffledMessages = [...allMessages].sort(() => Math.random() - 0.5);
@@ -180,7 +177,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       messageIndex++;
     });
 
-    console.log('NetworkVisualization - Generated message steps:', steps.length);
     return steps;
   }, [platforms]);
 
@@ -286,10 +282,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 开始动画序列 - 当有网络数据时自动开始
   useEffect(() => {
-    console.log('NetworkVisualization - Animation useEffect triggered, users.length:', users.length, 'messageSteps.length:', messageSteps.length);
-    
     if (users.length > 0 && messageSteps.length > 0) {
-      console.log('NetworkVisualization - Starting animation');
       setIsAnimating(true);
       setCurrentStep(0);
       setCurrentPhase(0);
@@ -298,6 +291,27 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       animationStartTimeRef.current = newStartTime;
       setAnimationStartTime(newStartTime);
       setAnimationCompleted(false); // 重置动画完成状态
+      
+      // 保存动画开始时的初始颜色
+      const initialColors: { [username: string]: { r: number; g: number; b: number } } = {};
+      users.forEach(user => {
+        const usernameMapping: { [key: string]: string } = {
+          'MarketingPro_Serena': 'Serena',
+          'Skeptical_Journalist': 'Journalist',
+          'TechBro_Elon': 'Elon',
+          'TechEnthusiast_Alex': 'Alex',
+          'ValueInvestor_Graham': 'Graham',
+          'Regulator_Tom': 'Tom',
+          'ArtStudent_Vivian': 'Vivian',
+          'SocialMedia_Intern': 'Intern',
+          'Cynical_Dev': 'Dev',
+          'Ethical_Philosopher': 'Philosopher'
+        };
+        const shortUsername = usernameMapping[user.username] || user.username;
+        // 使用当前保存的颜色作为初始颜色，如果没有则使用默认灰色
+        initialColors[shortUsername] = userColorStates[shortUsername] || { r: 107, g: 114, b: 128 };
+      });
+      setAnimationInitialColors(initialColors);
       
       // 使用 setTimeout 来精确控制每个消息的显示时机
       const timers: NodeJS.Timeout[] = [];
@@ -340,7 +354,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         const animationEndTime = lastMessage.delay + lastMessage.duration;
         
         const endTimer = setTimeout(() => {
-          
           setIsAnimating(false);
           setCurrentStep(-1); // 重置为-1表示没有当前消息
           setCurrentPhase(0);
@@ -377,6 +390,9 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     if (!animationStartTime) return;
 
     const interval = setInterval(() => {
+      // 使用 ref 中的开始时间，确保是最新的
+      const startTime = animationStartTimeRef.current;
+      if (!startTime) return;
       
       setUserColorStates(prev => {
         const newStates = { ...prev };
@@ -397,8 +413,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
             });
             
             if (totalMessages > 0) {
-              // 与消息动画保持一致：最后一条消息的结束时间 = (totalMessages - 1) * 6000 + 6000
-              const duration = (totalMessages - 1) * 6000 + 6000;
+              // 与消息动画保持一致：总时长 = 消息数量 * 6000ms
+              const duration = totalMessages * 6000;
               return duration;
             } else {
               return 0;
@@ -429,12 +445,12 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
             const totalDuration = calculateAnimationDuration();
             
             if (totalDuration > 0) {
-              const elapsed = Date.now() - animationStartTime;
+              const elapsed = Date.now() - startTime;
               const progress = Math.min(elapsed / totalDuration, 1);
               
-              // 获取当前保存的颜色状态作为初始颜色
-              const savedColor = prev[shortUsername];
-              const initialColor = savedColor || { r: 107, g: 114, b: 128 }; // 默认灰色或上一轮颜色
+              
+              // 使用动画开始时的初始颜色
+              const initialColor = animationInitialColors[shortUsername] || { r: 107, g: 114, b: 128 };
               
               // 计算最终颜色
               const finalColorStr = getStanceColor(user.objective_stance_score);
@@ -454,7 +470,9 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
                   b: Math.round(initialColor.b + (finalColor.b - initialColor.b) * progress)
                 };
                 
+                
                 // 检查是否有变化
+                const savedColor = prev[shortUsername];
                 if (!savedColor || 
                     savedColor.r !== currentColor.r || 
                     savedColor.g !== currentColor.g || 
@@ -473,7 +491,9 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setForceUpdate(prev => prev + 1);
     }, 100); // 恢复为100ms更新一次
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+    };
   }, [animationStartTime, users.length, platforms?.length]);
 
   // 获取所有静态路径（一开始就显示）

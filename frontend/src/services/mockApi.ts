@@ -201,7 +201,7 @@ class MockApiClient {
     if (state.status === 'running') {
       const now = Date.now();
       const elapsed = now - state.startTime;
-      const totalDuration = 10000; // 模拟10秒完成
+      const totalDuration = 2000; // 模拟10秒完成
       const progress = Math.min(Math.floor((elapsed / totalDuration) * 100), 99);
       
       // 如果超过总时长，标记为完成
