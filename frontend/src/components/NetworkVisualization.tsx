@@ -88,15 +88,12 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     platformToReceivers: false
   });
 
-  // 计算platforms的稳定标识符
-  const platformsKey = React.useMemo(() => {
-    if (!platforms || platforms.length === 0) return '';
-    return platforms.map(p => `${p.name}-${p.message_propagation?.length || 0}`).join('|');
-  }, [platforms?.length, platforms?.map(p => p.name).join(',')]);
 
   // 从实际数据生成消息传播步骤 - 前端随机排序并生成相对时间戳
   const messageSteps = React.useMemo(() => {
+    console.log('NetworkVisualization - messageSteps recalculating, platforms:', platforms);
     if (!platforms || platforms.length === 0) {
+      console.log('NetworkVisualization - No platforms or empty platforms array');
       return [];
     }
 
@@ -142,7 +139,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
     platforms.forEach(platform => {
       if (platform.message_propagation && Array.isArray(platform.message_propagation)) {
-        console.log(`平台 ${platform.name} 有 ${platform.message_propagation.length} 条消息`);
+        console.log(`NetworkVisualization - Platform ${platform.name} has ${platform.message_propagation.length} messages`);
         platform.message_propagation.forEach(message => {
           allMessages.push({
             platform: platform.name,
@@ -153,11 +150,10 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       }
     });
 
+    console.log('NetworkVisualization - Total messages collected:', allMessages.length);
+
     // 前端随机排序消息
     const shuffledMessages = [...allMessages].sort(() => Math.random() - 0.5);
-    
-    console.log('NetworkVisualization - 收集到的消息数量:', allMessages.length);
-    console.log('NetworkVisualization - 随机排序后的消息数量:', shuffledMessages.length);
 
     // 分配相对时间戳
     let currentDelay = 0;
@@ -184,8 +180,9 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       messageIndex++;
     });
 
+    console.log('NetworkVisualization - Generated message steps:', steps.length);
     return steps;
-  }, [platforms?.length]);
+  }, [platforms]);
 
   // 获取用户坐标 - 优化为现代美学的不规则圆形分布
   const getUserCoordinates = (username: string) => {
@@ -289,26 +286,17 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 开始动画序列 - 当有网络数据时自动开始
   useEffect(() => {
-    console.log('NetworkVisualization - useEffect triggered');
-    console.log('NetworkVisualization - has network data:', !!users.length);
-    console.log('NetworkVisualization - users:', users.length, 'platforms:', platforms?.length);
-    console.log('NetworkVisualization - messageSteps:', messageSteps.length);
-    console.log('NetworkVisualization - current animationStartTime:', animationStartTime);
+    console.log('NetworkVisualization - Animation useEffect triggered, users.length:', users.length, 'messageSteps.length:', messageSteps.length);
     
-    if (users.length > 0) {
-      console.log('Starting animation sequence');
+    if (users.length > 0 && messageSteps.length > 0) {
+      console.log('NetworkVisualization - Starting animation');
       setIsAnimating(true);
       setCurrentStep(0);
       setCurrentPhase(0);
-      // 只在没有动画开始时间时才设置，避免重复设置导致颜色动画重启
-      if (!animationStartTimeRef.current) {
-        const newStartTime = Date.now();
-        console.log('Setting animationStartTime to:', newStartTime);
-        animationStartTimeRef.current = newStartTime;
-        setAnimationStartTime(newStartTime); // 设置动画开始时间
-      } else {
-        console.log('AnimationStartTime already set, not resetting');
-      }
+      // 重置动画开始时间，确保每次都能重新开始
+      const newStartTime = Date.now();
+      animationStartTimeRef.current = newStartTime;
+      setAnimationStartTime(newStartTime);
       setAnimationCompleted(false); // 重置动画完成状态
       
       // 使用 setTimeout 来精确控制每个消息的显示时机
@@ -323,28 +311,24 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           setCurrentPhase(0);
           setEdgeTransitionStep(index);
           setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
-          console.log(`Phase 1 - Message ${index + 1}: Flashing sender ${step.sender}, edges inactive`);
         }, messageStartTime);
         
         // 阶段2: 闪烁发送者和平台 (1s) - 激活发送者到平台的边
         const phase2Timer = setTimeout(() => {
           setCurrentPhase(1);
           setActiveEdges({ senderToPlatform: true, platformToReceivers: false });
-          console.log(`Phase 2 - Message ${index + 1}: Flashing sender and platform, activating sender-to-platform edge`);
         }, messageStartTime + 1000);
         
         // 阶段3: 闪烁发送者、平台和接收者 (1s) - 激活平台到接收者的边
         const phase3Timer = setTimeout(() => {
           setCurrentPhase(2);
           setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
-          console.log(`Phase 3 - Message ${index + 1}: Flashing sender, platform and receivers, activating platform-to-receivers edges`);
         }, messageStartTime + 2000);
         
         // 阶段4: 开始流动边 (3s) - 保持所有边激活
         const phase4Timer = setTimeout(() => {
           setCurrentPhase(3);
           setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
-          console.log(`Phase 4 - Message ${index + 1}: Starting flow animation`);
         }, messageStartTime + 3000);
         
         timers.push(phase1Timer, phase2Timer, phase3Timer, phase4Timer);
@@ -355,17 +339,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         const lastMessage = messageSteps[messageSteps.length - 1];
         const animationEndTime = lastMessage.delay + lastMessage.duration;
         
-        console.log('=== 消息动画时长计算调试 ===');
-        console.log('messageSteps.length:', messageSteps.length);
-        console.log('lastMessage:', lastMessage);
-        console.log('lastMessage.delay:', lastMessage.delay);
-        console.log('lastMessage.duration:', lastMessage.duration);
-        console.log('animationEndTime:', animationEndTime);
-        console.log('animationEndTime (秒):', animationEndTime / 1000);
-        console.log('=== 消息动画时长计算调试结束 ===');
-        
         const endTimer = setTimeout(() => {
-          console.log('Animation sequence completed - stopping animation');
           
           setIsAnimating(false);
           setCurrentStep(-1); // 重置为-1表示没有当前消息
@@ -396,17 +370,13 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setIsTransitioning(false);
       setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
     }
-  }, [users.length, platforms?.length]);
+  }, [users.length, platforms?.length, messageSteps.length]);
 
   // 颜色动画定时器 - 每100ms更新一次颜色和颜色状态
   useEffect(() => {
-    console.log('Color animation useEffect triggered, animationStartTime:', animationStartTime, 'users.length:', users.length, 'platformsKey:', platformsKey);
     if (!animationStartTime) return;
 
     const interval = setInterval(() => {
-      const currentTime = Date.now();
-      const elapsed = currentTime - animationStartTime;
-      console.log(`Color animation tick - elapsed: ${elapsed}ms, animationStartTime: ${animationStartTime}`);
       
       setUserColorStates(prev => {
         const newStates = { ...prev };
@@ -414,46 +384,27 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         
         // 在useEffect内部计算动画时长，与消息动画保持一致
         const calculateAnimationDuration = () => {
-          console.log('=== 颜色动画时长计算调试 ===');
-          console.log('users.length:', users.length);
-          console.log('platforms.length:', platforms.length);
-          console.log('platforms:', platforms);
-          
           // 使用实际的后端数据计算时长，与消息动画保持一致
           if (users.length > 0 && platforms.length > 0) {
             let totalMessages = 0;
             
-            platforms.forEach((platform, index) => {
-              console.log(`平台 ${index}: ${platform.name}`);
-              console.log('platform.message_propagation:', platform.message_propagation);
-              console.log('platform.message_flow:', platform.message_flow);
-              
+            platforms.forEach((platform) => {
               const messages = platform.message_propagation || platform.message_flow || [];
-              console.log(`平台 ${platform.name} 消息数量:`, messages.length);
               
               if (Array.isArray(messages) && messages.length > 0) {
                 totalMessages += messages.length;
-                console.log(`平台 ${platform.name} 有效消息数量:`, messages.length);
               }
             });
-            
-            console.log('总消息数量:', totalMessages);
             
             if (totalMessages > 0) {
               // 与消息动画保持一致：最后一条消息的结束时间 = (totalMessages - 1) * 6000 + 6000
               const duration = (totalMessages - 1) * 6000 + 6000;
-              console.log(`颜色动画时长计算: ${totalMessages}条消息，最后一条消息结束时间 = ${duration}ms (${duration/1000}秒)`);
-              console.log('=== 颜色动画时长计算调试结束 ===');
               return duration;
             } else {
-              console.log('颜色动画时长计算: 没有消息，返回0');
-              console.log('=== 颜色动画时长计算调试结束 ===');
               return 0;
             }
           }
           
-          console.log('颜色动画时长计算: 没有后端数据，返回0');
-          console.log('=== 颜色动画时长计算调试结束 ===');
           // 如果没有后端数据，返回默认时长
           return 0;
         };
@@ -485,8 +436,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
               const savedColor = prev[shortUsername];
               const initialColor = savedColor || { r: 107, g: 114, b: 128 }; // 默认灰色或上一轮颜色
               
-              console.log(`User ${shortUsername}: elapsed=${elapsed}ms, totalDuration=${totalDuration}ms, progress=${progress.toFixed(3)}, savedColor=${JSON.stringify(savedColor)}, initialColor=${JSON.stringify(initialColor)}`);
-              
               // 计算最终颜色
               const finalColorStr = getStanceColor(user.objective_stance_score);
               const finalColorMatch = finalColorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
@@ -505,8 +454,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
                   b: Math.round(initialColor.b + (finalColor.b - initialColor.b) * progress)
                 };
                 
-                console.log(`User ${shortUsername}: finalColor=${JSON.stringify(finalColor)}, currentColor=${JSON.stringify(currentColor)}`);
-                
                 // 检查是否有变化
                 if (!savedColor || 
                     savedColor.r !== currentColor.r || 
@@ -514,11 +461,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
                     savedColor.b !== currentColor.b) {
                   newStates[shortUsername] = currentColor;
                   hasChanges = true;
-                  console.log(`User ${shortUsername}: 颜色更新，从 ${JSON.stringify(savedColor)} 到 ${JSON.stringify(currentColor)}`);
                 }
               }
-            } else {
-              console.log(`User ${shortUsername}: totalDuration为0，跳过颜色计算`);
             }
           }
         });
@@ -683,13 +627,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 处理节点点击事件
   const handleNodeClick = (nodeType: 'user' | 'platform', nodeName: string) => {
-    console.log('Node clicked:', nodeType, nodeName);
-    console.log('Available users:', users.map(u => u.username));
-    console.log('Available platforms:', platforms.map(p => p.name));
-    
     if (nodeType === 'user') {
       const user = users.find(u => u.username === nodeName);
-      console.log('Found user:', user);
       if (user) {
         setSelectedNode(user);
         setSelectedNodeType('user');
@@ -697,7 +636,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       }
     } else if (nodeType === 'platform') {
       const platform = platforms.find(p => p.name === nodeName);
-      console.log('Found platform:', platform);
       if (platform) {
         setSelectedNode(platform);
         setSelectedNodeType('platform');

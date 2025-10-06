@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Typography, message } from 'antd';
 import ConfigurationPanel from './ConfigurationPanel';
 import VisualizationArea from './VisualizationArea';
 import StrategyRefinementDrawer from '../../components/StrategyRefinementDrawer';
 import Scenario1ResultsPageStatic from './Scenario1ResultsPageStatic';
 import { SimulationConfig, SimulationParameters, SimulationState } from '../../types';
-import { mockApiClient, MockSimulationData } from '../../services/mockApi';
+import { mockApiClient, MockSimulationData, SimulationStatus } from '../../services/mockApi';
 // import { useStartSimulation, useAddPRStrategy, useSimulationStatus, useSimulationResult, useGenerateReport, useResetSimulation } from '../../hooks/useApi';
 import './Scenario1Page.css';
 
@@ -19,6 +19,14 @@ const Scenario1Page: React.FC = () => {
   const [simulationId, setSimulationId] = useState<string | null>(null);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+  
+  // 轮询相关状态
+  const [pollingStatus, setPollingStatus] = useState<SimulationStatus | null>(null);
+  const [isPolling, setIsPolling] = useState(false);
+  const [pollingError, setPollingError] = useState<string | null>(null);
+  const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pollingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const retryCountRef = useRef<number>(0);
 
   // API hooks - TODO: 后续集成后端API时取消注释
   // const startSimulationMutation = useStartSimulation();
@@ -27,6 +35,100 @@ const Scenario1Page: React.FC = () => {
   // const resetSimulationMutation = useResetSimulation();
   // const { data: _simulationStatus } = useSimulationStatus(simulationId);
   // const { data: simulationResultData } = useSimulationResult(simulationId);
+
+  // 清理轮询
+  const clearPolling = () => {
+    if (pollingIntervalRef.current) {
+      clearInterval(pollingIntervalRef.current);
+      pollingIntervalRef.current = null;
+    }
+    if (pollingTimeoutRef.current) {
+      clearTimeout(pollingTimeoutRef.current);
+      pollingTimeoutRef.current = null;
+    }
+    setIsPolling(false);
+    setPollingError(null);
+    retryCountRef.current = 0;
+  };
+
+  // 开始轮询
+  const startPolling = (id: string) => {
+    // 如果已经在轮询，先清理之前的轮询
+    if (isPolling) {
+      clearPolling();
+    }
+    
+    setIsPolling(true);
+    setPollingError(null);
+    let pollCount = 0;
+    const maxPolls = 40; // 最大轮询次数（40秒，覆盖10秒模拟+缓冲时间）
+    const maxRetries = 3; // 最大重试次数
+    
+    // 设置轮询间隔（1秒）
+    pollingIntervalRef.current = setInterval(async () => {
+      try {
+        pollCount++;
+        const status = await mockApiClient.getSimulationStatus(id);
+        setPollingStatus(status);
+        setPollingError(null); // 清除之前的错误
+        
+        if (status.status === 'completed') {
+          // 模拟完成，获取结果
+          try {
+            const result = await mockApiClient.getSimulationResult(id);
+            setSimulationResult(result);
+            clearPolling();
+            message.success('Simulation completed successfully!');
+          } catch (error) {
+            console.error('Failed to get simulation result:', error);
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            setPollingError(`Failed to get simulation result: ${errorMessage}`);
+            message.error(`Failed to get simulation result: ${errorMessage}`);
+            clearPolling();
+          }
+        } else if (status.status === 'error') {
+          const errorMessage = status.message || 'Unknown error';
+          setPollingError(`Simulation failed: ${errorMessage}`);
+          message.error(`Simulation failed: ${errorMessage}`);
+          clearPolling();
+        } else if (pollCount >= maxPolls) {
+          setPollingError('Simulation timeout - please try again');
+          message.error('Simulation timeout - please try again');
+          clearPolling();
+        }
+      } catch (error) {
+        console.error('Polling error:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        
+        // 增加重试计数
+        retryCountRef.current++;
+        
+        if (retryCountRef.current >= maxRetries) {
+          setPollingError(`Failed to check simulation status: ${errorMessage}`);
+          message.error(`Failed to check simulation status: ${errorMessage}`);
+          clearPolling();
+        } else {
+          // 显示重试信息
+          setPollingError(`Retrying... (${retryCountRef.current}/${maxRetries})`);
+          console.log(`Polling retry ${retryCountRef.current}/${maxRetries}: ${errorMessage}`);
+        }
+      }
+    }, 1000);
+    
+    // 设置超时（40秒）
+    pollingTimeoutRef.current = setTimeout(() => {
+      setPollingError('Simulation timeout - please try again');
+      message.error('Simulation timeout - please try again');
+      clearPolling();
+    }, 40000);
+  };
+
+  // 组件卸载时清理轮询
+  useEffect(() => {
+    return () => {
+      clearPolling();
+    };
+  }, []);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
     if (!config.eventDescription?.trim()) {
@@ -40,7 +142,7 @@ const Scenario1Page: React.FC = () => {
 
     setIsLoading(true);
     try {
-      // 使用模拟API调用
+      // 使用模拟API调用启动模拟
       const result = await mockApiClient.startSimulation({
         eventDescription: config.eventDescription,
         llm: config.llm,
@@ -62,9 +164,9 @@ const Scenario1Page: React.FC = () => {
         }],
       });
 
-      // 设置模拟结果数据
-      setSimulationResult(result);
+      // 设置模拟ID并开始轮询
       setSimulationId(result.simulationId);
+      startPolling(result.simulationId);
 
       message.success('Simulation started successfully!');
     } catch (error) {
@@ -89,8 +191,15 @@ const Scenario1Page: React.FC = () => {
 
     setIsLoading(true);
     try {
+      // 清理之前的轮询状态
+      clearPolling();
+      
+      // 获取当前轮次
+      const currentRound = simulationState?.currentRound || 1;
+      console.log('Frontend: Starting next round, current round:', currentRound);
+      
       // 使用模拟API调用添加下一轮策略
-      const result = await mockApiClient.addNextRoundStrategy(simulationId, strategy, simulationState?.currentRound || 1);
+      await mockApiClient.addNextRoundStrategy(simulationId, strategy, currentRound);
 
       // 更新模拟状态
       setSimulationState(prev => prev ? {
@@ -107,11 +216,8 @@ const Scenario1Page: React.FC = () => {
         nextRoundStrategy: strategy,
       } : undefined);
 
-      // 更新模拟结果数据
-      console.log('Scenario1Page - Setting simulation result:', result);
-      console.log('Scenario1Page - Result users:', result.users.length);
-      console.log('Scenario1Page - Result platforms:', result.platforms.length);
-      setSimulationResult(result);
+      // 开始轮询新轮次
+      startPolling(simulationId);
 
       message.success(`Round ${simulationState?.currentRound ? simulationState.currentRound + 1 : 2} simulation started!`);
     } catch (error) {
@@ -147,6 +253,9 @@ const Scenario1Page: React.FC = () => {
   const handleReset = async () => {
     setIsLoading(true);
     try {
+      // 清理轮询
+      clearPolling();
+      
       // 如果有活跃的模拟，先调用模拟API重置
       if (simulationId) {
         await mockApiClient.resetSimulation(simulationId);
@@ -159,6 +268,7 @@ const Scenario1Page: React.FC = () => {
       setConfirmedStrategy('');
       setIsDrawerVisible(false);
       setShowResults(false);
+      setPollingStatus(null);
       
       message.success('Simulation reset successfully');
     } catch (error) {
@@ -228,6 +338,9 @@ const Scenario1Page: React.FC = () => {
               onOpenDrawer={handleOpenDrawer}
               simulationState={simulationState}
               confirmedStrategy={confirmedStrategy}
+              pollingStatus={pollingStatus}
+              isPolling={isPolling}
+              pollingError={pollingError}
             />
           </div>
           <div className="visualization-column">

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Select, Input, Button, Space, Typography } from 'antd';
+import { Card, Select, Input, Button, Space, Typography, Progress } from 'antd';
 import { ThunderboltOutlined, SendOutlined, RightOutlined, EyeOutlined, LockOutlined } from '@ant-design/icons';
 import { LLMOption, SimulationState } from '../../types';
+import { SimulationStatus } from '../../services/mockApi';
 import ContentModal from '../../components/ContentModal';
 import './ConfigurationPanel.css';
 
@@ -17,6 +18,9 @@ interface ConfigurationPanelProps {
   simulationState?: SimulationState;
   confirmedStrategy?: string;
   onResetFields?: () => void;
+  pollingStatus?: SimulationStatus | null;
+  isPolling?: boolean;
+  pollingError?: string | null;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -28,6 +32,9 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   simulationState,
   confirmedStrategy,
   onResetFields,
+  pollingStatus = null,
+  isPolling = false,
+  pollingError = null,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
   const [eventDescription, setEventDescription] = useState<string>('');
@@ -273,6 +280,41 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
             maxLength={1000}
           />
         </div>
+
+        {/* 轮询状态显示 */}
+        {(isPolling || pollingError) && (
+          <div className="config-section">
+            <label className="config-label">Simulation Status</label>
+            <div className="polling-status">
+              {pollingError ? (
+                <div className="error-status">
+                  <div className="status-info">
+                    <span className="error-text">{pollingError}</span>
+                  </div>
+                </div>
+              ) : pollingStatus ? (
+                <>
+                  <div className="status-info">
+                    <span className="status-text">
+                      {pollingStatus.status === 'running' ? 'Running...' : 
+                       pollingStatus.status === 'completed' ? 'Completed' : 
+                       pollingStatus.status === 'error' ? 'Error' : 'Unknown'}
+                    </span>
+                    <span className="round-info">Round {pollingStatus.currentRound}</span>
+                  </div>
+                  {pollingStatus.status === 'running' && (
+                    <Progress 
+                      percent={pollingStatus.progress} 
+                      size="small" 
+                      status="active"
+                      className="polling-progress"
+                    />
+                  )}
+                </>
+              ) : null}
+            </div>
+          </div>
+        )}
 
         <div className="config-actions">
           <Button

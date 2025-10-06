@@ -44,7 +44,28 @@ export interface MockSimulationData {
   }>;
 }
 
+// 轮询状态接口
+export interface SimulationStatus {
+  simulationId: string;
+  status: 'initial' | 'running' | 'completed' | 'consumed' | 'error';
+  progress: number;
+  currentRound: number;
+  message?: string;
+}
+
+// 模拟状态存储
+interface SimulationState {
+  status: 'initial' | 'running' | 'completed' | 'consumed' | 'error';
+  progress: number;
+  currentRound: number;
+  data?: MockSimulationData;
+  startTime: number;
+  completedTime?: number;
+}
+
 class MockApiClient {
+  private simulationStates: Map<string, SimulationState> = new Map();
+
   constructor(baseURL: string = '/api') {
     // baseURL is reserved for future use
     void baseURL;
@@ -61,87 +82,58 @@ class MockApiClient {
     eventDescription: string;
     llm: string;
     strategy: string;
-  }): Promise<MockSimulationData> {
+  }): Promise<{ simulationId: string; status: string }> {
     console.log('Mock API: Starting simulation with config:', config);
     
-    // 返回round1.json的数据（第一轮），但更新一些字段
-    const simulationData: MockSimulationData = {
-      ...round1Data,
-      simulationId: `sim_${Date.now()}`,
-      status: 'running',
-      currentRound: 1,
-      prStrategies: [{
-        round: 1,
-        strategy: config.strategy,
-        timestamp: new Date().toISOString()
-      }]
-    };
-
-    return this.mockRequest(simulationData, 1000);
-  }
-
-  // 模拟获取模拟结果的API调用
-  async getSimulationResult(simulationId: string): Promise<MockSimulationData> {
-    console.log('Mock API: Getting simulation result for:', simulationId);
+    const simulationId = `sim_${Date.now()}`;
     
-    // 返回round1.json的数据（第一轮）
-    const simulationData: MockSimulationData = {
-      ...round1Data,
-      simulationId,
-      status: 'completed',
-      currentRound: 1
-    };
+    // 初始化模拟状态
+    this.simulationStates.set(simulationId, {
+      status: 'running',
+      progress: 0,
+      currentRound: 1,
+      startTime: Date.now()
+    });
 
-    return this.mockRequest(simulationData, 300);
+    return this.mockRequest({
+      simulationId,
+      status: 'running'
+    }, 500);
   }
+
 
   // 模拟添加下一轮策略的API调用
-  async addNextRoundStrategy(simulationId: string, strategy: string, currentRound: number = 1): Promise<MockSimulationData> {
+  async addNextRoundStrategy(simulationId: string, strategy: string, currentRound: number = 1): Promise<{ simulationId: string; status: string }> {
     console.log('Mock API: Adding next round strategy:', strategy, 'for round:', currentRound + 1);
     
-    // 根据当前轮数决定返回哪个数据
-    let baseData;
-    let targetRound;
+    const targetRound = currentRound + 1;
+    console.log('Mock API: Target round:', targetRound);
     
-    if (currentRound === 1) {
-      // 第二轮：返回round2.json的数据
-      baseData = round2Data;
-      targetRound = 2;
-    } else if (currentRound === 2) {
-      // 第三轮：返回round3.json的数据
-      baseData = round3Data;
-      targetRound = 3;
+    // 更新模拟状态
+    const state = this.simulationStates.get(simulationId);
+    if (state) {
+      console.log('Mock API: Updating existing state from round', state.currentRound, 'to round', targetRound);
+      state.status = 'running';
+      state.progress = 0;
+      state.currentRound = targetRound;
+      state.startTime = Date.now();
+      state.completedTime = undefined;
+      state.data = undefined;
     } else {
-      // 默认返回round2.json
-      baseData = round2Data;
-      targetRound = 2;
+      console.log('Mock API: Creating new state for round', targetRound);
+      // 如果状态不存在，创建新的
+      this.simulationStates.set(simulationId, {
+        status: 'running',
+        progress: 0,
+        currentRound: targetRound,
+        startTime: Date.now()
+      });
     }
-    
-    const simulationData: MockSimulationData = {
-      ...baseData,
-      simulationId,
-      status: 'running',
-      currentRound: targetRound,
-      prStrategies: [
-        {
-          round: 1,
-          strategy: "我们高度重视用户的隐私保护，这款AI产品采用了业界领先的隐私保护技术，所有数据处理都符合相关法规要求。我们将继续与监管机构合作，确保产品安全可靠。",
-          timestamp: "2024-10-03T10:00:00Z"
-        },
-        {
-          round: 2,
-          strategy: "我们决定暂停该AI产品的商业化推广，并邀请第三方安全机构进行全面审计。同时，我们将建立用户数据保护委员会，定期发布透明度报告，确保用户隐私得到最大程度的保护。",
-          timestamp: "2024-10-03T11:30:00Z"
-        },
-        ...(targetRound >= 3 ? [{
-          round: 3,
-          strategy: strategy,
-          timestamp: new Date().toISOString()
-        }] : [])
-      ]
-    };
 
-    return this.mockRequest(simulationData, 800);
+    return this.mockRequest({
+      simulationId,
+      status: 'running'
+    }, 500);
   }
 
   // 模拟生成报告的API调用
@@ -187,6 +179,102 @@ class MockApiClient {
       success: true,
       message: 'Simulation reset successfully'
     }, 200);
+  }
+
+  // 轮询API - 获取模拟状态
+  async getSimulationStatus(simulationId: string): Promise<SimulationStatus> {
+    console.log('Mock API: Getting simulation status for:', simulationId);
+    
+    const state = this.simulationStates.get(simulationId);
+    
+    if (!state) {
+      return {
+        simulationId,
+        status: 'error',
+        progress: 0,
+        currentRound: 0,
+        message: 'Simulation not found'
+      };
+    }
+
+    // 如果状态是running，模拟进度更新
+    if (state.status === 'running') {
+      const now = Date.now();
+      const elapsed = now - state.startTime;
+      const totalDuration = 10000; // 模拟10秒完成
+      const progress = Math.min(Math.floor((elapsed / totalDuration) * 100), 99);
+      
+      // 如果超过总时长，标记为完成
+      if (elapsed >= totalDuration) {
+        state.status = 'completed';
+        state.progress = 100;
+        state.completedTime = now;
+        
+        // 根据当前轮数设置对应的数据
+        console.log('Mock API: Setting data for round:', state.currentRound);
+        let baseData;
+        if (state.currentRound === 1) {
+          baseData = round1Data;
+          console.log('Mock API: Using round1Data');
+        } else if (state.currentRound === 2) {
+          baseData = round2Data;
+          console.log('Mock API: Using round2Data');
+        } else if (state.currentRound === 3) {
+          baseData = round3Data;
+          console.log('Mock API: Using round3Data');
+        } else {
+          baseData = round1Data;
+          console.log('Mock API: Using round1Data (fallback)');
+        }
+        
+        state.data = {
+          ...baseData,
+          simulationId,
+          status: 'completed',
+          currentRound: state.currentRound
+        };
+      } else {
+        state.progress = progress;
+      }
+    }
+
+    return this.mockRequest({
+      simulationId,
+      status: state.status,
+      progress: state.progress,
+      currentRound: state.currentRound,
+      message: state.status === 'error' ? 'Simulation failed' : undefined
+    }, 100);
+  }
+
+  // 轮询API - 获取模拟结果
+  async getSimulationResult(simulationId: string): Promise<MockSimulationData> {
+    console.log('Mock API: Getting simulation result for:', simulationId);
+    
+    const state = this.simulationStates.get(simulationId);
+    
+    if (!state) {
+      throw new Error('Simulation not found');
+    }
+
+    if (state.status === 'running') {
+      throw new Error('Simulation is still running');
+    }
+
+    if (state.status === 'error') {
+      throw new Error('Simulation failed');
+    }
+
+    if (!state.data) {
+      throw new Error('Simulation data not available');
+    }
+
+    // 如果状态是completed，获取数据后改为consumed
+    if (state.status === 'completed') {
+      state.status = 'consumed';
+    }
+
+    return this.mockRequest(state.data, 200);
   }
 }
 
