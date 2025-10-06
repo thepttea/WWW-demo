@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { ConfigProvider, theme } from 'antd';
+import { ConfigProvider, theme, App as AntdApp } from 'antd';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Dashboard from './pages/Dashboard';
 import './App.css';
@@ -31,9 +31,11 @@ const App: React.FC = () => {
           },
         }}
       >
-        <div className="app">
-          <Dashboard />
-        </div>
+        <AntdApp>
+          <div className="app">
+            <Dashboard />
+          </div>
+        </AntdApp>
       </ConfigProvider>
     </QueryClientProvider>
   );

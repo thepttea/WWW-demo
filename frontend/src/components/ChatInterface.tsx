@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, Input, Button, Typography } from 'antd';
-import { SendOutlined } from '@ant-design/icons';
+import { Card, Input, Button, Typography, message } from 'antd';
+import { SendOutlined, PlusOutlined } from '@ant-design/icons';
 import ChatMessage from './ChatMessage';
 import { ChatMessage as ChatMessageType } from '../types';
+import { useInitChatSession, useSendChatMessage, useChatHistory } from '../hooks/useApi';
 import './ChatInterface.css';
 
 const { Title, Paragraph } = Typography;
@@ -10,15 +11,22 @@ const { TextArea } = Input;
 
 interface ChatInterfaceProps {
   onStrategyGenerated: (strategy: string) => void;
+  onStrategyConfirm?: (strategy: string) => void;
+  onLastLLMMessageChange?: (message: string) => void;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onStrategyGenerated }) => {
-  const [sessionId, setSessionId] = useState<string | null>(null);
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onStrategyGenerated, onLastLLMMessageChange }) => {
   const [messages, setMessages] = useState<ChatMessageType[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [lastLLMMessage, setLastLLMMessage] = useState<string>('');
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const initStartedRef = useRef<boolean>(false); // 添加哨兵Ref
+
+  // API hooks
+  const initChatMutation = useInitChatSession();
+  const sendMessageMutation = useSendChatMessage();
+  const { data: chatHistory } = useChatHistory(sessionId);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -28,56 +36,64 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
     scrollToBottom();
   }, [messages]);
 
-  // 初始化聊天会话
+  // 当最后LLM消息变化时，通知父组件
   useEffect(() => {
-    // 使用哨兵防止在React严格模式下重复执行
-    if (initStartedRef.current) {
-      return;
+    if (onLastLLMMessageChange && lastLLMMessage) {
+      onLastLLMMessageChange(lastLLMMessage);
     }
-    initStartedRef.current = true;
+  }, [lastLLMMessage, onLastLLMMessageChange]);
 
-    const initChat = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fetch('/api/scenario1/chat/init');
-        const result = await response.json();
-
-        if (result.success && result.data) {
-          setSessionId(result.data.sessionId);
-          const initialMessage: ChatMessageType = {
-            id: '1',
-            type: 'llm',
-            content: result.data.content,
-            timestamp: new Date(result.data.timestamp),
-          };
-          setMessages([initialMessage]);
-        } else {
-          // 处理错误情况
-          const errorMessage: ChatMessageType = {
-            id: 'error-1',
-            type: 'llm',
-            content: 'Sorry, I failed to initialize. Please try refreshing.',
-            timestamp: new Date(),
-          };
-          setMessages([errorMessage]);
-        }
-      } catch (error) {
-        const errorMessage: ChatMessageType = {
-          id: 'error-1',
-          type: 'llm',
-          content: 'Error connecting to the server. Please check your connection and try again.',
-          timestamp: new Date(),
-        };
-        setMessages([errorMessage]);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    initChat();
+  // 组件挂载时，如果没有sessionId，自动初始化聊天会话
+  useEffect(() => {
+    if (!sessionId) {
+      handleInitChat();
+    }
   }, []);
 
+  // 当有聊天历史时，加载历史消息
+  useEffect(() => {
+    if (chatHistory?.success && chatHistory.data) {
+      const historyMessages: ChatMessageType[] = chatHistory.data.messages.map(msg => ({
+        id: msg.id,
+        type: msg.type as 'user' | 'llm',
+        content: msg.content,
+        timestamp: new Date(msg.timestamp),
+      }));
+      setMessages(historyMessages);
+      
+      // 更新最后一条LLM消息
+      const lastLLMMsg = historyMessages.filter(msg => msg.type === 'llm').pop();
+      if (lastLLMMsg) {
+        setLastLLMMessage(lastLLMMsg.content);
+      }
+    }
+  }, [chatHistory]);
 
+  // 初始化聊天会话
+  const handleInitChat = async () => {
+    try {
+      const result = await initChatMutation.mutateAsync();
+      if (result.success && result.data) {
+        setSessionId(result.data.sessionId);
+        // 添加欢迎消息
+        const welcomeMessage: ChatMessageType = {
+          id: result.data.sessionId + '_welcome',
+          type: 'llm',
+          content: result.data.content,
+          timestamp: new Date(result.data.timestamp),
+        };
+        setMessages([welcomeMessage]);
+        setLastLLMMessage(result.data.content);
+        message.success('Chat session initialized');
+      } else {
+        message.error(result.error?.message || 'Failed to initialize chat session');
+      }
+    } catch (error) {
+      message.error('Failed to initialize chat session');
+    }
+  };
+
+  // 发送消息
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading || !sessionId) return;
 
@@ -93,44 +109,25 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/scenario1/chat/message', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          sessionId: sessionId,
-          message: inputValue,
-        }),
+      const result = await sendMessageMutation.mutateAsync({
+        sessionId,
+        message: inputValue,
       });
-
-      const result = await response.json();
 
       if (result.success && result.data) {
         const llmMessage: ChatMessageType = {
-          id: result.data.messageId || (Date.now() + 1).toString(),
-          type: 'llm',
+          id: result.data.id,
+          type: result.data.type as 'user' | 'llm',
           content: result.data.content,
           timestamp: new Date(result.data.timestamp),
         };
         setMessages(prev => [...prev, llmMessage]);
+        setLastLLMMessage(result.data.content);
       } else {
-        const errorMessage: ChatMessageType = {
-          id: 'error-' + Date.now(),
-          type: 'llm',
-          content: `Sorry, an error occurred: ${result.error?.message || 'Unknown error'}`,
-          timestamp: new Date(),
-        };
-        setMessages(prev => [...prev, errorMessage]);
+        message.error(result.error?.message || 'Failed to send message');
       }
     } catch (error) {
-      const errorMessage: ChatMessageType = {
-        id: 'error-' + Date.now(),
-        type: 'llm',
-        content: 'Failed to send message. Please check the server connection.',
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
+      message.error('Failed to send message');
     } finally {
       setIsLoading(false);
     }
@@ -143,10 +140,22 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
     }
   };
 
+
   return (
     <Card className="chat-interface glassmorphism">
       <div className="chat-header">
-        <Title level={1} className="chat-title">LLM Chat</Title>
+        <div className="chat-title-section">
+          <Title level={1} className="chat-title">LLM Chat</Title>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={handleInitChat}
+            loading={initChatMutation.isPending}
+            className="new-session-button"
+          >
+            New Session
+          </Button>
+        </div>
         <Paragraph className="chat-description">
           Interact with the LLM to refine your PR strategy. The final strategy will be used in the simulation.
         </Paragraph>
@@ -188,6 +197,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ onStrategyGenerated: _onS
           />
         </div>
       </div>
+
     </Card>
   );
 };

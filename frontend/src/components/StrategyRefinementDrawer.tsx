@@ -21,7 +21,7 @@ const StrategyRefinementDrawer: React.FC<StrategyRefinementDrawerProps> = ({
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [parameters, setParameters] = useState<SimulationParameters>({
-    agents: 100,
+    agents: 10,
     interactionProbability: 0.5,
     positiveResponseProbability: 0.3,
     negativeResponseProbability: 0.3,
@@ -38,14 +38,20 @@ const StrategyRefinementDrawer: React.FC<StrategyRefinementDrawerProps> = ({
     }));
   };
 
+  const [lastLLMMessage, setLastLLMMessage] = useState<string>('');
+
   const handleStrategyGenerated = (strategy: string) => {
     // 这里可以处理策略生成逻辑
     console.log('Generated strategy:', strategy);
   };
 
+  const handleLastLLMMessageChange = (message: string) => {
+    setLastLLMMessage(message);
+  };
+
   const handleConfirm = () => {
-    // 这里应该获取聊天中生成的最终策略
-    const finalStrategy = "Generated PR strategy from chat...";
+    // 使用最后一条LLM消息作为策略
+    const finalStrategy = lastLLMMessage.trim() || "No strategy generated from chat";
     onStrategyConfirm(finalStrategy, parameters);
     onClose();
   };
@@ -104,7 +110,10 @@ const StrategyRefinementDrawer: React.FC<StrategyRefinementDrawerProps> = ({
             </div>
             
             <div className="right-panel">
-              <ChatInterface onStrategyGenerated={handleStrategyGenerated} />
+              <ChatInterface 
+                onStrategyGenerated={handleStrategyGenerated} 
+                onLastLLMMessageChange={handleLastLLMMessageChange}
+              />
             </div>
           </div>
         </div>

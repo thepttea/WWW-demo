@@ -1,21 +1,6 @@
-# EchoChamber Multi-Agent 舆论模拟系统 API 文档
 
-## 概述
 
-本文档描述了EchoChamber多智能体舆论模拟系统的前后端接口规范。系统支持两种主要场景：
-- **Scenario 1**: 用户输入公关场景和策略，通过LLM优化后进行模拟
-- **Scenario 2**: 选择历史公关案例，通过LLM+Agent模拟并与真实结果对比
-
-## 基础信息
-
-- **API基础URL**: `http://localhost:8000/api`
-- **WebSocket URL**: `ws://localhost:8000/ws`
-- **数据格式**: JSON
-- **字符编码**: UTF-8
-
----
-
-## 1. Scenario 1 相关接口
+##  Scenario 1 相关接口
 
 ### 1.1 LLM策略优化接口
 
@@ -51,6 +36,7 @@ POST /api/scenario1/chat/message
 ```
 
 **请求体：**
+
 ```json
 {
   "sessionId": "chat_session_12345",
@@ -60,6 +46,7 @@ POST /api/scenario1/chat/message
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -110,6 +97,7 @@ GET /api/scenario1/chat/{sessionId}/history
 ### 1.2 模拟配置和执行接口
 
 #### 1.2.1 启动Scenario 1模拟
+
 ```http
 POST /api/scenario1/simulation/start
 ```
@@ -157,6 +145,7 @@ GET /api/scenario1/simulation/{simulationId}/status
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -183,6 +172,7 @@ GET /api/scenario1/simulation/{simulationId}/result
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -228,6 +218,7 @@ GET /api/scenario1/simulation/{simulationId}/network
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -268,11 +259,13 @@ GET /api/scenario1/simulation/{simulationId}/network
 ### 2.1 历史案例管理接口
 
 #### 2.1.1 获取历史案例列表
+
 ```http
 GET /api/scenario2/cases
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -298,11 +291,13 @@ GET /api/scenario2/cases
 ```
 
 #### 2.1.2 获取案例详细信息
+
 ```http
 GET /api/scenario2/cases/{caseId}
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -348,11 +343,13 @@ GET /api/scenario2/cases/{caseId}
 ### 2.2 Scenario 2模拟执行接口
 
 #### 2.2.1 启动Scenario 2模拟
+
 ```http
 POST /api/scenario2/simulation/start
 ```
 
 **请求体：**
+
 ```json
 {
   "caseId": "case_001",
@@ -371,6 +368,7 @@ POST /api/scenario2/simulation/start
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -386,6 +384,7 @@ POST /api/scenario2/simulation/start
 ```
 
 #### 2.2.2 继续下一轮模拟
+
 ```http
 POST /api/scenario2/simulation/{simulationId}/next-round
 ```
@@ -413,6 +412,7 @@ GET /api/scenario2/simulation/{simulationId}/result
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -465,6 +465,7 @@ POST /api/scenario1/reports/generate
 ```
 
 **请求体：**
+
 ```json
 {
   "simulationId": "sim_12345",
@@ -474,6 +475,7 @@ POST /api/scenario1/reports/generate
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -503,6 +505,7 @@ POST /api/scenario2/reports/generate
 ```
 
 **请求体：**
+
 ```json
 {
   "simulationId": "sim_scenario2_12345",
@@ -512,6 +515,7 @@ POST /api/scenario2/reports/generate
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -546,11 +550,13 @@ POST /api/scenario2/reports/generate
 ```
 
 ### 4.3 重置模拟
+
 ```http
 POST /api/simulation/{simulationId}/reset
 ```
 
 **响应示例：**
+
 ```json
 {
   "success": true,
@@ -565,6 +571,7 @@ POST /api/simulation/{simulationId}/reset
 ## 5. 错误处理
 
 ### 5.1 标准错误响应格式
+
 ```json
 {
   "success": false,
@@ -578,6 +585,7 @@ POST /api/simulation/{simulationId}/reset
 ```
 
 ### 5.2 常见错误代码
+
 - `INVALID_SIMULATION_ID`: 无效的模拟ID
 - `SIMULATION_NOT_FOUND`: 模拟不存在
 - `SIMULATION_ALREADY_RUNNING`: 模拟已在运行
@@ -626,6 +634,7 @@ interface Agent {
 ```
 
 ### 6.3 网络边模型
+
 ```typescript
 interface NetworkEdge {
   source: string;
@@ -636,6 +645,7 @@ interface NetworkEdge {
 ```
 
 ### 6.4 聊天消息模型
+
 ```typescript
 interface ChatMessage {
   id: string;
@@ -647,6 +657,7 @@ interface ChatMessage {
 ```
 
 ### 6.5 历史案例模型
+
 ```typescript
 interface HistoricalCase {
   id: string;
