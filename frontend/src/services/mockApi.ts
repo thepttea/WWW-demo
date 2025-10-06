@@ -2,6 +2,7 @@
 import round1Data from '../../data/round1.json';  // 第一轮数据
 import round2Data from '../../data/round2.json';  // 第二轮数据
 import round3Data from '../../data/round3.json';  // 第三轮数据
+import resultData from '../../data/result.json';  // 模拟结果数据
 
 export interface MockSimulationData {
   simulationId: string;
@@ -48,6 +49,41 @@ export interface SimulationStatus {
   progress: number;
   currentRound: number;
   message?: string;
+}
+
+// 模拟结果数据接口
+export interface SimulationResultData {
+  overallSentiment: number;
+  engagementRate: number;
+  reach: number;
+  sentimentTrend: string;
+  prEffectiveness: number;
+  keyInsights: string;
+  recommendations: string[];
+  influentialNodes: Array<{
+    node: string;
+    influenceScore: number;
+    sentiment: string;
+    reach: number;
+  }>;
+  sentimentDistribution: {
+    positive: number;
+    neutral: number;
+    negative: number;
+  };
+  trendData: {
+    positive: string;
+    engagement: string;
+    reach: string;
+  };
+  effectivenessRating: {
+    score: number;
+    rating: string;
+    thresholds: {
+      excellent: number;
+      good: number;
+    };
+  };
 }
 
 // 模拟状态存储
@@ -166,6 +202,13 @@ class MockApiClient {
     };
 
     return this.mockRequest(reportData, 1200);
+  }
+
+  // 获取模拟结果数据的API调用
+  async getSimulationResultData(simulationId: string): Promise<SimulationResultData> {
+    console.log('Mock API: Getting simulation result data for:', simulationId);
+    
+    return this.mockRequest(resultData, 500);
   }
 
   // 模拟重置模拟的API调用
