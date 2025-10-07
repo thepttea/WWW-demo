@@ -88,7 +88,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   });
 
 
-  // 从实际数据生成消息传播步骤 - 前端随机排序并生成相对时间戳
+  // 从实际数据生成消息传播步骤 - 使用后端提供的实际数据
   const messageSteps = React.useMemo(() => {
     if (!platforms || platforms.length === 0) {
       return [];
@@ -127,7 +127,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       'Forum-like': 'Forum'
     };
 
-    // 收集所有消息
+    // 收集所有消息 - 保持后端提供的顺序
     const allMessages: Array<{
       platform: string;
       message: any;
@@ -146,14 +146,12 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       }
     });
 
-    // 前端随机排序消息
-    const shuffledMessages = [...allMessages].sort(() => Math.random() - 0.5);
-
+    // 使用后端提供的实际数据，不进行随机排序
     // 分配相对时间戳
     let currentDelay = 0;
     let messageIndex = 1;
 
-    shuffledMessages.forEach(({ message, platformName }) => {
+    allMessages.forEach(({ message, platformName }) => {
       const shortSender = usernameMapping[message.sender] || message.sender;
       const shortReceivers = message.receivers.map((receiver: string) => 
         usernameMapping[receiver] || receiver
@@ -166,7 +164,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         platform: platformName,
         receivers: shortReceivers,
         content: message.content,
-        delay: currentDelay,  // 前端计算的相对时间
+        delay: currentDelay,  // 使用实际的时间间隔
         duration: 6000
       });
 

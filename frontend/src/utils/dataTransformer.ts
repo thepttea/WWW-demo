@@ -136,41 +136,68 @@ export function transformSimulationResultToNetworkData(
   // 根据 propagationPaths 构建消息传播
   const messagePropagationMap = new Map<string, Array<any>>();
   
-  simulationResult.propagationPaths.forEach((path, index) => {
-    const sender = simulationResult.agents.find(a => a.agentId === path.from);
-    if (!sender) return;
+  // 检查是否有传播路径数据
+  if (simulationResult.propagationPaths && simulationResult.propagationPaths.length > 0) {
+    simulationResult.propagationPaths.forEach((path, index) => {
+      const sender = simulationResult.agents.find(a => a.agentId === path.from);
+      if (!sender) return;
 
-    const platform = sender.primaryPlatform;
-    if (!messagePropagationMap.has(platform)) {
-      messagePropagationMap.set(platform, []);
-    }
+      const platform = sender.primaryPlatform;
+      if (!messagePropagationMap.has(platform)) {
+        messagePropagationMap.set(platform, []);
+      }
 
-    // 获取接收者（基于网络拓扑）
-    const receivers: string[] = [];
-    if (networkData && networkData.edges) {
-      networkData.edges
-        .filter(edge => edge.source === path.from)
-        .forEach(edge => {
-          const receiver = simulationResult.agents.find(a => a.agentId === edge.target);
-          if (receiver) {
-            receivers.push(receiver.username);
-          }
-        });
-    }
+      // 获取接收者（基于网络拓扑）
+      const receivers: string[] = [];
+      if (networkData && networkData.edges) {
+        networkData.edges
+          .filter(edge => edge.source === path.from)
+          .forEach(edge => {
+            const receiver = simulationResult.agents.find(a => a.agentId === edge.target);
+            if (receiver) {
+              receivers.push(receiver.username);
+            }
+          });
+      }
 
-    const sentiment = path.stance > 0 ? 'positive' : path.stance < 0 ? 'negative' : 'neutral';
-    
-    messagePropagationMap.get(platform)!.push({
-      sender: sender.username,
-      receivers: receivers.slice(0, 4), // 限制接收者数量
-      content: path.content,
-      sentiment: sentiment,
-      timestamp: new Date(Date.now() + index * 6000).toISOString(), // 模拟时间戳
-      likes: Math.floor(Math.random() * 50) + 10,
-      shares: Math.floor(Math.random() * 20) + 5,
-      comments: Math.floor(Math.random() * 15) + 3,
+      const sentiment = path.stance > 0 ? 'positive' : path.stance < 0 ? 'negative' : 'neutral';
+      
+      messagePropagationMap.get(platform)!.push({
+        sender: sender.username,
+        receivers: receivers.slice(0, 4), // 限制接收者数量
+        content: path.content,
+        sentiment: sentiment,
+        timestamp: new Date(Date.now() + index * 6000).toISOString(), // 使用实际时间戳
+        likes: Math.floor(Math.random() * 50) + 10,
+        shares: Math.floor(Math.random() * 20) + 5,
+        comments: Math.floor(Math.random() * 15) + 3,
+      });
     });
-  });
+  } else {
+    // 如果没有传播路径数据，从agents的发言中生成基础消息
+    simulationResult.agents.forEach((agent, index) => {
+      if (agent.latestPost && agent.postsSent > 0) {
+        const platform = agent.primaryPlatform;
+        if (!messagePropagationMap.has(platform)) {
+          messagePropagationMap.set(platform, []);
+        }
+
+        const sentiment = agent.stanceScore > 0 ? 'positive' : 
+                         agent.stanceScore < 0 ? 'negative' : 'neutral';
+        
+        messagePropagationMap.get(platform)!.push({
+          sender: agent.username,
+          receivers: [], // 没有详细信息时为空
+          content: agent.latestPost,
+          sentiment: sentiment,
+          timestamp: new Date(Date.now() + index * 6000).toISOString(),
+          likes: Math.floor(Math.random() * 50) + 10,
+          shares: Math.floor(Math.random() * 20) + 5,
+          comments: Math.floor(Math.random() * 15) + 3,
+        });
+      }
+    });
+  }
 
   // 将消息传播数据添加到平台
   messagePropagationMap.forEach((messages, platformName) => {
