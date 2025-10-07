@@ -1,69 +1,125 @@
-# Multi-Agent Public Opinion Simulation Framework 
-这是一个基于大型语言模型（LLM）的动态多智能体（Multi-Agent）系统，旨在模拟复杂社交网络环境中的舆论形成与演变过程。
+# EchoChamber: A Multi-Agent LLM-based Simulation Platform for Public Relations Crisis Dynamics
 
-该框架通过为每个智能体（Agent）赋予独特的、从外部文件加载的“人格”（Persona），并模拟它们在不同社交平台（如微博、朋友圈、论坛）上的信息接收、思考决策和内容发布行为，来复现一个微缩的、动态的舆论场。
+EchoChamber is a dynamic multi-agent system powered by Large Language Models (LLMs) to simulate the formation and evolution of public opinion in complex social network environments. The project features a full-stack architecture with a React frontend and a Python FastAPI backend.
 
-## 核心特性
-* **动态人格系统:** 智能体的人格、行为模式和模型配置（如使用的LLM、温度参数）均由外部 `personas.csv` 文件定义，方便扩展和定制，无需修改代码。
-* **模拟社交网络:** 程序启动时会创建一个包含“关注”（弱连接）和“好友”（强连接）关系的复杂社交网络图，智能体接收信息流的机制受此网络结构影响。
-* **多平台信息流:** 内置了对不同社交平台信息分发逻辑的模拟：
-    * **朋友圈 (WeChat Moments-like):** 仅互为好友可见。
-    * **微博/Twitter (Weibo/Twitter-like):** 基于关注关系和影响力算法推荐。
-    * **抖音/TikTok (TikTok-like):** 纯粹基于算法和影响力推荐。 
-    * **论坛 (Forum-like):** 内容对所有参与者开放。
+This framework brings a miniature, dynamic public sphere to life by assigning unique "Personas" to each agent, simulating their information consumption, decision-making processes, and content publishing behaviors across various social media platforms.
 
-* **深度认知与记忆:** 每个智能体都拥有独立的记忆库（使用 chromadb），在做决策前会结合自身人设、长期记忆和当前看到的新信息进行一轮“内心思考”，使其行为更具连贯性和深度。
-* **智能决策系统:** 智能体在每个回合中独立决策其行为：发表观点（`POST`）、保持沉默（`NO_ACTION`） 或 永久退出讨论（`DROPOUT`）。
-* **自动化日志与报告:**
-    * 所有模拟过程的细节（包括智能体的内心独白）都会被记录到带时间戳的日志文件中。
-    * 模拟结束后，系统会自动调用LLM对整个舆论过程进行分析，生成一份包含核心议题、观点阵营、关键影响者（KOL）和舆论演变趋势的总结报告。
+## Core Features
 
-## 文件结构
+*   **Dual Simulation Scenarios**:
+    *   **Scenario 1**: A sandbox mode where users can define a PR crisis, collaboratively refine a response strategy with an LLM assistant, and simulate its impact.
+    *   **Scenario 2**: A "yesterday once more" mode where users can select historical PR cases, simulate the events, and compare the simulation's outcome with real-world results.
+*   **Interactive LLM Strategy Chat**: An integrated chat interface allows users to brainstorm, develop, and refine their PR strategies with guidance from a specialized LLM expert before launching a simulation.
+*   **Dynamic Social Network Simulation**: The backend creates a complex social network graph with varying relationship strengths, influencing how information spreads among agents.
+*   **Cross-Platform Simulation**: Simulates distinct information distribution logics for different social media archetypes (e.g., Twitter, WeChat, Forums).
+*   **Real-time Visualization**: The frontend is designed to visualize the network graph and the flow of public opinion as the simulation progresses (backend WebSocket integration pending).
+*   **Comprehensive API**: A well-documented FastAPI backend provides clear endpoints for both simulation scenarios.
+
+## Tech Stack
+
+| Area      | Technologies                                                                   |
+| :-------- | :----------------------------------------------------------------------------- |
+| **Frontend**  | React, TypeScript, Vite, Ant Design, TanStack Query                            |
+| **Backend**   | Python, FastAPI, LangChain, Uvicorn, python-dotenv                             |
+| **LLM**       | Compatible with any OpenAI-style API (e.g., OpenAI, Groq, local LLMs)          |
+
+## Project Structure
 ```
-├── aops/
-│   ├── main.py             # 主程序入口，运行模拟
-│   ├── agent.py            # 定义Agent的核心认知和行为逻辑
-│   ├── network.py          # 创建和管理人际关系网络
-│   ├── persona_manager.py  # 从CSV加载和管理Agent人设
-│   ├── llm_provider.py     # LLM模型加载与配置
-│   ├── config.py           # 存放API Key和模型端点等配置信息
-│   └── logger.py           # 日志记录模块
+.
+├── backend/
+│   ├── code/
+│   │   ├── api_server.py       # FastAPI application entry point
+│   │   ├── chat_manager.py     # Logic for LLM chat sessions
+│   │   ├── case_manager.py     # Logic for loading historical cases
+│   │   ├── simulation_manager.py # Manages simulation state
+│   │   ├── main.py             # Original CLI-based simulation runner
+│   │   └── ...
+│   ├── data/
+│   │   ├── historical_cases.json # Data for Scenario 2
+│   │   └── personas.csv        # Agent persona definitions
+│   └── requirements.txt      # Python dependencies
 │
-├── data/
-│   └── personas.csv        # Agent人设定义文件
-│
-└── logs/                   # 存放每次模拟运行的日志和结果
+└── frontend/
+    ├── src/
+    │   ├── pages/              # Main page components (HomePage, Scenario1Page, etc.)
+    │   ├── components/         # Reusable UI components (ChatInterface, Modals, etc.)
+    │   └── ...
+    ├── package.json          # Node.js dependencies
+    └── vite.config.ts        # Vite configuration (including proxy)
 ```
 
-## 如何使用
-### 1.环境配置
-首先，确保您已安装所有必需的Python库。
-```
-pip install chromadb pydantic langchain langgraph networkx langchain-openai python-dotenv
-```
+## Installation and Setup
 
-### 2. 配置模型API
-打开 `config.py` 文件，修改以下配置项：
-* `CUSTOM_API_BASE`: 设置OpenAI格式的API端点。
-* `API_KEY`: API密钥
+Follow these steps to set up and run the project locally. You will need to run two separate terminal sessions for the backend and frontend.
 
-### 3.定义智能体人设
-项目的所有智能体“人设”都由 `/data/personas.csv` 文件定义。您可以仿照示例格式添加、修改或删除人设。
+### 1. Backend Setup
 
-`personas.csv` 文件格式说明:
-| 列名 | 说明 | 示例值 |
-| :--- | :--- | :--- |
-| `username` | 智能体的用户名 | `投资圈大佬` |
-| `description` | 详细的角色背景、知识领域、性格和价值观描述 | `一位经验丰富的风险投资人，信奉价值投资...` |
-| `emotional_style` | 智能体发言时的情绪和语言风格 | `激进型` |
-| `influence_score` | 影响力分数（整数），会影响其帖子被推荐的概率 | `85` |
-| `primary_platform` | 主要活跃的社交平台，决定信息收发模式。可选值：`Weibo/Twitter-like`, `WeChat Moments-like`, `TikTok-like`, `Forum-like` | `Weibo/Twitter-like` |
-| `llm_model` | 该智能体思考时使用的具体LLM模型名称 | `gpt-4o-mini` |
-| `llm_temperature` | LLM的温度参数（0.0-1.0），值越高，创造性和随机性越强 | `0.8` |
+1.  **Navigate to the backend directory**:
+    ```bash
+    cd backend
+    ```
 
-## 一些改进方向：
-1. 模拟社交网络现在是使用随机数生成强弱关系，后续考虑使用llm根据两个人设来生成一个概率值或者关系权重；
-2. 现在数据管理采用表格，后续会改为数据库；
-3. 人设设定提示词仍然存在一定问题，后续尝试改进提示词达到更好的效果；
-4. 现在舆论传播模拟路径方式比较简单，后续需要往更数据化的形式改进。
+2.  **Create and activate a Python virtual environment** (recommended):
+    ```bash
+    # Create the environment
+    python -m venv venv
+
+    # Activate on Windows
+    .\venv\Scripts\activate
+
+    # Activate on macOS/Linux
+    source venv/bin/activate
+    ```
+
+3.  **Install Python dependencies**:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4.  **Configure Environment Variables (Crucial Step)**:
+    *   Navigate into the `code` directory: `cd code`.
+    *   Create a new file named `.env` by copying the example: `copy .env.example .env` (Windows) or `cp .env.example .env` (macOS/Linux).
+    *   Open the `.env` file and **add your own LLM API Key**:
+        ```dotenv
+        API_KEY="sk-your-llm-api-key-here"
+        CUSTOM_API_BASE="https://api.openai.com/v1" # Optional: Change if you use a different endpoint
+        ```
+
+### 2. Frontend Setup
+
+1.  **Navigate to the frontend directory** in a **new terminal**:
+    ```bash
+    cd frontend
+    ```
+
+2.  **Install Node.js dependencies** (pnpm is recommended):
+    *   If you don't have pnpm, install it globally: `npm install -g pnpm`.
+    *   Install project dependencies:
+        ```bash
+        pnpm install
+        ```
+    *   *Note: If you encounter a script execution error on Windows, open PowerShell as Administrator and run `Set-ExecutionPolicy RemoteSigned`.*
+
+## Running the Application
+
+You must start the backend server first, then the frontend development server.
+
+### 1. Start the Backend Server
+
+*   In your first terminal (with the Python virtual environment activated and inside the `backend/code` directory), run:
+    ```bash
+    python api_server.py
+    ```
+*   The server should start, and you'll see a message like: `Uvicorn running on http://127.0.0.1:8000`.
+*   **Verify**: Open your browser and go to **http://localhost:8000/docs**. You should see the FastAPI interactive API documentation.
+
+### 2. Start the Frontend Server
+
+*   In your second terminal (inside the `frontend` directory), run:
+    ```bash
+    pnpm dev
+    ```
+*   The Vite development server will start, and it should automatically open your browser to **http://localhost:3000**.
+
+You can now interact with the EchoChamber application. The frontend will proxy API requests to the backend, allowing the two services to communicate.
 

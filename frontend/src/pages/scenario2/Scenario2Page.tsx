@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, message } from 'antd';
 import CaseSelectionPanel from './CaseSelectionPanel';
 import VisualizationArea from './VisualizationArea';
@@ -12,9 +12,35 @@ type Scenario2View = 'selection' | 'simulation';
 
 const Scenario2Page: React.FC = () => {
   const [currentView, setCurrentView] = useState<Scenario2View>('selection');
-  const [isLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [simulationResult] = useState<any>(null);
   const [selectedCase, setSelectedCase] = useState<HistoricalCase | null>(null);
+  const [historicalCases, setHistoricalCases] = useState<HistoricalCase[]>([]); // 新增 state
+
+  // 新增 useEffect 以获取案例数据
+  useEffect(() => {
+    const fetchCases = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch('/api/scenario2/cases');
+        const result = await response.json();
+        if (result.success && Array.isArray(result.data)) {
+          setHistoricalCases(result.data);
+        } else {
+          message.error('Failed to load historical cases.');
+          console.error("API Error:", result.error || "Unknown error");
+        }
+      } catch (error) {
+        message.error('Error connecting to the server to fetch cases.');
+        console.error("Fetch Error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCases();
+  }, []);
+
 
   const handleStartSimulation = async (_config: SimulationConfig) => {
     if (!selectedCase) {
@@ -66,6 +92,7 @@ const Scenario2Page: React.FC = () => {
         <div className="content-grid">
           <div className="config-column">
             <CaseSelectionPanel
+              historicalCases={historicalCases} // 传递数据
               selectedCase={selectedCase}
               onCaseSelect={handleCaseSelect}
               onStartSimulation={handleStartSimulation}

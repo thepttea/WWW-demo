@@ -10,66 +10,19 @@ interface CaseSelectionModalProps {
   visible: boolean;
   onClose: () => void;
   onCaseSelect: (caseItem: HistoricalCase) => void;
+  historicalCases: HistoricalCase[]; // 新增 prop
 }
 
 const CaseSelectionModal: React.FC<CaseSelectionModalProps> = ({
   visible,
   onClose,
   onCaseSelect,
+  historicalCases, // 接收 prop
 }) => {
   const [selectedCase, setSelectedCase] = useState<HistoricalCase | null>(null);
 
-  // 模拟案例数据 - 等待后端对接
-  const caseStudies: HistoricalCase[] = [
-    {
-      id: '1',
-      title: 'Tech Product Controversy',
-      description: 'A tech company faces backlash over a controversial product feature. The PR team must address user concerns and restore trust.',
-      originalStrategy: 'Immediate acknowledgment, technical fix, leadership communication, community engagement',
-      actualOutcome: 'Successfully restored user trust and improved product development process',
-      successRate: 85
-    },
-    {
-      id: '2',
-      title: 'Food Safety Crisis',
-      description: 'A food brand encounters a health scare related to one of its products. The PR response focuses on transparency and consumer safety.',
-      originalStrategy: 'Transparency, safety measures, consumer communication, regulatory compliance',
-      actualOutcome: 'Maintained brand reputation and strengthened safety protocols',
-      successRate: 90
-    },
-    {
-      id: '3',
-      title: 'Fashion Brand Ethics',
-      description: 'A fashion retailer is accused of unethical labor practices. The PR strategy involves addressing the allegations and promoting ethical sourcing.',
-      originalStrategy: 'Ethical sourcing commitment, third-party audits, supply chain transparency',
-      actualOutcome: 'Improved brand image and established industry leadership in ethical practices',
-      successRate: 75
-    },
-    {
-      id: '4',
-      title: 'Airline Service Disruption',
-      description: 'An airline experiences a major service disruption. The PR team must manage passenger frustration and provide timely updates.',
-      originalStrategy: 'Real-time communication, compensation, operational improvements, customer service',
-      actualOutcome: 'Minimized customer complaints and improved operational resilience',
-      successRate: 80
-    },
-    {
-      id: '5',
-      title: 'Financial Data Breach',
-      description: 'A financial institution faces a data breach. The PR response prioritizes data security and customer communication.',
-      originalStrategy: 'Immediate notification, security measures, customer support, regulatory reporting',
-      actualOutcome: 'Maintained customer trust and strengthened security infrastructure',
-      successRate: 70
-    },
-    {
-      id: '6',
-      title: 'Corporate Misconduct Scandal',
-      description: 'A high-profile executive is involved in a scandal, damaging the company\'s reputation. The PR team works on damage control and internal reforms.',
-      originalStrategy: 'Leadership change, internal reforms, transparency, stakeholder communication',
-      actualOutcome: 'Restored stakeholder confidence and implemented stronger governance',
-      successRate: 65
-    }
-  ];
+  // 模拟案例数据 - 等待后端对接 (现在已移除)
+  // const caseStudies: HistoricalCase[] = [...];
 
   const handleCaseClick = (caseItem: HistoricalCase) => {
     setSelectedCase(caseItem);
@@ -103,7 +56,7 @@ const CaseSelectionModal: React.FC<CaseSelectionModalProps> = ({
         <div className="modal-body">
           <div className="case-list-section">
             <div className="case-list">
-              {caseStudies.map((caseItem) => (
+              {historicalCases.map((caseItem) => (
                 <div
                   key={caseItem.id}
                   className={`case-item ${selectedCase?.id === caseItem.id ? 'selected' : ''}`}
