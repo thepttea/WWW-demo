@@ -90,7 +90,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 从实际数据生成消息传播步骤 - 使用后端提供的实际数据
   const messageSteps = React.useMemo(() => {
+    console.log('NetworkVisualization - platforms:', platforms);
+    console.log('NetworkVisualization - users:', users);
+    
     if (!platforms || platforms.length === 0) {
+      console.log('NetworkVisualization - No platforms data available');
       return [];
     }
 
@@ -135,7 +139,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     }> = [];
 
     platforms.forEach(platform => {
+      console.log('NetworkVisualization - Processing platform:', platform.name);
+      console.log('NetworkVisualization - Platform message_propagation:', platform.message_propagation);
+      
       if (platform.message_propagation && Array.isArray(platform.message_propagation)) {
+        console.log('NetworkVisualization - Found', platform.message_propagation.length, 'messages for platform', platform.name);
         platform.message_propagation.forEach(message => {
           allMessages.push({
             platform: platform.name,
@@ -143,6 +151,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
             platformName: platformMapping[platform.name] || platform.name
           });
         });
+      } else {
+        console.log('NetworkVisualization - No message_propagation data for platform', platform.name);
       }
     });
 
@@ -172,6 +182,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       messageIndex++;
     });
 
+    console.log('NetworkVisualization - Generated', steps.length, 'message steps');
+    console.log('NetworkVisualization - Message steps:', steps);
     return steps;
   }, [platforms]);
 
@@ -277,7 +289,13 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 开始动画序列 - 当有网络数据时自动开始
   useEffect(() => {
+    console.log('NetworkVisualization - Animation trigger check:');
+    console.log('  - users.length:', users.length);
+    console.log('  - messageSteps.length:', messageSteps.length);
+    console.log('  - platforms?.length:', platforms?.length);
+    
     if (users.length > 0 && messageSteps.length > 0) {
+      console.log('NetworkVisualization - Starting animation with', messageSteps.length, 'steps');
       setIsAnimating(true);
       setCurrentStep(0);
       setCurrentPhase(0);

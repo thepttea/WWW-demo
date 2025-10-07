@@ -45,11 +45,24 @@ interface BackendSimulationResult {
     latestPost?: string;
     isActive: boolean;
   }>;
-  propagationPaths: Array<{
+  propagationPaths?: Array<{
     from: string;
     content: string;
     round: number;
     stance: number;
+  }>;
+  platforms?: Array<{
+    name: string;
+    type: string;
+    userCount: number;
+    activeUsers: string[];
+    message_propagation: Array<{
+      sender: string;
+      receivers: string[];
+      content: string;
+      sentiment: string;
+      timestamp: string;
+    }>;
   }>;
 }
 
@@ -133,11 +146,23 @@ export function transformSimulationResultToNetworkData(
   });
 
   // 3. 构建消息传播数据
-  // 根据 propagationPaths 构建消息传播
+  // 检查后端是否直接提供了platforms数据（包含message_propagation）
   const messagePropagationMap = new Map<string, Array<any>>();
   
-  // 检查是否有传播路径数据
-  if (simulationResult.propagationPaths && simulationResult.propagationPaths.length > 0) {
+  // 首先检查是否有直接的platforms数据（后端可能直接返回）
+  if (simulationResult.platforms && Array.isArray(simulationResult.platforms)) {
+    console.log('DataTransformer - Found direct platforms data with', simulationResult.platforms.length, 'platforms');
+    simulationResult.platforms.forEach((platform: any) => {
+      if (platform.message_propagation && Array.isArray(platform.message_propagation)) {
+        console.log('DataTransformer - Platform', platform.name, 'has', platform.message_propagation.length, 'messages');
+        messagePropagationMap.set(platform.name, platform.message_propagation);
+      }
+    });
+  }
+  
+  // 如果没有直接的platforms数据，尝试从propagationPaths构建
+  if (messagePropagationMap.size === 0 && simulationResult.propagationPaths && simulationResult.propagationPaths.length > 0) {
+    console.log('DataTransformer - Using propagationPaths data');
     simulationResult.propagationPaths.forEach((path, index) => {
       const sender = simulationResult.agents.find(a => a.agentId === path.from);
       if (!sender) return;
@@ -173,8 +198,11 @@ export function transformSimulationResultToNetworkData(
         comments: Math.floor(Math.random() * 15) + 3,
       });
     });
-  } else {
-    // 如果没有传播路径数据，从agents的发言中生成基础消息
+  }
+  
+  // 如果仍然没有数据，从agents的发言中生成基础消息
+  if (messagePropagationMap.size === 0) {
+    console.log('DataTransformer - Generating messages from agents data');
     simulationResult.agents.forEach((agent, index) => {
       if (agent.latestPost && agent.postsSent > 0) {
         const platform = agent.primaryPlatform;
@@ -204,10 +232,18 @@ export function transformSimulationResultToNetworkData(
     const platform = platformMap.get(platformName);
     if (platform) {
       platform.message_propagation = messages;
+      console.log('DataTransformer - Added', messages.length, 'messages to platform', platformName);
     }
   });
 
   const platforms = Array.from(platformMap.values());
+  
+  console.log('DataTransformer - Final result:');
+  console.log('  - users:', users.length);
+  console.log('  - platforms:', platforms.length);
+  platforms.forEach(platform => {
+    console.log(`  - Platform ${platform.name}: ${platform.message_propagation?.length || 0} messages`);
+  });
 
   return {
     users,
