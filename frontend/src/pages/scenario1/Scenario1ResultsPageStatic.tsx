@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Typography, Button, Table, Tag, Row, Col, Statistic, Progress } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined, ReloadOutlined } from '@ant-design/icons';
+import { mockApiClient, SimulationResultData } from '../../services/mockApi';
+// import { useSimulationResultData } from '../../hooks/useApi';
 import './Scenario1ResultsPage.css';
 
 const { Title, Text } = Typography;
@@ -20,34 +22,84 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
 }) => {
   console.log('Scenario1ResultsPageStatic - simulationResults:', simulationResults);
 
-  // 静态数据用于调试
-  const staticData = {
-    overallSentiment: 72,
-    engagementRate: 15.3,
-    reach: 850,
-    sentimentTrend: '+12%',
-    prEffectiveness: 85,
-    keyInsights: "The PR strategy has shown significant effectiveness in shifting public opinion. The sentiment analysis reveals a 12% positive trend over the simulation period, with high engagement rates indicating strong public interest. The strategy successfully mitigated initial negative sentiment and built positive momentum.",
-    recommendations: [
-      "Continue the current communication strategy as it shows strong positive momentum",
-      "Focus on maintaining engagement through regular updates and transparency",
-      "Monitor key opinion leaders and influencers for potential amplification opportunities",
-      "Consider expanding the message to reach additional demographic segments"
-    ],
-    influentialNodes: [
-      { node: 'Media Outlet A', influenceScore: 95, sentiment: 'Positive', reach: 120 },
-      { node: 'Industry Expert B', influenceScore: 88, sentiment: 'Positive', reach: 85 },
-      { node: 'Social Media Influencer C', influenceScore: 82, sentiment: 'Neutral', reach: 200 },
-      { node: 'Community Leader D', influenceScore: 78, sentiment: 'Positive', reach: 65 },
-    ],
-    sentimentDistribution: {
-      positive: 45,
-      neutral: 35,
-      negative: 20
-    }
-  };
+  const [resultData, setResultData] = useState<SimulationResultData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const data = staticData;
+  // 从API获取结果数据
+  useEffect(() => {
+    const fetchResultData = async () => {
+      try {
+        setLoading(true);
+        // 使用simulationResults中的simulationId，如果没有则使用默认值
+        const simulationId = simulationResults?.simulationId || 'default_simulation';
+        const response = await mockApiClient.getSimulationResultData(simulationId);
+        if (response.success && response.data) {
+          setResultData(response.data);
+        } else {
+          throw new Error(response.error?.message || 'Failed to fetch result data');
+        }
+      } catch (error) {
+        console.error('Failed to fetch result data:', error);
+        // 如果API调用失败，使用默认数据
+        setResultData({
+          overallSentiment: 72,
+          engagementRate: 15.3,
+          reach: 850,
+          sentimentTrend: '+12%',
+          prEffectiveness: 85,
+          keyInsights: "The PR strategy has shown significant effectiveness in shifting public opinion. The sentiment analysis reveals a 12% positive trend over the simulation period, with high engagement rates indicating strong public interest. The strategy successfully mitigated initial negative sentiment and built positive momentum.",
+          recommendations: [
+            "Continue the current communication strategy as it shows strong positive momentum",
+            "Focus on maintaining engagement through regular updates and transparency",
+            "Monitor key opinion leaders and influencers for potential amplification opportunities",
+            "Consider expanding the message to reach additional demographic segments"
+          ],
+          influentialNodes: [
+            { node: 'Media Outlet A', influence_score: 95, sentiment: 'Positive', reach: 120 },
+            { node: 'Industry Expert B', influence_score: 88, sentiment: 'Positive', reach: 85 },
+            { node: 'Social Media Influencer C', influence_score: 82, sentiment: 'Neutral', reach: 200 },
+            { node: 'Community Leader D', influence_score: 78, sentiment: 'Positive', reach: 65 },
+          ],
+          sentimentDistribution: {
+            positive: 45,
+            neutral: 35,
+            negative: 20
+          },
+          trendData: {
+            positive: '+8%',
+            engagement: '+8%',
+            reach: '+15%'
+          },
+          effectivenessRating: {
+            score: 85,
+            rating: 'Excellent',
+            thresholds: {
+              excellent: 80,
+              good: 60
+            }
+          }
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchResultData();
+  }, [simulationResults]);
+
+  if (loading || !resultData) {
+    return (
+      <div className="scenario1-results-overlay">
+        <div className="results-modal">
+          <div className="modal-header">
+            <Title level={2} className="modal-title">Loading Results...</Title>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const data = resultData;
 
   const getSentimentColor = (sentiment: string) => {
     switch (sentiment.toLowerCase()) {
@@ -70,7 +122,7 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
               suffix="%"
               valueStyle={{ color: '#137fec' }}
             />
-            <Text className="trend-text positive">+{data.sentimentTrend}</Text>
+            <Text className="trend-text positive">{data.trendData.positive}</Text>
           </Card>
         </Col>
         <Col span={8}>
@@ -81,7 +133,7 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
               suffix="%"
               valueStyle={{ color: '#137fec' }}
             />
-            <Text className="trend-text positive">+8%</Text>
+            <Text className="trend-text positive">{data.trendData.engagement}</Text>
           </Card>
         </Col>
         <Col span={8}>
@@ -92,7 +144,7 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
               suffix="K"
               valueStyle={{ color: '#137fec' }}
             />
-            <Text className="trend-text positive">+15%</Text>
+            <Text className="trend-text positive">{data.trendData.reach}</Text>
           </Card>
         </Col>
       </Row>
@@ -110,7 +162,7 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
             className="effectiveness-progress"
           />
           <Text className="effectiveness-text">
-            {data.prEffectiveness}% - {data.prEffectiveness >= 80 ? 'Excellent' : data.prEffectiveness >= 60 ? 'Good' : 'Needs Improvement'}
+            {data.effectivenessRating.score}% - {data.effectivenessRating.rating}
           </Text>
         </div>
       </div>
@@ -197,8 +249,8 @@ const Scenario1ResultsPageStatic: React.FC<Scenario1ResultsPageProps> = ({
             },
             {
               title: 'Influence Score',
-              dataIndex: 'influenceScore',
-              key: 'influenceScore',
+              dataIndex: 'influence_score',
+              key: 'influence_score',
               render: (score: number) => (
                 <Progress 
                   percent={score} 

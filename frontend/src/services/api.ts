@@ -76,7 +76,7 @@ export interface SimulationResult {
     agentId: string;
     username: string;
     description: string;
-    influenceScore: number;
+    influence_score: number;
     primaryPlatform: string;
     emotionalStyle: string;
     stanceScore: number;
@@ -97,7 +97,7 @@ export interface NetworkData {
     id: string;
     username: string;
     platform: string;
-    influenceScore: number;
+    influence_score: number;
     sentiment: string;
   }>;
   edges: Array<{
@@ -123,6 +123,40 @@ export interface ReportResponse {
     improvements: string[];
   };
   generatedAt: string;
+}
+
+export interface SimulationResultData {
+  overallSentiment: number;
+  engagementRate: number;
+  reach: number;
+  sentimentTrend: string;
+  prEffectiveness: number;
+  keyInsights: string;
+  recommendations: string[];
+  influentialNodes: Array<{
+    node: string;
+    influence_score: number;
+    sentiment: string;
+    reach: number;
+  }>;
+  sentimentDistribution: {
+    positive: number;
+    neutral: number;
+    negative: number;
+  };
+  trendData: {
+    positive: string;
+    engagement: string;
+    reach: string;
+  };
+  effectivenessRating: {
+    score: number;
+    rating: string;
+    thresholds: {
+      excellent: number;
+      good: number;
+    };
+  };
 }
 
 // API客户端类
@@ -193,7 +227,7 @@ class ApiClient {
   }
 
   // 模拟相关API
-  async startSimulation(request: StartSimulationRequest): Promise<ApiResponse<{ simulationId: string; status: string; websocketUrl: string }>> {
+  async startSimulation(request: StartSimulationRequest): Promise<ApiResponse<{ simulationId: string; status: string }>> {
     return this.request('/scenario1/simulation/start', {
       method: 'POST',
       body: JSON.stringify(request),
@@ -221,6 +255,12 @@ class ApiClient {
     });
   }
 
+  async getSimulationResultData(simulationId: string): Promise<ApiResponse<SimulationResultData>> {
+    return this.request<SimulationResultData>(`/scenario1/simulation/${simulationId}/analysis`, {
+      method: 'GET',
+    });
+  }
+
   async getNetworkData(simulationId: string): Promise<ApiResponse<NetworkData>> {
     return this.request<NetworkData>(`/scenario1/simulation/${simulationId}/network`, {
       method: 'GET',
@@ -243,6 +283,23 @@ class ApiClient {
   async resetSimulation(simulationId: string): Promise<ApiResponse<{ simulationId: string; status: string; message: string }>> {
     return this.request(`/simulation/${simulationId}/reset`, {
       method: 'POST',
+    });
+  }
+
+  // 获取模拟数据相关API
+  async getSimulationData(simulationId: string): Promise<ApiResponse<any>> {
+    return this.request(`/scenario1/simulation/${simulationId}/data`, {
+      method: 'GET',
+    });
+  }
+
+  async getNetworkVisualizationData(simulationId: string): Promise<ApiResponse<{
+    users: any[];
+    platforms: any[];
+    crossPlatformPropagation: any[];
+  }>> {
+    return this.request(`/scenario1/simulation/${simulationId}/network-data`, {
+      method: 'GET',
     });
   }
 }

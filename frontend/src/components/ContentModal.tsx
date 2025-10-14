@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Typography } from 'antd';
 import './ContentModal.css';
 
-const { Title, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
 interface ContentModalProps {
   visible: boolean;

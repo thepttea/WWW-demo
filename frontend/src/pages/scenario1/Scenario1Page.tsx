@@ -27,6 +27,7 @@ const Scenario1Page: React.FC = () => {
   const { data: simulationResultData } = useSimulationResult(simulationId);
   const { data: networkData } = useNetworkData(simulationId);
 
+
   const handleStartSimulation = async (config: SimulationConfig) => {
     if (!config.eventDescription?.trim()) {
       message.warning('Please enter event description first');
@@ -257,17 +258,38 @@ const Scenario1Page: React.FC = () => {
                 // 数据转换：将后端格式转换为前端期望的格式
                 if (simulationResultData?.success && simulationResultData.data) {
                   try {
+                    // 转换数据格式以匹配期望的接口
+                    const transformedData = {
+                      ...simulationResultData.data,
+                      agents: simulationResultData.data.agents.map(agent => ({
+                        ...agent,
+                        influenceScore: agent.influence_score || 0
+                      }))
+                    };
+                    
                     // 优先使用完整的模拟结果数据
-                    const backendNetworkData = networkData?.success ? networkData.data : undefined;
+                    const backendNetworkData = networkData?.success && networkData.data ? {
+                      ...networkData.data,
+                      nodes: networkData.data.nodes.map(node => ({
+                        ...node,
+                        influenceScore: node.influence_score || 0
+                      })),
+                      edges: networkData.data.edges || []
+                    } : undefined;
                     return transformSimulationResultToNetworkData(
-                      simulationResultData.data,
+                      transformedData,
                       backendNetworkData
                     );
                   } catch (error) {
                     console.error('Error transforming simulation data:', error);
                     // 如果转换失败，尝试简化版转换
                     if (simulationResultData.data.agents) {
-                      return transformAgentsToNetworkData(simulationResultData.data.agents);
+                      // 转换数据格式以匹配期望的接口
+                      const transformedAgents = simulationResultData.data.agents.map(agent => ({
+                        ...agent,
+                        influenceScore: agent.influence_score || 0
+                      }));
+                      return transformAgentsToNetworkData(transformedAgents);
                     }
                   }
                 }
