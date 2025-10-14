@@ -34,714 +34,707 @@
         "mediaCoverage": "positive",
         "stockPrice": "+8% over 3 months"
       },
-      "summary": "The swift and transparent response helped rebuild user trust. The stock recovered and the app's user base grew steadily after the changes were implemented."
+      "keyFactors": ["Quick apology", "Decisive action (disabling feature)", "Transparency"]
     }
   },
   {
     "id": "case_002",
-    "title": "Airline Service Failure",
-    "description": "An airline's mishandling of a passenger incident goes viral, causing significant brand damage. The PR team needs to perform crisis management.",
-    "background": "A video surfaced online showing airline staff forcibly removing a paying passenger from an overbooked flight. The video was viewed hundreds of millions of times, sparking international outrage. The CEO's initial response was widely criticized as victim-blaming and insincere.",
-    "industry": "aviation",
-    "difficulty": "hard",
-    "totalRounds": 3,
+    "title": "Food Safety Crisis",
+    "description": "A food brand encounters a health scare related to one of its products. The PR response focuses on transparency and consumer safety.",
+    "background": "A popular beverage company had to recall millions of bottles after a small batch was found to be contaminated at a single bottling plant. News broke on social media before the company could make an official announcement, causing widespread panic and brand trust erosion.",
+    "industry": "food",
+    "difficulty": "high",
+    "totalRounds": 2,
     "strategies": [
       {
         "round": 1,
-        "title": "Flawed Initial Statement",
-        "content": "Release an internal memo, which is leaked, defending the staff's actions and describing the passenger as 'disruptive and belligerent'.",
-        "timeline": "Within 24 hours"
+        "title": "Immediate Containment",
+        "content": "Issue a voluntary nationwide recall of the specific product line, even unaffected batches, to show utmost caution. The CEO should personally deliver the message. Activate a 24/7 consumer hotline and social media response team.",
+        "timeline": "Within 6 hours of confirmation"
       },
       {
         "round": 2,
-        "title": "Public Apology and Policy Change",
-        "content": "After continued public pressure and a plummeting stock price, the CEO issues a full, heartfelt public apology. The airline announces it will no longer use law enforcement to remove passengers from overbooked flights and will review its overbooking policies.",
-        "timeline": "48 hours"
-      },
-      {
-        "round": 3,
-        "title": "Compensation and Rebuilding",
-        "content": "Offer a full refund and compensation to all passengers on the flight. Launch a new ad campaign focused on customer service improvements. The CEO goes on a media tour to personally address the issue.",
-        "timeline": "1-3 weeks"
-      }
-    ],
-    "realWorldOutcome": {
-      "success": false,
-      "metrics": {
-        "sentimentImprovement": 10,
-        "mediaCoverage": "negative",
-        "stockPrice": "-4% over 6 months"
-      },
-      "summary": "The initial poor response caused deep and lasting damage to the airline's reputation. While later actions were more appropriate, the brand became a case study in how not to handle a crisis. It took years for public perception to recover."
-    }
-  },
-  {
-    "id": "case_003",
-    "title": "Fast Food Ingredient Scandal",
-    "description": "A popular fast-food chain is accused of using substandard ingredients, leading to a food safety crisis.",
-    "background": "An investigative report, complete with undercover footage, revealed that a key supplier for a global fast-food chain was using expired meat. The news broke in several major markets simultaneously, causing a sales slump and calls for boycotts.",
-    "industry": "food & beverage",
-    "difficulty": "hard",
-    "totalRounds": 3,
-    "strategies": [
-      {
-        "round": 1,
-        "title": "Immediate Action & Transparency",
-        "content": "Immediately sever ties with the supplier in question. Issue a public statement apologizing to customers and close affected restaurants for inspection. Place full-page ads in national newspapers to apologize and explain the actions being taken.",
-        "timeline": "Within 24 hours"
-      },
-      {
-        "round": 2,
-        "title": "Supply Chain Overhaul",
-        "content": "Announce a complete overhaul of the supply chain management and quality control processes. Invite media and food safety experts to tour new, approved facilities. Launch a dedicated website to provide transparent information about ingredient sourcing.",
-        "timeline": "1-2 weeks"
-      },
-      {
-        "round": 3,
-        "title": "Regaining Customer Trust",
-        "content": "Introduce new menu items with a focus on fresh, locally sourced ingredients. Run a marketing campaign centered on the theme of 'A Fresh Start'. Offer free items and discounts to encourage customers to return.",
-        "timeline": "1-3 months"
+        "title": "Rebuilding Trust",
+        "content": "Provide full transparency about the investigation's findings. Announce new, stricter safety protocols across all plants. Offer full refunds and high-value coupons to affected customers. Launch a facility tour video series to showcase safety standards.",
+        "timeline": "1 week later"
       }
     ],
     "realWorldOutcome": {
       "success": true,
       "metrics": {
-        "sentimentImprovement": 45,
-        "mediaCoverage": "neutral to positive",
-        "sales": "Returned to pre-crisis levels within 6 months"
+        "sentimentImprovement": 40,
+        "mediaCoverage": "neutral_to_positive",
+        "stockPrice": "Recovered to pre-crisis level within 6 weeks"
       },
-      "summary": "The company's swift, decisive, and transparent actions were key to containing the damage. By taking visible steps to fix the problem and openly communicating with the public, they were able to gradually rebuild trust and recover their market position."
+      "keyFactors": ["Proactive and broad recall", "CEO visibility", "Customer compensation"]
     }
   },
-  [
-    {
-      "id": "case_004",
-      "title": "Bud Light & Dylan Mulvaney Incident (2023)",
-      "description": "A partnership with transgender influencer Dylan Mulvaney sparked a strong boycott from conservative consumers, leading to a disastrous public relations crisis for Bud Light. The brand's attempt to remain neutral ended up alienating both sides.",
-      "background": "In April 2023, Bud Light partnered with transgender influencer Dylan Mulvaney for a social media promotion. This was part of a strategy to attract younger, more diverse consumers, but it immediately triggered a fierce backlash from the brand's traditional customer base, who felt betrayed. The #BoycottBudLight hashtag went viral, leading to a sharp decline in sales and stock price.",
-      "industry": "beverage",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Initial Marketing Partnership Triggers Conservative Backlash",
-          "content": "On April 1, 2023, as part of a strategy to attract younger and more diverse consumers, Bud Light collaborated with transgender influencer Dylan Mulvaney, who has millions of followers, to post a sponsored video on her Instagram promoting the brand's 'March Madness' contest. In the video, Mulvaney showed a custom commemorative beer can with her face on it. This initiative stemmed from the brand's marketing VP's strategy to 'evolve and elevate this iconic brand' and make it more 'inclusive'.",
-          "timeline": "April 1, 2023"
-        },
-        {
-          "round": 2,
-          "title": "Vague Official Response Leads to 'Double Alienation'",
-          "content": "Facing the overwhelming boycott, parent company Anheuser-Busch's initial response attempted to downplay the event's significance. A spokesperson's statement said: 'From time to time, we produce unique commemorative cans for fans and for brand influencers, like Dylan Mulvaney. This commemorative can was a gift to celebrate a personal milestone and is not for sale to the general public.' Nearly two weeks later, as the boycott intensified and sales declined, company CEO Brendan Whitworth issued a vague open letter titled 'Our Responsibility to America,' attempting a neutral stance: 'We never intended to be part of a discussion that divides people. We are in the business of bringing people together over a beer.'",
-          "timeline": "Following initial backlash"
-        },
-        {
-          "round": 3,
-          "title": "Subsequent Actions and Influencer's Counterattack Exacerbate Brand Damage",
-          "content": "As the crisis continued, Anheuser-Busch placed the two marketing executives who planned the collaboration on leave. At the same time, the company quickly launched a series of new ads with patriotic themes, such as featuring the classic Budweiser Clydesdales, in an attempt to win back its traditional consumer base. However, months after the incident, Mulvaney, who had remained silent, spoke out publicly, harshly criticizing Bud Light's handling of the crisis. She stated in a video: 'for a company to hire a trans person and then not publicly stand by them is worse in my opinion than not hiring a trans person at all.' In response, an Anheuser-Busch spokesperson again gave an unnamed, generic response: 'As we've said, we remain committed to the programs and partnerships we have forged over decades with organizations across a number of communities, including those in the LGBTQ+ community.'",
-          "timeline": "Ongoing crisis"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "Severe reputational damage, alienating both conservative and progressive consumers.",
-          "mediaCoverage": "Overwhelmingly negative",
-          "stockPrice": "Market value evaporated by tens of billions of dollars."
-        },
-        "keyFactors": [
-          "Ambiguous and neutral stance",
-          "Failure to support partner influencer",
-          "Alienated both core and target audiences"
-        ]
+  {
+    "id": "case_003",
+    "title": "Test case 3",
+    "description": "A tech company faces backlash over a controversial product feature. The PR team must address user concerns and restore trust.",
+    "background": "A major tech firm launched a new social media app with a feature that automatically shared users' locations with friends by default. This led to a massive public outcry over privacy concerns, with #TechGiantIsWatching trending globally. The company's stock dropped 15% within 48 hours.",
+    "industry": "technology",
+    "difficulty": "medium",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Initial Response",
+        "content": "Immediately issue a public apology acknowledging the mistake. Temporarily disable the feature for all users. Promise a full review and a more transparent redesign.",
+        "timeline": "Within 12 hours"
+      },
+      {
+        "round": 2,
+        "title": "Follow-up Actions",
+        "content": "Publish a detailed blog post explaining what went wrong and the steps being taken. Announce the feature will be opt-in only in the future. Engage with privacy advocates and key tech journalists.",
+        "timeline": "48-72 hours"
+      },
+      {
+        "round": 3,
+        "title": "Long-term Recovery",
+        "content": "Launch a 'Privacy First' marketing campaign. Roll out the redesigned feature with clear, user-friendly privacy controls. Partner with a respected third-party for a security audit.",
+        "timeline": "1-2 weeks"
       }
-    },
-    {
-      "id": "case_005",
-      "title": "Nongfu Spring Nationalism Controversy (2024)",
-      "description": "Following the death of a competitor's founder, Chinese beverage giant Nongfu Spring was engulfed in a nationalist-fueled online storm, with accusations of the founder's ingratitude and the brand's packaging being 'pro-Japan'.",
-      "background": "In early 2024, after the passing of Wahaha's founder Zong Qinghou, narratives about Nongfu Spring founder Zhong Shanshan's alleged 'betrayal' of Wahaha resurfaced and were amplified online. These were combined with criticisms that the packaging design of its 'Oriental Leaf' tea drink was 'Japan-worshipping,' igniting nationalist sentiment among the public.",
-      "industry": "beverage",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Triggering Event and Outbreak of Negative Public Opinion",
-          "content": "Initial Event: On February 25, 2024, the death of Wahaha Group's founder, Zong Qinghou, prompted widespread social mourning. Subsequently, narratives began to circulate and be amplified online about Nongfu Spring's founder, Zhong Shanshan, being 'ungrateful' during his early years as a Wahaha agent. These narratives, combined with criticism that the packaging design of Nongfu Spring's 'Oriental Leaf' tea drink was 'pro-Japan,' quickly ignited public nationalist sentiment.",
-          "timeline": "February 25, 2024"
-        },
-        {
-          "round": 2,
-          "title": "Founder's Personal Clarification Fails to Quell the Storm",
-          "content": "To address the crisis, on March 3, 2024, Zhong Shanshan published a long article titled 'A Few Things Between Mr. Zong and Me' via Nongfu Spring's official WeChat account. In the article, he attempted to clarify history, emphasize his respect for Zong Qinghou, and refute online rumors. He wrote: 'Mr. Zong has always been an entrepreneur I respect. He was both a mentor and a friend to me, and of course, a competitor... Using Mr. Zong's passing, a large amount of slander against me personally and Nongfu Spring has appeared online, which is certainly not what Mr. Zong would have wanted to see.' He also clarified that his first fortune came from the textile business, not Wahaha, and explained the 'channel stuffing' controversy from years ago.",
-          "timeline": "March 3, 2024"
-        },
-        {
-          "round": 3,
-          "title": "Response to Specific Accusations Has Limited Effect",
-          "content": "In response to the specific accusation that the 'Oriental Leaf' packaging was 'pro-Japan,' Nongfu Spring's customer service issued an official response on March 7, which was subsequently reported by multiple media outlets. The customer service stated: 'The building pattern on the green tea product label is an artistic creation based on the image of Chinese temple architecture... aiming to showcase the influence of Chinese tea and tea culture on the world, demonstrating national confidence.' Regarding the text on the packaging about Japanese matcha originating from China, customer service explained that its content was sourced from authentic and verifiable references.",
-          "timeline": "March 7, 2024"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "Failed to quell public opinion; fact-based clarifications were ineffective against emotional, nationalist-driven sentiment.",
-          "mediaCoverage": "Negative",
-          "stockPrice": "Market value evaporated by tens of billions of Hong Kong dollars."
-        },
-        "keyFactors": [
-          "Nationalist sentiment",
-          "Ineffectiveness of logical rebuttals in an emotional crisis",
-          "Focus shifted from business disputes to a moral trial of the brand's loyalty"
-        ]
-      }
-    },
-    {
-      "id": "case_006",
-      "title": "BMW MINI 'Ice Cream Gate' Incident (2023)",
-      "description": "At the Shanghai Auto Show, staff at the BMW MINI booth were accused of treating Chinese and foreign visitors differently when distributing free ice cream, triggering a massive PR crisis. Two subsequent apologies failed to appease public anger.",
-      "background": "On April 20, 2023, a video went viral on social media showing staff at the BMW MINI booth at the Shanghai Auto Show refusing to give free ice cream to Chinese visitors, claiming it had run out, only to enthusiastically offer it to a foreign visitor moments later. This was widely seen as a discriminatory act, sparking public outrage.",
-      "industry": "automotive",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "On-site Video Goes Viral, Discrimination Accusations Spread Rapidly",
-          "content": "Initial Event: On April 20, 2023, a video went viral on social media. The video showed that at the BMW MINI booth at the Shanghai Auto Show, two staff members denied a Chinese visitor's request for free ice cream, stating it was 'all gone.' However, when a foreign visitor approached, the staff enthusiastically took a carton of ice cream from the cooler and handed it to him.",
-          "timeline": "April 20, 2023"
-        },
-        {
-          "round": 2,
-          "title": "First Apology is Vague, Triggering Public Ridicule and Secondary Spread",
-          "content": "Facing public pressure, MINI China issued its first apology on its official Weibo account that afternoon. The letter read: 'The 'Sweet Pet' activity launched by MINI at the Shanghai Auto Show was originally intended to give a sweet treat to friends big and small visiting the show. Due to our lack of meticulous internal management and staff negligence, we have caused unpleasantness for everyone. We sincerely apologize for this! We will reflect on ourselves, improve management, strengthen internal training, and strive to provide good service and experience for every friend. Once again, we sincerely apologize to everyone!'",
-          "timeline": "Afternoon of April 20, 2023"
-        },
-        {
-          "round": 3,
-          "title": "Second Explanation Criticized as 'Excuses,' Damaging Brand Image and Market Value",
-          "content": "After the first apology failed, on the morning of April 21, MINI China issued a second statement attempting a more detailed explanation. The statement claimed: 'In addition to the 300 servings distributed daily, we also reserved a very small portion for our hardworking colleagues on site. The 4-5 'foreigners' you see in the video are our colleagues, they were wearing employee badges.'",
-          "timeline": "Morning of April 21, 2023"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "Both apologies exacerbated public negative sentiment and ridicule.",
-          "mediaCoverage": "Widespread negative reporting and online discussion",
-          "stockPrice": "BMW Group's stock price fell by 3.62%, wiping out about €2.4 billion in market value."
-        },
-        "keyFactors": [
-          "Apology was evasive and did not address the core accusation of discrimination",
-          "Explanation was seen as making excuses and lacked sincerity",
-          "Failed to understand and respect the cultural sensitivities of Chinese consumers"
-        ]
-      }
-    },
-    {
-      "id": "case_007",
-      "title": "Cathay Pacific Passenger Discrimination Incident (2023)",
-      "description": "Cathay Pacific flight attendants were accused of discriminating against non-English-speaking passengers. The incident, exposed via an audio recording, quickly escalated and sparked strong outrage among the mainland Chinese public.",
-      "background": "On May 21, 2023, a passenger from mainland China posted an audio recording on social media, revealing that flight attendants on Cathay Pacific flight CX987 were mocking passengers who spoke Mandarin in English and Cantonese. The recording included remarks like 'If you cannot say blanket in English, you cannot have it,' which went viral and was seen as discrimination based on language and identity.",
-      "industry": "aviation",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Passenger's Audio Recording Exposes Discriminatory Remarks, Sparking Public Outrage",
-          "content": "Initial Event: On May 21, 2023, a mainland Chinese passenger posted on the social platform 'Xiaohongshu' with an audio recording, complaining that while on Cathay Pacific flight CX987 (Chengdu to Hong Kong), they overheard flight attendants in the rear cabin rest area mocking and discriminating against Mandarin-speaking passengers in English and Cantonese. The recording clearly captured the flight attendants' conversation, such as: 'If you cannot say blanket in English, you cannot have it,' and complaining in Cantonese 'They can't understand human language' after reminding passengers to return to their seats.",
-          "timeline": "May 21, 2023"
-        },
-        {
-          "round": 2,
-          "title": "Cathay Pacific Issues Multiple Statements, from Initial Apology to Firing Employees",
-          "content": "Facing the storm of public opinion, Cathay Pacific responded three times within 24 hours. The initial apology was rather standard, but as the situation escalated, the company's stance became increasingly serious. On the evening of May 23, Cathay Pacific CEO Ronald Lam issued a signed statement announcing the final decision: 'Currently, we have completed the investigation into the incident and, in accordance with company regulations, have dismissed the three flight attendants involved. Here, I want to reiterate that for individual employees who seriously violate company rules and ethical standards, Cathay Pacific will maintain a 'zero tolerance' attitude and will show no leniency.'",
-          "timeline": "Within 24-48 hours"
-        },
-        {
-          "round": 3,
-          "title": "CEO Personally Appears and Promises Reform, Government Officials Intervene",
-          "content": "On May 24, Hong Kong's Chief Executive John Lee publicly stated that he was 'pained' by the incident, believing the words and actions 'hurt the feelings of Hong Kong and mainland compatriots,' and had told Cathay Pacific's senior management that similar situations would not be tolerated. On the same day, Cathay Pacific CEO Ronald Lam, attending an event in Guangzhou, faced the media in person and apologized for the fourth time, this time in Mandarin. He promised: 'To prevent similar incidents from happening again, I will personally lead a cross-departmental task force to conduct a comprehensive review, re-examining our service processes, staff training, and related systems to further enhance Cathay Pacific's service quality.' Subsequently, Cathay Pacific announced a series of reform measures, including adding Mandarin broadcasts on flights to and from the mainland, indicating the languages spoken by cabin crew on their name tags, and for the first time, recruiting cabin crew from mainland China.",
-          "timeline": "May 24, 2023 and onwards"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": true,
-        "metrics": {
-          "sentimentImprovement": "Decisive action (firing employees) and high-level intervention effectively quelled public anger.",
-          "mediaCoverage": "Shifted from extremely negative to focusing on the company's reform measures",
-          "stockPrice": "Stabilized, avoiding further decline"
-        },
-        "keyFactors": [
-          "Fast and decisive action (firing employees)",
-          "CEO apologized personally, repeatedly, and in Mandarin",
-          "Proposed specific and substantive reform measures"
-        ]
-      }
-    },
-    {
-      "id": "case_008",
-      "title": "Balenciaga Advertising Campaign Controversy (2022)",
-      "description": "Luxury fashion brand Balenciaga sparked a global boycott and brand crisis after releasing two ad campaigns accused of featuring elements of 'child pornography' and 'child abuse'.",
-      "background": "In November 2022, Balenciaga released two holiday ad campaigns. In one, child models held teddy bear handbags dressed in BDSM-style harnesses; in another, a background document featured a U.S. Supreme Court ruling on child pornography laws. This triggered global condemnation, with the public accusing the brand of 'sexualizing children'.",
-      "industry": "fashion",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Controversial Ads Released, Sparking Global Condemnation",
-          "content": "Initial Event: In November 2022, Balenciaga released two holiday collection ad campaigns. One, the 'Gift Shop' series, photographed by Gabriele Galimberti, featured child models holding teddy bear bags dressed in BDSM (bondage, dominance, sadism, and masochism) style harnesses. The second, the 'Garde-Robe' collection in collaboration with Adidas, included a photo where scattered documents in the background contained a U.S. Supreme Court ruling on a case involving child pornography laws.",
-          "timeline": "November 2022"
-        },
-        {
-          "round": 2,
-          "title": "Initial Response and Lawsuit Criticized as 'Shifting Blame'",
-          "content": "Facing the crisis, Balenciaga first removed the relevant ads. It then issued an initial apology, stating for the teddy bear ad: 'our plush bear bags and the Gift Collection should not have been featured with children.' For the document ad, the brand tried to shift responsibility to a third party, claiming the props were provided by a third party and confirmed in writing to be 'fake office documents,' but 'it turned out they were real legal documents.' More controversially, Balenciaga then filed a $25 million lawsuit against the production company for the 'Garde-Robe' ad, North Six, and set designer Nicholas Des Jardins, accusing them of 'inexplicable acts and omissions.'",
-          "timeline": "Initial response"
-        },
-        {
-          "round": 3,
-          "title": "Senior Management Steps Up to Take Responsibility, Pledges Internal Reforms",
-          "content": "After the initial response failed, Balenciaga changed its strategy. The company dropped the lawsuit. Brand creative director Demna Gvasalia and CEO Cédric Charbit successively issued more profound personal apologies. In his statement, Demna admitted: 'It was inappropriate to have kids promote objects that had nothing to do with them,' and said he would re-evaluate his working methods. Balenciaga's official account also posted a more detailed statement, admitting to 'a series of serious errors' and stating: 'We strongly condemn child abuse; it was never our intent to include it in our narrative... Balenciaga reiterates its sincere apologies for the offence we have caused.' The company also promised to implement internal reforms, establish a new content validation process, and set up a fund to support organizations that protect children.",
-          "timeline": "Subsequent response"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "The initial response worsened negative sentiment; subsequent apologies from senior management began to calm the situation, but the damage to the brand was already done.",
-          "mediaCoverage": "Global negative press and boycott movements",
-          "stockPrice": "Brand value and sales were severely impacted"
-        },
-        "keyFactors": [
-          "Initial attempt to shift blame",
-          "Crossing the societal moral line of child protection",
-          "Later acceptance of responsibility and commitment to reform were correct but came too late"
-        ]
-      }
-    },
-    {
-      "id": "case_009",
-      "title": "Xibei 'Ready-to-Cook Meals' Dispute (2025)",
-      "description": "Following public questioning by celebrity Luo Yonghao, well-known restaurant chain Xibei was embroiled in a 'ready-to-cook meals' controversy. The conflict between its 'freshly stir-fried' marketing and its actual use of semi-finished products from a central kitchen became the focus of the dispute.",
-      "background": "On September 10, 2025, tech celebrity Luo Yonghao accused Xibei on Weibo of serving 'almost entirely ready-to-cook meals at high prices,' which resonated with consumers. Xibei's long-standing brand image of 'natural, healthy, and made on-site' was severely challenged.",
-      "industry": "food & beverage",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Celebrity Accusation and Harsh Denial Ignite Public Standoff",
-          "content": "Initial Event and Company PR Content: On September 10, 2025, tech celebrity Luo Yonghao posted on Weibo, directly pointing out that Xibei's dishes were 'almost all ready-to-cook and expensive,' sparking strong resonance among consumers. In response to the accusation, Xibei's founder Jia Guolong quickly gave a harsh response. At a media briefing on September 11, he firmly denied it, stating Xibei is '100% free of ready-to-cook meals,' and claimed: 'Luo Yonghao expressed dissatisfaction with ready-to-cook meals, which has harmed us. We will pursue legal procedures and will definitely sue him.' The next day, Xibei's official Weibo account posted 'A Letter to All Customers from the Xibei Team,' which stated: 'As an influential public figure, Luo Yonghao's false accusations and improper language against Xibei are firmly opposed by Xibei, and we will not tolerate it.'",
-          "timeline": "September 10-12, 2025"
-        },
-        {
-          "round": 2,
-          "title": "'Open Kitchen' Backfires, Trust Crisis Erupts",
-          "content": "To prove its innocence, Xibei announced it would open the kitchens of its 370 stores nationwide for media and public supervision, and provocatively launched a 'Luo Yonghao Menu.'",
-          "timeline": "Following the denial"
-        },
-        {
-          "round": 3,
-          "title": "A 180-Degree Turn in Attitude, Issuing an Apology and Promising Rectification",
-          "content": "After public pressure peaked, Xibei's attitude took a 180-degree turn. On September 15, Xibei's official Weibo posted an apology letter, acknowledging the problems. The letter read: 'We have profoundly realized that there is a significant discrepancy between Xibei's production processes and customer expectations, and we have failed to meet the needs and expectations of our customers. For this, Xibei extends its deepest apologies for the trouble and concern caused to our customers.' The letter promised a series of rectifications, 'to move the central kitchen's pre-processing steps to in-store on-site processing as much as possible,' and stated that adjustments for several dishes would be completed by October 1, such as changing the beef sauce in children's meals to be stir-fried in-store and replacing all soybean oil with non-GMO soybean oil.",
-          "timeline": "September 15, 2025"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "The initial aggressive stance escalated the conflict; the later apology and rectification promises salvaged some public opinion, but trust was already damaged.",
-          "mediaCoverage": "Shifted from a negative confrontation to a discussion on industry transparency",
-          "stockPrice": "Brand image and customer trust were severely damaged"
-        },
-        "keyFactors": [
-          "Initial harsh denial and legal threats",
-          "Playing word games with the concept of 'ready-to-cook meals'",
-          "The final apology was effective due to its specific, action-oriented plan"
-        ]
-      }
-    },
-    {
-      "id": "case_010",
-      "title": "Pang Dong Lai Employee 'Tasting Noodles' Incident (2024)",
-      "description": "Retailer Pang Dong Lai trended on social media due to an employee's improper food handling. However, through a unique, transparent, and humane handling process, it successfully turned a potential crisis into a brand reputation victory.",
-      "background": "On February 15, 2024, a video showed an employee at a Pang Dong Lai food court in Xuchang tasting noodles from a pot with chopsticks and then stirring the pot with the same unwashed chopsticks while preparing staff meals. This raised public concern about food safety.",
-      "industry": "retail",
-      "difficulty": "medium",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Video Exposure and Initial Harsh Punishment",
-          "content": "Pang Dong Lai responded swiftly. On February 16, the company issued its first official statement, defining the act as a 'serious food processing safety incident' and announced the disciplinary action according to company policy: 'terminate the labor contract of the employee involved,' while also demoting the relevant supervisors and shutting down the hot pot stall in question.",
-          "timeline": "February 16, 2024"
-        },
-        {
-          "round": 2,
-          "title": "Activating 'Democratic Council' for Public Re-evaluation",
-          "content": "Facing public debate, Pang Dong Lai did not remain silent or stick to its original decision but took a surprising step. The company quickly initiated its internal 'Democratic Council' procedure to re-evaluate the incident. On February 19, Pang Dong Lai released a detailed 13-page investigation report, making the entire process of democratic discussion, deliberation, and resolution public. The report clearly listed two alternative solutions: Option one was to uphold the original decision (termination with compensation); Option two was to **'place the employee on a three-month learning period, transfer them from their current position to a non-food processing role.'**",
-          "timeline": "February 19, 2024"
-        },
-        {
-          "round": 3,
-          "title": "Announcing a Humane Final Decision, Winning Widespread Acclaim",
-          "content": "In the 13-page report, Pang Dong Lai announced the voting results from the democratic review panel, which included regular employees: Option one received 6 votes, and Option two received 11 votes. Therefore, the final decision was to adopt Option two, allowing the employee to keep their job with a transfer. The report concluded: 'The re-adjudication of this incident was conducted through the democratic council to provide employees with a platform of respect, fairness, justice, and democracy, to cultivate well-rounded personalities and achieve a positive state of life.'",
-          "timeline": "Announcement on February 19, 2024"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": true,
-        "metrics": {
-          "sentimentImprovement": "Public opinion completely shifted from debating the severity of the punishment to praising the company's culture and transparency.",
-          "mediaCoverage": "Overwhelmingly positive",
-          "stockPrice": "Brand reputation was significantly enhanced"
-        },
-        "keyFactors": [
-          "Extreme transparency (publishing a 13-page report)",
-          "Listening to public opinion and being willing to correct course",
-          "Humane handling and a unique corporate culture"
-        ]
-      }
-    },
-    {
-      "id": "case_011",
-      "title": "SHEIN & Temu's Ongoing Labor and Data Controversies (Ongoing)",
-      "description": "Fast-fashion giants SHEIN and Temu face a series of continuous, serious allegations, including labor exploitation in their supply chains, product safety issues, and user data security concerns, constituting a chronic, systemic reputational challenge.",
-      "background": "For years, various media and NGOs have exposed harsh working conditions in SHEIN's supplier factories, such as extremely long hours and low wages. Additionally, some products from both companies have been found to contain excessive levels of toxic chemicals, and they face accusations of using forced labor due to potential links to Xinjiang cotton. Temu's data security practices are also under scrutiny due to the history of its parent company, Pinduoduo.",
-      "industry": "e-commerce",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Frequent Exposures of Labor and Safety Issues Lead to Sustained Criticism",
-          "content": "Initial Events: For years, multiple media outlets and non-governmental organizations (like Public Eye) have, through methods like undercover investigations, continuously exposed poor working conditions at SHEIN's supplier factories, including workers laboring for over 12 hours a day with only one day off per month and meager wages, in serious violation of its own code of conduct. At the same time, investigations have found that some products from SHEIN and Temu contain excessive levels of toxic chemicals (like lead), posing a health threat to consumers. Furthermore, allegations that their products may use cotton from Xinjiang, involving forced labor, have put them under immense international political pressure.",
-          "timeline": "Ongoing"
-        },
-        {
-          "round": 2,
-          "title": "Official Responses Consist Mainly of Denials and Promises, Lacking Substantive Transparency",
-          "content": "In response to accusations of labor exploitation, SHEIN's official statements typically acknowledge the existence of problems in part, but emphasize that they are isolated cases and promise improvements. For example, regarding the Public Eye report, SHEIN stated: 'While we do not agree with many of the allegations in the report, the discussion on working hours and wages is important, and the company has made significant progress in improving working conditions.' At the same time, SHEIN stressed that the investigation's sample size was small and not representative, and claimed the company is investing millions to strengthen supply chain governance and conduct surprise audits of suppliers. For more sensitive allegations like forced labor and data security, Temu issued direct denials, with its statement saying: 'Temu denies all allegations of data breaches, labor exploitation, and counterfeit goods. The company claims it complies with all necessary regulations and provides a safe shopping experience for users.'",
-          "timeline": "Reactive statements"
-        },
-        {
-          "round": 3,
-          "title": "Facing Regulatory Pressure and Data Security Doubts, Crisis Becomes the Norm",
-          "content": "Initial Events: Besides labor issues, Temu's data security strategy is also under scrutiny. Its parent company, Pinduoduo, was once removed from the Google Play Store after malware was found in its app, making outsiders wary of Temu's data collection practices. U.S. members of Congress have expressed concerns about Temu's data handling and questioned its relationship with the Chinese government, sparking discussions about national security. Meanwhile, the European Commission has also requested that SHEIN and Temu detail how they comply with regulations on online content.",
-          "timeline": "Ongoing regulatory scrutiny"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "A strategy of denials and opaque promises has failed to dispel external doubts, and the negative image persists.",
-          "mediaCoverage": "Continuous negative reporting and investigations",
-          "stockPrice": "Facing regulatory and public pressure, creating uncertainty for future development like its IPO"
-        },
-        "keyFactors": [
-          "Lack of independent third-party audits and transparency",
-          "Inherent issues in the business model are difficult to resolve through PR",
-          "Issues have escalated from the consumer level to national regulatory and security levels"
-        ]
-      }
-    },
-    {
-      "id": "case_012",
-      "title": "Boeing & Alaska Airlines 737 MAX 9 Incident (2024)",
-      "description": "A Boeing 737 MAX 9 aircraft suffered a serious in-flight incident where an emergency door plug detached, once again thrusting Boeing's production quality and safety management into the spotlight and drawing rare public criticism from its airline customers.",
-      "background": "On January 5, 2024, shortly after takeoff, a door plug on Alaska Airlines Flight 1282 suddenly detached, causing rapid cabin depressurization. A preliminary investigation by the National Transportation Safety Board (NTSB) revealed that four key bolts meant to secure the plug were missing. Given the 737 MAX series' previous history of fatal crashes, this incident was seen as further proof of systemic failures in Boeing's quality control.",
-      "industry": "aerospace",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "In-flight Emergency Occurs, Dealing Another Blow to Boeing's Safety Record",
-          "content": "Initial Event: During its ascent, a door plug used to seal an unnecessary emergency exit on Alaska Airlines Flight 1282 suddenly detached, leading to immediate cabin depressurization and forcing the plane to make an emergency return. Fortunately, the event caused no fatalities. The preliminary investigation report from the U.S. National Transportation Safety Board (NTSB) indicated that the four key bolts used to secure the door plug were missing.",
-          "timeline": "January 5, 2024"
-        },
-        {
-          "round": 2,
-          "title": "Airlines Publicly Express Dissatisfaction, Boeing CEO Admits Responsibility",
-          "content": "PR Content (from customers): As one of Boeing's largest customers, United Airlines CEO Scott Kirby expressed rare public disappointment with Boeing after the incident. In an interview with CNBC, he said: 'I'm disappointed that the manufacturing challenges do keep happening at Boeing. This isn't new... The Max 9 grounding is probably the straw that broke the camel's back for us.' He also stated that United Airlines would develop fleet plans that do not include the future MAX 10 model. Alaska Airlines CEO Ben Minicucci also expressed 'anger' and demanded Boeing explain how it would improve its internal quality programs.\nPR Content (from Boeing): Facing dual pressure from regulators and core customers, Boeing adopted a stance of taking responsibility. Boeing CEO Dave Calhoun said in a statement: 'Whatever final conclusions are reached, Boeing is accountable for what happened. An event like this must not happen on an airplane that leaves our factory.' Boeing Commercial Airplanes CEO Stan Deal also apologized to airline customers: 'We have let down our airline customers and are deeply sorry for the significant disruption to them, their employees and their passengers.'",
-          "timeline": "Following the incident"
-        },
-        {
-          "round": 3,
-          "title": "Groundings and Investigations Continue, Deepening the Trust Crisis",
-          "content": "Subsequent Developments: In subsequent inspections, United and Alaska Airlines found more loose bolts and parts on other grounded 737 MAX 9 aircraft, further confirming the systemic nature of the problem. The FAA conducted a strict audit of Boeing's production line and limited its 737 MAX production until quality control issues are satisfactorily resolved.",
-          "timeline": "Ongoing investigation"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "The CEO's admission of responsibility was a necessary step, but the subsequent discovery of more problems deepened the trust crisis.",
-          "mediaCoverage": "Sustained negative coverage focusing on systemic quality control issues",
-          "stockPrice": "Suffered long-term financial and reputational damage"
-        },
-        "keyFactors": [
-          "Public criticism from core customers",
-          "Systemic nature of quality control problems",
-          "The company's 'safety first' culture was fundamentally questioned"
-        ]
-      }
-    },
-    {
-      "id": "case_013",
-      "title": "Tesla Cybertruck Launch Demo Controversy (2019, ongoing relevance)",
-      "description": "At the Cybertruck launch event, a live demonstration meant to showcase the strength of its 'armor glass' failed spectacularly when the window shattered. However, the leader's immediate reaction and brand culture transformed the failure into a viral marketing event.",
-      "background": "On November 21, 2019, during the Cybertruck unveiling, Tesla CEO Elon Musk had the lead designer throw a steel ball at the vehicle's window to demonstrate its strength. Unexpectedly, the glass shattered, and the dramatic moment quickly became a global headline.",
-      "industry": "automotive",
-      "difficulty": "medium",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Live Demo Fails Unexpectedly, Drawing Global Attention",
-          "content": "Initial Event: At the Cybertruck launch event on November 21, 2019, to demonstrate the durability of its 'Armor Glass,' Tesla CEO Elon Musk had lead designer Franz von Holzhausen throw a steel ball at the car window. To everyone's surprise, both the front and rear windows shattered.\nPR Content (Musk's immediate reaction): When the first window shattered, Musk blurted out, 'Oh my fucking god.' He then tried to defuse the awkwardness with humor, laughing and saying, 'Well, maybe that was a little too hard,' adding, 'at least it didn't go through.' After the second attempt also failed, he joked helplessly, 'Room for improvement,' and said they would fix it in post-production.",
-          "timeline": "November 21, 2019"
-        },
-        {
-          "round": 2,
-          "title": "Post-event Explanation and Transformation of Brand Image",
-          "content": "Afterward, Musk explained the possible reason for the glass shattering on social media. He posted a video of a pre-launch test where the steel ball failed to break the window. He explained, 'I think we probably cracked one corner [from the earlier sledgehammer demo on the door] and that's probably what led the steel ball cracking the window instead of just bouncing off, like when we were practicing.' He also admitted that the failed demo caught him off guard and affected the flow of the rest of the presentation.",
-          "timeline": "Post-event"
-        },
-        {
-          "round": 3,
-          "title": "Symbolizing the 'Failure' and Integrating It into the Brand Narrative",
-          "content": "Instead of trying to hide the embarrassment, Tesla actively symbolized it. The company later sold a t-shirt featuring the cracked window design of the Cybertruck, turning the 'fail' into a brand culture symbol.",
-          "timeline": "Long-term"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": true,
-        "metrics": {
-          "sentimentImprovement": "Public opinion shifted from ridicule to admiration for the brand's willingness to take risks, reinforcing its image as a disruptor.",
-          "mediaCoverage": "Gained far more global exposure than a conventional launch",
-          "stockPrice": "The incident may have actually boosted pre-orders, with over 250,000 received in the days following the event."
-        },
-        "keyFactors": [
-          "The leader's authentic, humane, and humorous immediate reaction",
-          "High alignment with the brand's 'unconventional and risk-taking' image",
-          "Actively symbolizing the failure and integrating it into the brand culture"
-        ]
-      }
-    },
-    {
-      "id": "case_014",
-      "title": "Arc'teryx Himalaya Fireworks Incident (2025)",
-      "description": "High-end outdoor brand Arc'teryx faced huge controversy for hosting a large-scale fireworks display in the ecologically fragile Himalayan region. The 'mountain-blasting' marketing event was seen as a severe betrayal of its core value of 'respecting nature'.",
-      "background": "In September 2025, as part of a brand campaign, Arc'teryx collaborated with artist Cai Guo-Qiang on a firework art project titled 'Ascending Dragon' at an altitude of about 5,500 meters in the Himalayas. This act immediately drew strong criticism from outdoor enthusiasts and environmentalists, who considered it disrespectful to nature.",
-      "industry": "apparel",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Marketing Event Sparks Environmental Concerns",
-          "content": "Initial Event and Company PR Content: On September 19, 2025, as part of its 'Ascend to Beauty' brand campaign, Arc'teryx collaborated with artist Cai Guo-Qiang to execute a firework art project called 'Ascending Dragon' in the Jiangzi Relong area of the Himalayas, at an altitude of about 5,500 meters. Videos of the event were widely spread online. Facing initial environmental concerns, the brand and its customer service initially responded by emphasizing the event's compliance and eco-friendliness, stating: 'The event was conducted under scientific assessment and strict guidance, the artistic creation used environmentally friendly materials, the colored powders were biodegradable, and emissions met environmental standards.' They also stated the event's intention was to 'pay tribute to nature, culture, and the environment.'",
-          "timeline": "September 19, 2025"
-        },
-        {
-          "round": 2,
-          "title": "Public Opinion Ferments, Officials Delete Videos but Offer No Formal Response",
-          "content": "As the topic 'Arc'teryx's firework art with Cai Guo-Qiang sparks controversy' trended on Weibo with over 100 million views, public pressure mounted. At this stage, Arc'teryx and Cai Guo-Qiang's team took initial steps to cool the situation by deleting the event videos from social media. However, for a period after deleting the videos, the brand did not issue a formal official statement or apology.",
-          "timeline": "Following backlash"
-        },
-        {
-          "round": 3,
-          "title": "Government Intervention and Formal Apology",
-          "content": "In the early morning of September 21, the government of Shigatse, where the event took place, issued a notice stating that an investigation team had been formed to verify the situation on-site and would handle it according to laws and regulations. After the official intervention, Arc'teryx and Cai Guo-Qiang's team quickly issued formal apologies. Arc'teryx stated on its official Weibo: 'We sincerely thank everyone for their concern and supervision of the ecological environment of the Qinghai-Tibet Plateau, and we humbly accept all criticisms and suggestions. We deeply identify with and respect everyone's guardianship. Here, we express our most sincere apologies to all.' The company promised to cooperate with third-party organizations for an environmental impact assessment and carry out remedial actions. Cai Guo-Qiang's studio also issued a simultaneous statement, admitting to 'lack of thorough consideration' and expressing deep apologies.",
-          "timeline": "September 21, 2025"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "Deleting videos was seen as evading responsibility; the final apology eased hostility, but the brand's image was already damaged.",
-          "mediaCoverage": "Widespread negative criticism and questioning",
-          "stockPrice": "The brand's core values were questioned, and loyal customers felt betrayed"
-        },
-        "keyFactors": [
-          "Marketing behavior severely contradicted the brand's core values",
-          "Lack of timely and sincere communication in the initial stage",
-          "Government intervention forced the brand to adopt a more responsible attitude"
-        ]
-      }
-    },
-    {
-      "id": "case_015",
-      "title": "Xiaomi Auto SU7 Post-Launch Controversy (2025)",
-      "description": "Xiaomi Auto faced dissatisfaction from some high-performance version owners due to a feature change in an OTA update. Xiaomi's rapid response and handling of the matter demonstrated the crisis management capabilities of automakers in the smart vehicle era.",
-      "background": "In early May 2025, some owners of the Xiaomi SU7 Ultra (high-performance version) discovered after an OTA update that the previously directly accessible 'Track Mode' (maximum performance mode) now had unlocking conditions, requiring drivers to achieve a certain lap time on a designated track to unlock full horsepower. This uncommunicated change sparked strong dissatisfaction within the owner community.",
-      "industry": "automotive",
-      "difficulty": "medium",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "OTA Update Restricts Performance, Causing Owner Dissatisfaction",
-          "content": "Initial Event: In early May 2025, some owners of the Xiaomi SU7 Ultra (high-performance version) received an OTA update push. After updating, they found that the 'Track Mode' (i.e., maximum performance mode), which was previously directly available, now had unlocking conditions, requiring owners to achieve a certain lap time on a designated track to unlock the full horsepower; otherwise, they could only use about 900 hp instead of the advertised 1548 hp.",
-          "timeline": "Early May 2025"
-        },
-        {
-          "round": 2,
-          "title": "Urgent Late-Night Apology, Pausing Rollout and Promising a Solution",
-          "content": "Facing negative feedback from owners, Xiaomi Auto responded extremely quickly. Late on the night of May 7, Xiaomi Auto's official account published a notice titled 'Answers to Questions Everyone is Concerned About,' directly addressing and apologizing for the 'Track Mode' controversy. The notice stated: 'The update we previously pushed added unlocking conditions to the 'Track Mode' feature, which has caused trouble for some users, and for this, we are deeply sorry. After receiving everyone's feedback, we took it very seriously and have paused this rollout. For the small number of users who have already upgraded, we will resolve this in the next version update.' Xiaomi also admitted: 'Our original intention was to better ensure driving safety, but we did not fully consult everyone's opinions, nor did we communicate the relevant features well. There were indeed shortcomings in our work.'",
-          "timeline": "Night of May 7, 2025"
-        },
-        {
-          "round": 3,
-          "title": "Addressing Other Controversies and Providing Compensation",
-          "content": "In the same notice, Xiaomi Auto also proactively addressed another controversy—the unclear functional description of the optional 'carbon fiber dual-air-duct front hood.' Some users questioned whether this expensive option was merely decorative. Xiaomi explained its design intention and admitted that 'the information was not communicated clearly enough.' To address this, the company proposed specific compensation measures: 'For undelivered orders, we will offer a limited-time option change service, allowing a switch back to the aluminum hood; for users who have already taken delivery or locked in their order with the carbon fiber hood before this limited-time change period ends..., we will gift 20,000 points to express our sincerity.'",
-          "timeline": "May 7, 2025"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": true,
-        "metrics": {
-          "sentimentImprovement": "The quick response and sincere apology effectively contained the crisis, winning the approval of most owners and netizens.",
-          "mediaCoverage": "Public opinion shifted from criticism to a discussion on the ethics of OTAs in smart cars",
-          "stockPrice": "Successfully turned a negative event into an opportunity to build trust with users"
-        },
-        "keyFactors": [
-          "Rapid response (late-night announcement)",
-          "Actions speak louder than words (pausing the rollout, promising a fix)",
-          "Proactively addressing other issues and offering tangible compensation"
-        ]
-      }
-    },
-    {
-      "id": "case_016",
-      "title": "OpenAI & Scarlett Johansson 'Sky' Voice Controversy (2024)",
-      "description": "OpenAI's newly released ChatGPT voice assistant, 'Sky,' was criticized for sounding highly similar to actress Scarlett Johansson, who had previously declined to voice the system. This sparked a major controversy over personality rights, AI ethics, and corporate integrity.",
-      "background": "In May 2024, when OpenAI launched its GPT-4o model, it showcased a voice named 'Sky,' which was widely noted for its 'eerily similar' tone to Scarlett Johansson. Adding to the controversy, OpenAI CEO Sam Altman tweeted 'her' shortly after the launch, which was interpreted as a deliberate connection to the movie 'Her,' in which Johansson voiced an AI assistant.",
-      "industry": "technology",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "New Voice Release Sparks Controversy Due to Striking Similarity to Celebrity's Voice",
-          "content": "Initial Event: When OpenAI released its GPT-4o model, it highlighted its new voice interaction capabilities. One of the voices, a female voice named 'Sky,' was immediately pointed out by users and the media as being 'eerily similar' to Scarlett Johansson's voice due to its natural, slightly husky, and emotive tone. More controversially, Johansson had voiced an AI assistant in the 2013 film 'Her,' and OpenAI CEO Sam Altman posted a single word on social media shortly after the launch: 'her,' which was widely interpreted as an intentional link between the two.",
-          "timeline": "May 2024"
-        },
-        {
-          "round": 2,
-          "title": "Johansson Issues a Strong Statement, Revealing History of Collaboration Request",
-          "content": "PR Content (from Johansson): Facing the controversy, Scarlett Johansson issued a strongly worded public statement revealing the background of the event. She stated that Altman had contacted her in September 2023, hoping she would voice ChatGPT because he believed her voice would be 'comforting to people,' but she declined for personal reasons. In her statement, she wrote: 'When I heard the released demo, I was shocked, angered and in disbelief that Mr. Altman would pursue a voice that sounded so eerily similar to mine that my closest friends and news outlets could not tell the difference.' She also revealed that two days before the demo's release, Altman contacted her agent again, asking her to reconsider, but the system was launched before she could respond. She had hired legal counsel to demand that OpenAI explain the creation process of the 'Sky' voice.",
-          "timeline": "Following the launch"
-        },
-        {
-          "round": 3,
-          "title": "OpenAI Suspends Use of the Voice and Apologizes, but Denies Imitation",
-          "content": "Following Johansson's statement, OpenAI acted swiftly, announcing it would suspend the use of the 'Sky' voice in its products. In a blog post, the company insisted the voice was not an imitation of Johansson but was recorded by another professional voice actress using her natural voice, whose name could not be disclosed for privacy reasons. CEO Sam Altman also issued a statement: 'The voice of Sky is not Scarlett Johansson's, and it was never intended to resemble hers. We cast the voice actor behind Sky's voice before any outreach to Ms. Johansson. Out of respect for Ms. Johansson, we have paused using Sky's voice in our products. We are sorry to Ms. Johansson that we didn't communicate better.'",
-          "timeline": "After Johansson's statement"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": false,
-        "metrics": {
-          "sentimentImprovement": "Suspending the voice was necessary for crisis control, but the denial of imitation did not fully convince the public, damaging the company's credibility.",
-          "mediaCoverage": "Global negative press, sparking a profound discussion on AI ethics and the 'right of publicity for voice'",
-          "stockPrice": "Brand image suffered a severe blow, with accusations of dishonesty and infringement"
-        },
-        "keyFactors": [
-          "Johansson's statement provided key context that made OpenAI's actions seem intentional",
-          "The CEO's tweet contradicted the company's official statement",
-          "The incident became a landmark case for the protection of personal biometric data in the age of AI"
-        ]
-      }
-    },
-    {
-      "id": "case_017",
-      "title": "KFC UK 'FCK' Crisis PR (2018, as a benchmark for successful response)",
-      "description": "KFC in the UK faced a supply chain disruption after switching logistics providers, forcing the majority of its restaurants to close due to a chicken shortage. However, the company successfully turned the crisis into an opportunity to boost brand affinity through a highly creative PR campaign.",
-      "background": "In February 2018, after KFC UK switched its logistics provider, the new system quickly collapsed, preventing chicken from being delivered to restaurants. Hundreds of stores were forced to close because they had 'no chicken to fry,' leading to consumer complaints and ridicule.",
-      "industry": "food & beverage",
-      "difficulty": "high",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Supply Chain Failure Leads to Widespread Restaurant Closures",
-          "content": "Initial Event: In February 2018, KFC UK & Ireland switched its logistics contract from the specialized food distribution company Bidvest Logistics to DHL, a move intended to reduce costs and increase efficiency. However, DHL's system quickly collapsed after the handover, preventing chicken from being transported from the warehouse to the restaurants. The crisis escalated rapidly over a few days, with hundreds of KFC outlets forced to close due to having 'no chicken to fry.'",
-          "timeline": "February 2018"
-        },
-        {
-          "round": 2,
-          "title": "Humorous and Self-deprecating 'FCK' Ad Turns the Tide",
-          "content": "After several days of chaos, KFC's PR and marketing team opted against a dry corporate statement and instead adopted a bold and humorous strategy. They took out full-page ads in several major UK newspapers. The ad featured an empty chicken bucket with the 'KFC' letters cleverly rearranged to read **'FCK'—a well-known acronym for an expletive. The ad copy read: 'A chicken restaurant without any chicken. It's not ideal... We're sorry... It's been a hell of a week, but we're making progress, and every day more and more fresh chicken is being delivered to our restaurants. Thank you for bearing with us.'**",
-          "timeline": "During the crisis"
-        },
-        {
-          "round": 3,
-          "title": "Continuous Transparent Communication Consolidates Gains",
-          "content": "In addition to the creative ad, KFC also implemented a series of transparent communication measures. They created a dedicated page on their official website with real-time updates on the operating status of each store for customers to check. At the same time, their social media team remained highly active, answering consumer questions and reporting on supply chain recovery progress almost daily in a lighthearted and humorous tone. For example, they tweeted: 'There's gossip in the hen house, here's the facts...'",
-          "timeline": "Ongoing recovery period"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": true,
-        "metrics": {
-          "sentimentImprovement": "Negative public sentiment quickly turned into good-natured teasing and praise, and brand affinity even increased.",
-          "mediaCoverage": "Overwhelmingly positive response; the 'FCK' ad was hailed as a 'work of PR genius'",
-          "stockPrice": "Successfully navigated the operational crisis and strengthened the brand image"
-        },
-        "keyFactors": [
-          "A bold, humorous, and brand-appropriate creative idea (the FCK ad)",
-          "Candidly admitting the mistake without shifting blame",
-          "Continuous and transparent communication"
-        ]
-      }
-    },
-    {
-      "id": "case_018",
-      "title": "California Pizza Kitchen's TikTok Response (2024)",
-      "description": "California Pizza Kitchen (CPK) faced a PR crisis due to a viral TikTok video where a customer complained their take-out mac 'n' cheese had no mac. CPK's response is a masterclass in modern social media crisis management.",
-      "background": "In the summer of 2024, a customer posted a TikTok video showing their CPK take-out order of 'mac 'n' cheese' that only contained cheese sauce. When they called the restaurant, an employee insisted the order was correct. The absurd situation made the video go viral, turning CPK into an internet joke.",
-      "industry": "food & beverage",
-      "difficulty": "medium",
-      "totalRounds": 3,
-      "strategies": [
-        {
-          "round": 1,
-          "title": "Customer's Complaint Video Goes Viral",
-          "content": "Initial Event: A customer posted a video on TikTok showing her CPK take-out order—a 'mac 'n' cheese' that consisted only of cheese sauce. To make matters worse, when she called the restaurant to complain, the employee who answered insisted that the 'cheese-only' order was correct. This absurd scenario caused the video to go viral, soaring in views and bringing negative attention to CPK's brand image.",
-          "timeline": "Summer 2024"
-        },
-        {
-          "round": 2,
-          "title": "Responding with a Humanized and Humorous Approach on the Same Platform",
-          "content": "Instead of issuing a traditional, dry corporate press release or official apology, CPK chose to fight back on the platform where the crisis originated—TikTok. They quickly produced and posted a response video. In the video, a chef named Chef Paul appeared on camera in a very sincere and humorous way, looking at the camera and saying: 'Okay, TikTok. We hear you. We messed up.' Then, he demonstrated how to make a 'proper' mac 'n' cheese and emphasized that 'the mac is back.' The entire video was lighthearted, fun, and full of personality.",
-          "timeline": "Rapid response"
-        },
-        {
-          "round": 3,
-          "title": "Going Beyond the Online Response to Compensate the Customer",
-          "content": "CPK's crisis management didn't stop with the successful online response. They found the original customer who posted the video and offered her a year's supply of free mac 'n' cheese and pizza as compensation.",
-          "timeline": "Following the video response"
-        }
-      ],
-      "realWorldOutcome": {
-        "success": true,
-        "metrics": {
-          "sentimentImprovement": "The comment section quickly shifted from ridicule to praise, and the response video itself went viral.",
-          "mediaCoverage": "A successful viral positive marketing event",
-          "stockPrice": "Turned a negative event into a brand re-energizing campaign, winning over many consumers"
-        },
-        "keyFactors": [
-          "Responding on the right platform (TikTok)",
-          "A fast, humorous, and personalized communication style",
-          "Supplemented by tangible compensation for the affected customer"
-        ]
-      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "metrics": {
+        "sentimentImprovement": 35,
+        "mediaCoverage": "positive",
+        "stockPrice": "+8% over 3 months"
+      },
+      "keyFactors": ["Quick apology", "Decisive action (disabling feature)", "Transparency"]
     }
-  ]
+  },
+  {
+    "id": "case_004",
+    "title": "Bud Light & Dylan Mulvaney Incident (2023)",
+    "description": "A partnership with transgender influencer Dylan Mulvaney sparked a strong boycott from conservative consumers, leading to a disastrous public relations crisis for Bud Light. The brand's attempt to remain neutral ended up alienating both sides.",
+    "background": "In April 2023, Bud Light partnered with transgender influencer Dylan Mulvaney for a social media promotion. This was part of a strategy to attract younger, more diverse consumers, but it immediately triggered a fierce backlash from the brand's traditional customer base, who felt betrayed. The #BoycottBudLight hashtag went viral, leading to a sharp decline in sales and stock price.",
+    "industry": "beverage",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Initial Marketing Partnership Triggers Conservative Backlash",
+        "content": "On April 1, 2023, as part of a strategy to attract younger and more diverse consumers, Bud Light collaborated with transgender influencer Dylan Mulvaney, who has millions of followers, to post a sponsored video on her Instagram promoting the brand's 'March Madness' contest. In the video, Mulvaney showed a custom commemorative beer can with her face on it. This initiative stemmed from the brand's marketing VP's strategy to 'evolve and elevate this iconic brand' and make it more 'inclusive'.",
+        "timeline": "April 1, 2023"
+      },
+      {
+        "round": 2,
+        "title": "Vague Official Response Leads to 'Double Alienation'",
+        "content": "Facing the overwhelming boycott, parent company Anheuser-Busch's initial response attempted to downplay the event's significance. A spokesperson's statement said: 'From time to time, we produce unique commemorative cans for fans and for brand influencers, like Dylan Mulvaney. This commemorative can was a gift to celebrate a personal milestone and is not for sale to the general public.' Nearly two weeks later, as the boycott intensified and sales declined, company CEO Brendan Whitworth issued a vague open letter titled 'Our Responsibility to America,' attempting a neutral stance: 'We never intended to be part of a discussion that divides people. We are in the business of bringing people together over a beer.'",
+        "timeline": "Following initial backlash"
+      },
+      {
+        "round": 3,
+        "title": "Subsequent Actions and Influencer's Counterattack Exacerbate Brand Damage",
+        "content": "As the crisis continued, Anheuser-Busch placed the two marketing executives who planned the collaboration on leave. At the same time, the company quickly launched a series of new ads with patriotic themes, such as featuring the classic Budweiser Clydesdales, in an attempt to win back its traditional consumer base. However, months after the incident, Mulvaney, who had remained silent, spoke out publicly, harshly criticizing Bud Light's handling of the crisis. She stated in a video: 'for a company to hire a trans person and then not publicly stand by them is worse in my opinion than not hiring a trans person at all.' In response, an Anheuser-Busch spokesperson again gave an unnamed, generic response: 'As we've said, we remain committed to the programs and partnerships we have forged over decades with organizations across a number of communities, including those in the LGBTQ+ community.'",
+        "timeline": "Ongoing crisis"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "Severe reputational damage, alienating both conservative and progressive consumers.",
+        "mediaCoverage": "Overwhelmingly negative",
+        "stockPrice": "Market value evaporated by tens of billions of dollars."
+      },
+      "keyFactors": [
+        "Ambiguous and neutral stance",
+        "Failure to support partner influencer",
+        "Alienated both core and target audiences"
+      ]
+    }
+  },
+  {
+    "id": "case_005",
+    "title": "Nongfu Spring Nationalism Controversy (2024)",
+    "description": "Following the death of a competitor's founder, Chinese beverage giant Nongfu Spring was engulfed in a nationalist-fueled online storm, with accusations of the founder's ingratitude and the brand's packaging being 'pro-Japan'.",
+    "background": "In early 2024, after the passing of Wahaha's founder Zong Qinghou, narratives about Nongfu Spring founder Zhong Shanshan's alleged 'betrayal' of Wahaha resurfaced and were amplified online. These were combined with criticisms that the packaging design of its 'Oriental Leaf' tea drink was 'Japan-worshipping,' igniting nationalist sentiment among the public.",
+    "industry": "beverage",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Triggering Event and Outbreak of Negative Public Opinion",
+        "content": "Initial Event: On February 25, 2024, the death of Wahaha Group's founder, Zong Qinghou, prompted widespread social mourning. Subsequently, narratives began to circulate and be amplified online about Nongfu Spring's founder, Zhong Shanshan, being 'ungrateful' during his early years as a Wahaha agent. These narratives, combined with criticism that the packaging design of Nongfu Spring's 'Oriental Leaf' tea drink was 'pro-Japan,' quickly ignited public nationalist sentiment.",
+        "timeline": "February 25, 2024"
+      },
+      {
+        "round": 2,
+        "title": "Founder's Personal Clarification Fails to Quell the Storm",
+        "content": "To address the crisis, on March 3, 2024, Zhong Shanshan published a long article titled 'A Few Things Between Mr. Zong and Me' via Nongfu Spring's official WeChat account. In the article, he attempted to clarify history, emphasize his respect for Zong Qinghou, and refute online rumors. He wrote: 'Mr. Zong has always been an entrepreneur I respect. He was both a mentor and a friend to me, and of course, a competitor... Using Mr. Zong's passing, a large amount of slander against me personally and Nongfu Spring has appeared online, which is certainly not what Mr. Zong would have wanted to see.' He also clarified that his first fortune came from the textile business, not Wahaha, and explained the 'channel stuffing' controversy from years ago.",
+        "timeline": "March 3, 2024"
+      },
+      {
+        "round": 3,
+        "title": "Response to Specific Accusations Has Limited Effect",
+        "content": "In response to the specific accusation that the 'Oriental Leaf' packaging was 'pro-Japan,' Nongfu Spring's customer service issued an official response on March 7, which was subsequently reported by multiple media outlets. The customer service stated: 'The building pattern on the green tea product label is an artistic creation based on the image of Chinese temple architecture... aiming to showcase the influence of Chinese tea and tea culture on the world, demonstrating national confidence.' Regarding the text on the packaging about Japanese matcha originating from China, customer service explained that its content was sourced from authentic and verifiable references.",
+        "timeline": "March 7, 2024"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "Failed to quell public opinion; fact-based clarifications were ineffective against emotional, nationalist-driven sentiment.",
+        "mediaCoverage": "Negative",
+        "stockPrice": "Market value evaporated by tens of billions of Hong Kong dollars."
+      },
+      "keyFactors": [
+        "Nationalist sentiment",
+        "Ineffectiveness of logical rebuttals in an emotional crisis",
+        "Focus shifted from business disputes to a moral trial of the brand's loyalty"
+      ]
+    }
+  },
+  {
+    "id": "case_006",
+    "title": "BMW MINI 'Ice Cream Gate' Incident (2023)",
+    "description": "At the Shanghai Auto Show, staff at the BMW MINI booth were accused of treating Chinese and foreign visitors differently when distributing free ice cream, triggering a massive PR crisis. Two subsequent apologies failed to appease public anger.",
+    "background": "On April 20, 2023, a video went viral on social media showing staff at the BMW MINI booth at the Shanghai Auto Show refusing to give free ice cream to Chinese visitors, claiming it had run out, only to enthusiastically offer it to a foreign visitor moments later. This was widely seen as a discriminatory act, sparking public outrage.",
+    "industry": "automotive",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "On-site Video Goes Viral, Discrimination Accusations Spread Rapidly",
+        "content": "Initial Event: On April 20, 2023, a video went viral on social media. The video showed that at the BMW MINI booth at the Shanghai Auto Show, two staff members denied a Chinese visitor's request for free ice cream, stating it was 'all gone.' However, when a foreign visitor approached, the staff enthusiastically took a carton of ice cream from the cooler and handed it to him.",
+        "timeline": "April 20, 2023"
+      },
+      {
+        "round": 2,
+        "title": "First Apology is Vague, Triggering Public Ridicule and Secondary Spread",
+        "content": "Facing public pressure, MINI China issued its first apology on its official Weibo account that afternoon. The letter read: 'The 'Sweet Pet' activity launched by MINI at the Shanghai Auto Show was originally intended to give a sweet treat to friends big and small visiting the show. Due to our lack of meticulous internal management and staff negligence, we have caused unpleasantness for everyone. We sincerely apologize for this! We will reflect on ourselves, improve management, strengthen internal training, and strive to provide good service and experience for every friend. Once again, we sincerely apologize to everyone!'",
+        "timeline": "Afternoon of April 20, 2023"
+      },
+      {
+        "round": 3,
+        "title": "Second Explanation Criticized as 'Excuses,' Damaging Brand Image and Market Value",
+        "content": "After the first apology failed, on the morning of April 21, MINI China issued a second statement attempting a more detailed explanation. The statement claimed: 'In addition to the 300 servings distributed daily, we also reserved a very small portion for our hardworking colleagues on site. The 4-5 'foreigners' you see in the video are our colleagues, they were wearing employee badges.'",
+        "timeline": "Morning of April 21, 2023"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "Both apologies exacerbated public negative sentiment and ridicule.",
+        "mediaCoverage": "Widespread negative reporting and online discussion",
+        "stockPrice": "BMW Group's stock price fell by 3.62%, wiping out about €2.4 billion in market value."
+      },
+      "keyFactors": [
+        "Apology was evasive and did not address the core accusation of discrimination",
+        "Explanation was seen as making excuses and lacked sincerity",
+        "Failed to understand and respect the cultural sensitivities of Chinese consumers"
+      ]
+    }
+  },
+  {
+    "id": "case_007",
+    "title": "Cathay Pacific Passenger Discrimination Incident (2023)",
+    "description": "Cathay Pacific flight attendants were accused of discriminating against non-English-speaking passengers. The incident, exposed via an audio recording, quickly escalated and sparked strong outrage among the mainland Chinese public.",
+    "background": "On May 21, 2023, a passenger from mainland China posted an audio recording on social media, revealing that flight attendants on Cathay Pacific flight CX987 were mocking passengers who spoke Mandarin in English and Cantonese. The recording included remarks like 'If you cannot say blanket in English, you cannot have it,' which went viral and was seen as discrimination based on language and identity.",
+    "industry": "aviation",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Passenger's Audio Recording Exposes Discriminatory Remarks, Sparking Public Outrage",
+        "content": "Initial Event: On May 21, 2023, a mainland Chinese passenger posted on the social platform 'Xiaohongshu' with an audio recording, complaining that while on Cathay Pacific flight CX987 (Chengdu to Hong Kong), they overheard flight attendants in the rear cabin rest area mocking and discriminating against Mandarin-speaking passengers in English and Cantonese. The recording clearly captured the flight attendants' conversation, such as: 'If you cannot say blanket in English, you cannot have it,' and complaining in Cantonese 'They can't understand human language' after reminding passengers to return to their seats.",
+        "timeline": "May 21, 2023"
+      },
+      {
+        "round": 2,
+        "title": "Cathay Pacific Issues Multiple Statements, from Initial Apology to Firing Employees",
+        "content": "Facing the storm of public opinion, Cathay Pacific responded three times within 24 hours. The initial apology was rather standard, but as the situation escalated, the company's stance became increasingly serious. On the evening of May 23, Cathay Pacific CEO Ronald Lam issued a signed statement announcing the final decision: 'Currently, we have completed the investigation into the incident and, in accordance with company regulations, have dismissed the three flight attendants involved. Here, I want to reiterate that for individual employees who seriously violate company rules and ethical standards, Cathay Pacific will maintain a 'zero tolerance' attitude and will show no leniency.'",
+        "timeline": "Within 24-48 hours"
+      },
+      {
+        "round": 3,
+        "title": "CEO Personally Appears and Promises Reform, Government Officials Intervene",
+        "content": "On May 24, Hong Kong's Chief Executive John Lee publicly stated that he was 'pained' by the incident, believing the words and actions 'hurt the feelings of Hong Kong and mainland compatriots,' and had told Cathay Pacific's senior management that similar situations would not be tolerated. On the same day, Cathay Pacific CEO Ronald Lam, attending an event in Guangzhou, faced the media in person and apologized for the fourth time, this time in Mandarin. He promised: 'To prevent similar incidents from happening again, I will personally lead a cross-departmental task force to conduct a comprehensive review, re-examining our service processes, staff training, and related systems to further enhance Cathay Pacific's service quality.' Subsequently, Cathay Pacific announced a series of reform measures, including adding Mandarin broadcasts on flights to and from the mainland, indicating the languages spoken by cabin crew on their name tags, and for the first time, recruiting cabin crew from mainland China.",
+        "timeline": "May 24, 2023 and onwards"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "metrics": {
+        "sentimentImprovement": "Decisive action (firing employees) and high-level intervention effectively quelled public anger.",
+        "mediaCoverage": "Shifted from extremely negative to focusing on the company's reform measures",
+        "stockPrice": "Stabilized, avoiding further decline"
+      },
+      "keyFactors": [
+        "Fast and decisive action (firing employees)",
+        "CEO apologized personally, repeatedly, and in Mandarin",
+        "Proposed specific and substantive reform measures"
+      ]
+    }
+  },
+  {
+    "id": "case_008",
+    "title": "Balenciaga Advertising Campaign Controversy (2022)",
+    "description": "Luxury fashion brand Balenciaga sparked a global boycott and brand crisis after releasing two ad campaigns accused of featuring elements of 'child pornography' and 'child abuse'.",
+    "background": "In November 2022, Balenciaga released two holiday ad campaigns. In one, child models held teddy bear handbags dressed in BDSM-style harnesses; in another, a background document featured a U.S. Supreme Court ruling on child pornography laws. This triggered global condemnation, with the public accusing the brand of 'sexualizing children'.",
+    "industry": "fashion",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Controversial Ads Released, Sparking Global Condemnation",
+        "content": "Initial Event: In November 2022, Balenciaga released two holiday collection ad campaigns. One, the 'Gift Shop' series, photographed by Gabriele Galimberti, featured child models holding teddy bear bags dressed in BDSM (bondage, dominance, sadism, and masochism) style harnesses. The second, the 'Garde-Robe' collection in collaboration with Adidas, included a photo where scattered documents in the background contained a U.S. Supreme Court ruling on a case involving child pornography laws.",
+        "timeline": "November 2022"
+      },
+      {
+        "round": 2,
+        "title": "Initial Response and Lawsuit Criticized as 'Shifting Blame'",
+        "content": "Facing the crisis, Balenciaga first removed the relevant ads. It then issued an initial apology, stating for the teddy bear ad: 'our plush bear bags and the Gift Collection should not have been featured with children.' For the document ad, the brand tried to shift responsibility to a third party, claiming the props were provided by a third party and confirmed in writing to be 'fake office documents,' but 'it turned out they were real legal documents.' More controversially, Balenciaga then filed a $25 million lawsuit against the production company for the 'Garde-Robe' ad, North Six, and set designer Nicholas Des Jardins, accusing them of 'inexplicable acts and omissions.'",
+        "timeline": "Initial response"
+      },
+      {
+        "round": 3,
+        "title": "Senior Management Steps Up to Take Responsibility, Pledges Internal Reforms",
+        "content": "After the initial response failed, Balenciaga changed its strategy. The company dropped the lawsuit. Brand creative director Demna Gvasalia and CEO Cédric Charbit successively issued more profound personal apologies. In his statement, Demna admitted: 'It was inappropriate to have kids promote objects that had nothing to do with them,' and said he would re-evaluate his working methods. Balenciaga's official account also posted a more detailed statement, admitting to 'a series of serious errors' and stating: 'We strongly condemn child abuse; it was never our intent to include it in our narrative... Balenciaga reiterates its sincere apologies for the offence we have caused.' The company also promised to implement internal reforms, establish a new content validation process, and set up a fund to support organizations that protect children.",
+        "timeline": "Subsequent response"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "The initial response worsened negative sentiment; subsequent apologies from senior management began to calm the situation, but the damage to the brand was already done.",
+        "mediaCoverage": "Global negative press and boycott movements",
+        "stockPrice": "Brand value and sales were severely impacted"
+      },
+      "keyFactors": [
+        "Initial attempt to shift blame",
+        "Crossing the societal moral line of child protection",
+        "Later acceptance of responsibility and commitment to reform were correct but came too late"
+      ]
+    }
+  },
+  {
+    "id": "case_009",
+    "title": "Xibei 'Ready-to-Cook Meals' Dispute (2025)",
+    "description": "Following public questioning by celebrity Luo Yonghao, well-known restaurant chain Xibei was embroiled in a 'ready-to-cook meals' controversy. The conflict between its 'freshly stir-fried' marketing and its actual use of semi-finished products from a central kitchen became the focus of the dispute.",
+    "background": "On September 10, 2025, tech celebrity Luo Yonghao accused Xibei on Weibo of serving 'almost entirely ready-to-cook meals at high prices,' which resonated with consumers. Xibei's long-standing brand image of 'natural, healthy, and made on-site' was severely challenged.",
+    "industry": "food & beverage",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Celebrity Accusation and Harsh Denial Ignite Public Standoff",
+        "content": "Initial Event and Company PR Content: On September 10, 2025, tech celebrity Luo Yonghao posted on Weibo, directly pointing out that Xibei's dishes were 'almost all ready-to-cook and expensive,' sparking strong resonance among consumers. In response to the accusation, Xibei's founder Jia Guolong quickly gave a harsh response. At a media briefing on September 11, he firmly denied it, stating Xibei is '100% free of ready-to-cook meals,' and claimed: 'Luo Yonghao expressed dissatisfaction with ready-to-cook meals, which has harmed us. We will pursue legal procedures and will definitely sue him.' The next day, Xibei's official Weibo account posted 'A Letter to All Customers from the Xibei Team,' which stated: 'As an influential public figure, Luo Yonghao's false accusations and improper language against Xibei are firmly opposed by Xibei, and we will not tolerate it.'",
+        "timeline": "September 10-12, 2025"
+      },
+      {
+        "round": 2,
+        "title": "'Open Kitchen' Backfires, Trust Crisis Erupts",
+        "content": "To prove its innocence, Xibei announced it would open the kitchens of its 370 stores nationwide for media and public supervision, and provocatively launched a 'Luo Yonghao Menu.'",
+        "timeline": "Following the denial"
+      },
+      {
+        "round": 3,
+        "title": "A 180-Degree Turn in Attitude, Issuing an Apology and Promising Rectification",
+        "content": "After public pressure peaked, Xibei's attitude took a 180-degree turn. On September 15, Xibei's official Weibo posted an apology letter, acknowledging the problems. The letter read: 'We have profoundly realized that there is a significant discrepancy between Xibei's production processes and customer expectations, and we have failed to meet the needs and expectations of our customers. For this, Xibei extends its deepest apologies for the trouble and concern caused to our customers.' The letter promised a series of rectifications, 'to move the central kitchen's pre-processing steps to in-store on-site processing as much as possible,' and stated that adjustments for several dishes would be completed by October 1, such as changing the beef sauce in children's meals to be stir-fried in-store and replacing all soybean oil with non-GMO soybean oil.",
+        "timeline": "September 15, 2025"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "The initial aggressive stance escalated the conflict; the later apology and rectification promises salvaged some public opinion, but trust was already damaged.",
+        "mediaCoverage": "Shifted from a negative confrontation to a discussion on industry transparency",
+        "stockPrice": "Brand image and customer trust were severely damaged"
+      },
+      "keyFactors": [
+        "Initial harsh denial and legal threats",
+        "Playing word games with the concept of 'ready-to-cook meals'",
+        "The final apology was effective due to its specific, action-oriented plan"
+      ]
+    }
+  },
+  {
+    "id": "case_010",
+    "title": "Pang Dong Lai Employee 'Tasting Noodles' Incident (2024)",
+    "description": "Retailer Pang Dong Lai trended on social media due to an employee's improper food handling. However, through a unique, transparent, and humane handling process, it successfully turned a potential crisis into a brand reputation victory.",
+    "background": "On February 15, 2024, a video showed an employee at a Pang Dong Lai food court in Xuchang tasting noodles from a pot with chopsticks and then stirring the pot with the same unwashed chopsticks while preparing staff meals. This raised public concern about food safety.",
+    "industry": "retail",
+    "difficulty": "medium",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Video Exposure and Initial Harsh Punishment",
+        "content": "Pang Dong Lai responded swiftly. On February 16, the company issued its first official statement, defining the act as a 'serious food processing safety incident' and announced the disciplinary action according to company policy: 'terminate the labor contract of the employee involved,' while also demoting the relevant supervisors and shutting down the hot pot stall in question.",
+        "timeline": "February 16, 2024"
+      },
+      {
+        "round": 2,
+        "title": "Activating 'Democratic Council' for Public Re-evaluation",
+        "content": "Facing public debate, Pang Dong Lai did not remain silent or stick to its original decision but took a surprising step. The company quickly initiated its internal 'Democratic Council' procedure to re-evaluate the incident. On February 19, Pang Dong Lai released a detailed 13-page investigation report, making the entire process of democratic discussion, deliberation, and resolution public. The report clearly listed two alternative solutions: Option one was to uphold the original decision (termination with compensation); Option two was to **'place the employee on a three-month learning period, transfer them from their current position to a non-food processing role.'**",
+        "timeline": "February 19, 2024"
+      },
+      {
+        "round": 3,
+        "title": "Announcing a Humane Final Decision, Winning Widespread Acclaim",
+        "content": "In the 13-page report, Pang Dong Lai announced the voting results from the democratic review panel, which included regular employees: Option one received 6 votes, and Option two received 11 votes. Therefore, the final decision was to adopt Option two, allowing the employee to keep their job with a transfer. The report concluded: 'The re-adjudication of this incident was conducted through the democratic council to provide employees with a platform of respect, fairness, justice, and democracy, to cultivate well-rounded personalities and achieve a positive state of life.'",
+        "timeline": "Announcement on February 19, 2024"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "metrics": {
+        "sentimentImprovement": "Public opinion completely shifted from debating the severity of the punishment to praising the company's culture and transparency.",
+        "mediaCoverage": "Overwhelmingly positive",
+        "stockPrice": "Brand reputation was significantly enhanced"
+      },
+      "keyFactors": [
+        "Extreme transparency (publishing a 13-page report)",
+        "Listening to public opinion and being willing to correct course",
+        "Humane handling and a unique corporate culture"
+      ]
+    }
+  },
+  {
+    "id": "case_011",
+    "title": "SHEIN & Temu's Ongoing Labor and Data Controversies (Ongoing)",
+    "description": "Fast-fashion giants SHEIN and Temu face a series of continuous, serious allegations, including labor exploitation in their supply chains, product safety issues, and user data security concerns, constituting a chronic, systemic reputational challenge.",
+    "background": "For years, various media and NGOs have exposed harsh working conditions in SHEIN's supplier factories, such as extremely long hours and low wages. Additionally, some products from both companies have been found to contain excessive levels of toxic chemicals, and they face accusations of using forced labor due to potential links to Xinjiang cotton. Temu's data security practices are also under scrutiny due to the history of its parent company, Pinduoduo.",
+    "industry": "e-commerce",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Frequent Exposures of Labor and Safety Issues Lead to Sustained Criticism",
+        "content": "Initial Events: For years, multiple media outlets and non-governmental organizations (like Public Eye) have, through methods like undercover investigations, continuously exposed poor working conditions at SHEIN's supplier factories, including workers laboring for over 12 hours a day with only one day off per month and meager wages, in serious violation of its own code of conduct. At the same time, investigations have found that some products from SHEIN and Temu contain excessive levels of toxic chemicals (like lead), posing a health threat to consumers. Furthermore, allegations that their products may use cotton from Xinjiang, involving forced labor, have put them under immense international political pressure.",
+        "timeline": "Ongoing"
+      },
+      {
+        "round": 2,
+        "title": "Official Responses Consist Mainly of Denials and Promises, Lacking Substantive Transparency",
+        "content": "In response to accusations of labor exploitation, SHEIN's official statements typically acknowledge the existence of problems in part, but emphasize that they are isolated cases and promise improvements. For example, regarding the Public Eye report, SHEIN stated: 'While we do not agree with many of the allegations in the report, the discussion on working hours and wages is important, and the company has made significant progress in improving working conditions.' At the same time, SHEIN stressed that the investigation's sample size was small and not representative, and claimed the company is investing millions to strengthen supply chain governance and conduct surprise audits of suppliers. For more sensitive allegations like forced labor and data security, Temu issued direct denials, with its statement saying: 'Temu denies all allegations of data breaches, labor exploitation, and counterfeit goods. The company claims it complies with all necessary regulations and provides a safe shopping experience for users.'",
+        "timeline": "Reactive statements"
+      },
+      {
+        "round": 3,
+        "title": "Facing Regulatory Pressure and Data Security Doubts, Crisis Becomes the Norm",
+        "content": "Initial Events: Besides labor issues, Temu's data security strategy is also under scrutiny. Its parent company, Pinduoduo, was once removed from the Google Play Store after malware was found in its app, making outsiders wary of Temu's data collection practices. U.S. members of Congress have expressed concerns about Temu's data handling and questioned its relationship with the Chinese government, sparking discussions about national security. Meanwhile, the European Commission has also requested that SHEIN and Temu detail how they comply with regulations on online content.",
+        "timeline": "Ongoing regulatory scrutiny"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "A strategy of denials and opaque promises has failed to dispel external doubts, and the negative image persists.",
+        "mediaCoverage": "Continuous negative reporting and investigations",
+        "stockPrice": "Facing regulatory and public pressure, creating uncertainty for future development like its IPO"
+      },
+      "keyFactors": [
+        "Lack of independent third-party audits and transparency",
+        "Inherent issues in the business model are difficult to resolve through PR",
+        "Issues have escalated from the consumer level to national regulatory and security levels"
+      ]
+    }
+  },
+  {
+    "id": "case_012",
+    "title": "Boeing & Alaska Airlines 737 MAX 9 Incident (2024)",
+    "description": "A Boeing 737 MAX 9 aircraft suffered a serious in-flight incident where an emergency door plug detached, once again thrusting Boeing's production quality and safety management into the spotlight and drawing rare public criticism from its airline customers.",
+    "background": "On January 5, 2024, shortly after takeoff, a door plug on Alaska Airlines Flight 1282 suddenly detached, causing rapid cabin depressurization. A preliminary investigation by the National Transportation Safety Board (NTSB) revealed that four key bolts meant to secure the plug were missing. Given the 737 MAX series' previous history of fatal crashes, this incident was seen as further proof of systemic failures in Boeing's quality control.",
+    "industry": "aerospace",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "In-flight Emergency Occurs, Dealing Another Blow to Boeing's Safety Record",
+        "content": "Initial Event: During its ascent, a door plug used to seal an unnecessary emergency exit on Alaska Airlines Flight 1282 suddenly detached, leading to immediate cabin depressurization and forcing the plane to make an emergency return. Fortunately, the event caused no fatalities. The preliminary investigation report from the U.S. National Transportation Safety Board (NTSB) indicated that the four key bolts used to secure the door plug were missing.",
+        "timeline": "January 5, 2024"
+      },
+      {
+        "round": 2,
+        "title": "Airlines Publicly Express Dissatisfaction, Boeing CEO Admits Responsibility",
+        "content": "PR Content (from customers): As one of Boeing's largest customers, United Airlines CEO Scott Kirby expressed rare public disappointment with Boeing after the incident. In an interview with CNBC, he said: 'I'm disappointed that the manufacturing challenges do keep happening at Boeing. This isn't new... The Max 9 grounding is probably the straw that broke the camel's back for us.' He also stated that United Airlines would develop fleet plans that do not include the future MAX 10 model. Alaska Airlines CEO Ben Minicucci also expressed 'anger' and demanded Boeing explain how it would improve its internal quality programs.\nPR Content (from Boeing): Facing dual pressure from regulators and core customers, Boeing adopted a stance of taking responsibility. Boeing CEO Dave Calhoun said in a statement: 'Whatever final conclusions are reached, Boeing is accountable for what happened. An event like this must not happen on an airplane that leaves our factory.' Boeing Commercial Airplanes CEO Stan Deal also apologized to airline customers: 'We have let down our airline customers and are deeply sorry for the significant disruption to them, their employees and their passengers.'",
+        "timeline": "Following the incident"
+      },
+      {
+        "round": 3,
+        "title": "Groundings and Investigations Continue, Deepening the Trust Crisis",
+        "content": "Subsequent Developments: In subsequent inspections, United and Alaska Airlines found more loose bolts and parts on other grounded 737 MAX 9 aircraft, further confirming the systemic nature of the problem. The FAA conducted a strict audit of Boeing's production line and limited its 737 MAX production until quality control issues are satisfactorily resolved.",
+        "timeline": "Ongoing investigation"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "The CEO's admission of responsibility was a necessary step, but the subsequent discovery of more problems deepened the trust crisis.",
+        "mediaCoverage": "Sustained negative coverage focusing on systemic quality control issues",
+        "stockPrice": "Suffered long-term financial and reputational damage"
+      },
+      "keyFactors": [
+        "Public criticism from core customers",
+        "Systemic nature of quality control problems",
+        "The company's 'safety first' culture was fundamentally questioned"
+      ]
+    }
+  },
+  {
+    "id": "case_013",
+    "title": "Tesla Cybertruck Launch Demo Controversy (2019, ongoing relevance)",
+    "description": "At the Cybertruck launch event, a live demonstration meant to showcase the strength of its 'armor glass' failed spectacularly when the window shattered. However, the leader's immediate reaction and brand culture transformed the failure into a viral marketing event.",
+    "background": "On November 21, 2019, during the Cybertruck unveiling, Tesla CEO Elon Musk had the lead designer throw a steel ball at the vehicle's window to demonstrate its strength. Unexpectedly, the glass shattered, and the dramatic moment quickly became a global headline.",
+    "industry": "automotive",
+    "difficulty": "medium",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Live Demo Fails Unexpectedly, Drawing Global Attention",
+        "content": "Initial Event: At the Cybertruck launch event on November 21, 2019, to demonstrate the durability of its 'Armor Glass,' Tesla CEO Elon Musk had lead designer Franz von Holzhausen throw a steel ball at the car window. To everyone's surprise, both the front and rear windows shattered.\nPR Content (Musk's immediate reaction): When the first window shattered, Musk blurted out, 'Oh my fucking god.' He then tried to defuse the awkwardness with humor, laughing and saying, 'Well, maybe that was a little too hard,' adding, 'at least it didn't go through.' After the second attempt also failed, he joked helplessly, 'Room for improvement,' and said they would fix it in post-production.",
+        "timeline": "November 21, 2019"
+      },
+      {
+        "round": 2,
+        "title": "Post-event Explanation and Transformation of Brand Image",
+        "content": "Afterward, Musk explained the possible reason for the glass shattering on social media. He posted a video of a pre-launch test where the steel ball failed to break the window. He explained, 'I think we probably cracked one corner [from the earlier sledgehammer demo on the door] and that's probably what led the steel ball cracking the window instead of just bouncing off, like when we were practicing.' He also admitted that the failed demo caught him off guard and affected the flow of the rest of the presentation.",
+        "timeline": "Post-event"
+      },
+      {
+        "round": 3,
+        "title": "Symbolizing the 'Failure' and Integrating It into the Brand Narrative",
+        "content": "Instead of trying to hide the embarrassment, Tesla actively symbolized it. The company later sold a t-shirt featuring the cracked window design of the Cybertruck, turning the 'fail' into a brand culture symbol.",
+        "timeline": "Long-term"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "metrics": {
+        "sentimentImprovement": "Public opinion shifted from ridicule to admiration for the brand's willingness to take risks, reinforcing its image as a disruptor.",
+        "mediaCoverage": "Gained far more global exposure than a conventional launch",
+        "stockPrice": "The incident may have actually boosted pre-orders, with over 250,000 received in the days following the event."
+      },
+      "keyFactors": [
+        "The leader's authentic, humane, and humorous immediate reaction",
+        "High alignment with the brand's 'unconventional and risk-taking' image",
+        "Actively symbolizing the failure and integrating it into the brand culture"
+      ]
+    }
+  },
+  {
+    "id": "case_014",
+    "title": "Arc'teryx Himalaya Fireworks Incident (2025)",
+    "description": "High-end outdoor brand Arc'teryx faced huge controversy for hosting a large-scale fireworks display in the ecologically fragile Himalayan region. The 'mountain-blasting' marketing event was seen as a severe betrayal of its core value of 'respecting nature'.",
+    "background": "In September 2025, as part of a brand campaign, Arc'teryx collaborated with artist Cai Guo-Qiang on a firework art project titled 'Ascending Dragon' at an altitude of about 5,500 meters in the Himalayas. This act immediately drew strong criticism from outdoor enthusiasts and environmentalists, who considered it disrespectful to nature.",
+    "industry": "apparel",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Marketing Event Sparks Environmental Concerns",
+        "content": "Initial Event and Company PR Content: On September 19, 2025, as part of its 'Ascend to Beauty' brand campaign, Arc'teryx collaborated with artist Cai Guo-Qiang to execute a firework art project called 'Ascending Dragon' in the Jiangzi Relong area of the Himalayas, at an altitude of about 5,500 meters. Videos of the event were widely spread online. Facing initial environmental concerns, the brand and its customer service initially responded by emphasizing the event's compliance and eco-friendliness, stating: 'The event was conducted under scientific assessment and strict guidance, the artistic creation used environmentally friendly materials, the colored powders were biodegradable, and emissions met environmental standards.' They also stated the event's intention was to 'pay tribute to nature, culture, and the environment.'",
+        "timeline": "September 19, 2025"
+      },
+      {
+        "round": 2,
+        "title": "Public Opinion Ferments, Officials Delete Videos but Offer No Formal Response",
+        "content": "As the topic 'Arc'teryx's firework art with Cai Guo-Qiang sparks controversy' trended on Weibo with over 100 million views, public pressure mounted. At this stage, Arc'teryx and Cai Guo-Qiang's team took initial steps to cool the situation by deleting the event videos from social media. However, for a period after deleting the videos, the brand did not issue a formal official statement or apology.",
+        "timeline": "Following backlash"
+      },
+      {
+        "round": 3,
+        "title": "Government Intervention and Formal Apology",
+        "content": "In the early morning of September 21, the government of Shigatse, where the event took place, issued a notice stating that an investigation team had been formed to verify the situation on-site and would handle it according to laws and regulations. After the official intervention, Arc'teryx and Cai Guo-Qiang's team quickly issued formal apologies. Arc'teryx stated on its official Weibo: 'We sincerely thank everyone for their concern and supervision of the ecological environment of the Qinghai-Tibet Plateau, and we humbly accept all criticisms and suggestions. We deeply identify with and respect everyone's guardianship. Here, we express our most sincere apologies to all.' The company promised to cooperate with third-party organizations for an environmental impact assessment and carry out remedial actions. Cai Guo-Qiang's studio also issued a simultaneous statement, admitting to 'lack of thorough consideration' and expressing deep apologies.",
+        "timeline": "September 21, 2025"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "Deleting videos was seen as evading responsibility; the final apology eased hostility, but the brand's image was already damaged.",
+        "mediaCoverage": "Widespread negative criticism and questioning",
+        "stockPrice": "The brand's core values were questioned, and loyal customers felt betrayed"
+      },
+      "keyFactors": [
+        "Marketing behavior severely contradicted the brand's core values",
+        "Lack of timely and sincere communication in the initial stage",
+        "Government intervention forced the brand to adopt a more responsible attitude"
+      ]
+    }
+  },
+  {
+    "id": "case_015",
+    "title": "Xiaomi Auto SU7 Post-Launch Controversy (2025)",
+    "description": "Xiaomi Auto faced dissatisfaction from some high-performance version owners due to a feature change in an OTA update. Xiaomi's rapid response and handling of the matter demonstrated the crisis management capabilities of automakers in the smart vehicle era.",
+    "background": "In early May 2025, some owners of the Xiaomi SU7 Ultra (high-performance version) discovered after an OTA update that the previously directly accessible 'Track Mode' (maximum performance mode) now had unlocking conditions, requiring drivers to achieve a certain lap time on a designated track to unlock full horsepower. This uncommunicated change sparked strong dissatisfaction within the owner community.",
+    "industry": "automotive",
+    "difficulty": "medium",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "OTA Update Restricts Performance, Causing Owner Dissatisfaction",
+        "content": "Initial Event: In early May 2025, some owners of the Xiaomi SU7 Ultra (high-performance version) received an OTA update push. After updating, they found that the 'Track Mode' (i.e., maximum performance mode), which was previously directly available, now had unlocking conditions, requiring owners to achieve a certain lap time on a designated track to unlock the full horsepower; otherwise, they could only use about 900 hp instead of the advertised 1548 hp.",
+        "timeline": "Early May 2025"
+      },
+      {
+        "round": 2,
+        "title": "Urgent Late-Night Apology, Pausing Rollout and Promising a Solution",
+        "content": "Facing negative feedback from owners, Xiaomi Auto responded extremely quickly. Late on the night of May 7, Xiaomi Auto's official account published a notice titled 'Answers to Questions Everyone is Concerned About,' directly addressing and apologizing for the 'Track Mode' controversy. The notice stated: 'The update we previously pushed added unlocking conditions to the 'Track Mode' feature, which has caused trouble for some users, and for this, we are deeply sorry. After receiving everyone's feedback, we took it very seriously and have paused this rollout. For the small number of users who have already upgraded, we will resolve this in the next version update.' Xiaomi also admitted: 'Our original intention was to better ensure driving safety, but we did not fully consult everyone's opinions, nor did we communicate the relevant features well. There were indeed shortcomings in our work.'",
+        "timeline": "Night of May 7, 2025"
+      },
+      {
+        "round": 3,
+        "title": "Addressing Other Controversies and Providing Compensation",
+        "content": "In the same notice, Xiaomi Auto also proactively addressed another controversy—the unclear functional description of the optional 'carbon fiber dual-air-duct front hood.' Some users questioned whether this expensive option was merely decorative. Xiaomi explained its design intention and admitted that 'the information was not communicated clearly enough.' To address this, the company proposed specific compensation measures: 'For undelivered orders, we will offer a limited-time option change service, allowing a switch back to the aluminum hood; for users who have already taken delivery or locked in their order with the carbon fiber hood before this limited-time change period ends..., we will gift 20,000 points to express our sincerity.'",
+        "timeline": "May 7, 2025"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "metrics": {
+        "sentimentImprovement": "The quick response and sincere apology effectively contained the crisis, winning the approval of most owners and netizens.",
+        "mediaCoverage": "Public opinion shifted from criticism to a discussion on the ethics of OTAs in smart cars",
+        "stockPrice": "Successfully turned a negative event into an opportunity to build trust with users"
+      },
+      "keyFactors": [
+        "Rapid response (late-night announcement)",
+        "Actions speak louder than words (pausing the rollout, promising a fix)",
+        "Proactively addressing other issues and offering tangible compensation"
+      ]
+    }
+  },
+  {
+    "id": "case_016",
+    "title": "OpenAI & Scarlett Johansson 'Sky' Voice Controversy (2024)",
+    "description": "OpenAI's newly released ChatGPT voice assistant, 'Sky,' was criticized for sounding highly similar to actress Scarlett Johansson, who had previously declined to voice the system. This sparked a major controversy over personality rights, AI ethics, and corporate integrity.",
+    "background": "In May 2024, when OpenAI launched its GPT-4o model, it showcased a voice named 'Sky,' which was widely noted for its 'eerily similar' tone to Scarlett Johansson. Adding to the controversy, OpenAI CEO Sam Altman tweeted 'her' shortly after the launch, which was interpreted as a deliberate connection to the movie 'Her,' in which Johansson voiced an AI assistant.",
+    "industry": "technology",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "New Voice Release Sparks Controversy Due to Striking Similarity to Celebrity's Voice",
+        "content": "Initial Event: When OpenAI released its GPT-4o model, it highlighted its new voice interaction capabilities. One of the voices, a female voice named 'Sky,' was immediately pointed out by users and the media as being 'eerily similar' to Scarlett Johansson's voice due to its natural, slightly husky, and emotive tone. More controversially, Johansson had voiced an AI assistant in the 2013 film 'Her,' and OpenAI CEO Sam Altman posted a single word on social media shortly after the launch: 'her,' which was widely interpreted as an intentional link between the two.",
+        "timeline": "May 2024"
+      },
+      {
+        "round": 2,
+        "title": "Johansson Issues a Strong Statement, Revealing History of Collaboration Request",
+        "content": "PR Content (from Johansson): Facing the controversy, Scarlett Johansson issued a strongly worded public statement revealing the background of the event. She stated that Altman had contacted her in September 2023, hoping she would voice ChatGPT because he believed her voice would be 'comforting to people,' but she declined for personal reasons. In her statement, she wrote: 'When I heard the released demo, I was shocked, angered and in disbelief that Mr. Altman would pursue a voice that sounded so eerily similar to mine that my closest friends and news outlets could not tell the difference.' She also revealed that two days before the demo's release, Altman contacted her agent again, asking her to reconsider, but the system was launched before she could respond. She had hired legal counsel to demand that OpenAI explain the creation process of the 'Sky' voice.",
+        "timeline": "Following the launch"
+      },
+      {
+        "round": 3,
+        "title": "OpenAI Suspends Use of the Voice and Apologizes, but Denies Imitation",
+        "content": "Following Johansson's statement, OpenAI acted swiftly, announcing it would suspend the use of the 'Sky' voice in its products. In a blog post, the company insisted the voice was not an imitation of Johansson but was recorded by another professional voice actress using her natural voice, whose name could not be disclosed for privacy reasons. CEO Sam Altman also issued a statement: 'The voice of Sky is not Scarlett Johansson's, and it was never intended to resemble hers. We cast the voice actor behind Sky's voice before any outreach to Ms. Johansson. Out of respect for Ms. Johansson, we have paused using Sky's voice in our products. We are sorry to Ms. Johansson that we didn't communicate better.'",
+        "timeline": "After Johansson's statement"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": "Suspending the voice was necessary for crisis control, but the denial of imitation did not fully convince the public, damaging the company's credibility.",
+        "mediaCoverage": "Global negative press, sparking a profound discussion on AI ethics and the 'right of publicity for voice'",
+        "stockPrice": "Brand image suffered a severe blow, with accusations of dishonesty and infringement"
+      },
+      "keyFactors": [
+        "Johansson's statement provided key context that made OpenAI's actions seem intentional",
+        "The CEO's tweet contradicted the company's official statement",
+        "The incident became a landmark case for the protection of personal biometric data in the age of AI"
+      ]
+    }
+  },
+  {
+    "id": "case_017",
+    "title": "KFC UK 'FCK' Crisis PR (2018, as a benchmark for successful response)",
+    "description": "KFC in the UK faced a supply chain disruption after switching logistics providers, forcing the majority of its restaurants to close due to a chicken shortage. However, the company successfully turned the crisis into an opportunity to boost brand affinity through a highly creative PR campaign.",
+    "background": "In February 2018, after KFC UK switched its logistics provider, the new system quickly collapsed, preventing chicken from being delivered to restaurants. Hundreds of stores were forced to close because they had 'no chicken to fry,' leading to consumer complaints and ridicule.",
+    "industry": "food & beverage",
+    "difficulty": "high",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Supply Chain Failure Leads to Widespread Restaurant Closures",
+        "content": "Initial Event: In February 2018, KFC UK & Ireland switched its logistics contract from the specialized food distribution company Bidvest Logistics to DHL, a move intended to reduce costs and increase efficiency. However, DHL's system quickly collapsed after the handover, preventing chicken from being transported from the warehouse to the restaurants. The crisis escalated rapidly over a few days, with hundreds of KFC outlets forced to close due to having 'no chicken to fry.'",
+        "timeline": "February 2018"
+      },
+      {
+        "round": 2,
+        "title": "Humorous and Self-deprecating 'FCK' Ad Turns the Tide",
+        "content": "After several days of chaos, KFC's PR and marketing team opted against a dry corporate statement and instead adopted a bold and humorous strategy. They took out full-page ads in several major UK newspapers. The ad featured an empty chicken bucket with the 'KFC' letters cleverly rearranged to read **'FCK'—a well-known acronym for an expletive. The ad copy read: 'A chicken restaurant without any chicken. It's not ideal... We're sorry... It's been a hell of a week, but we're making progress, and every day more and more fresh chicken is being delivered to our restaurants. Thank you for bearing with us.'**",
+        "timeline": "During the crisis"
+      },
+      {
+        "round": 3,
+        "title": "Continuous Transparent Communication Consolidates Gains",
+        "content": "In addition to the creative ad, KFC also implemented a series of transparent communication measures. They created a dedicated page on their official website with real-time updates on the operating status of each store for customers to check. At the same time, their social media team remained highly active, answering consumer questions and reporting on supply chain recovery progress almost daily in a lighthearted and humorous tone. For example, they tweeted: 'There's gossip in the hen house, here's the facts...'",
+        "timeline": "Ongoing recovery period"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "metrics": {
+        "sentimentImprovement": "Negative public sentiment quickly turned into good-natured teasing and praise, and brand affinity even increased.",
+        "mediaCoverage": "Overwhelmingly positive response; the 'FCK' ad was hailed as a 'work of PR genius'",
+        "stockPrice": "Successfully navigated the operational crisis and strengthened the brand image"
+      },
+      "keyFactors": [
+        "A bold, humorous, and brand-appropriate creative idea (the FCK ad)",
+        "Candidly admitting the mistake without shifting blame",
+        "Continuous and transparent communication"
+      ]
+    }
+  },
+  {
+    "id": "case_018",
+    "title": "California Pizza Kitchen's TikTok Response (2024)",
+    "description": "California Pizza Kitchen (CPK) faced a PR crisis due to a viral TikTok video where a customer complained their take-out mac 'n' cheese had no mac. CPK's response is a masterclass in modern social media crisis management.",
+    "background": "In the summer of 2024, a customer posted a TikTok video showing their CPK take-out order of 'mac 'n' cheese' that only contained cheese sauce. When they called the restaurant, an employee insisted the order was correct. The absurd situation made the video go viral, turning CPK into an internet joke.",
+    "industry": "food & beverage",
+    "difficulty": "medium",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Customer's Complaint Video Goes Viral",
+        "content": "Initial Event: A customer posted a video on TikTok showing her CPK take-out order—a 'mac 'n' cheese' that consisted only of cheese sauce. To make matters worse, when she called the restaurant to complain, the employee who answered insisted that the 'cheese-only' order was correct. This absurd scenario caused the video to go viral, soaring in views and bringing negative attention to CPK's brand image.",
+        "timeline": "Summer 2024"
+      },
+      {
+        "round": 2,
+        "title": "Responding with a Humanized and Humorous Approach on the Same Platform",
+        "content": "Instead of issuing a traditional, dry corporate press release or official apology, CPK chose to fight back on the platform where the crisis originated—TikTok. They quickly produced and posted a response video. In the video, a chef named Chef Paul appeared on camera in a very sincere and humorous way, looking at the camera and saying: 'Okay, TikTok. We hear you. We messed up.' Then, he demonstrated how to make a 'proper' mac 'n' cheese and emphasized that 'the mac is back.' The entire video was lighthearted, fun, and full of personality.",
+        "timeline": "Rapid response"
+      },
+      {
+        "round": 3,
+        "title": "Going Beyond the Online Response to Compensate the Customer",
+        "content": "CPK's crisis management didn't stop with the successful online response. They found the original customer who posted the video and offered her a year's supply of free mac 'n' cheese and pizza as compensation.",
+        "timeline": "Following the video response"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "metrics": {
+        "sentimentImprovement": "The comment section quickly shifted from ridicule to praise, and the response video itself went viral.",
+        "mediaCoverage": "A successful viral positive marketing event",
+        "stockPrice": "Turned a negative event into a brand re-energizing campaign, winning over many consumers"
+      },
+      "keyFactors": [
+        "Responding on the right platform (TikTok)",
+        "A fast, humorous, and personalized communication style",
+        "Supplemented by tangible compensation for the affected customer"
+      ]
+    }
+  }
+]
