@@ -34,77 +34,565 @@
         "mediaCoverage": "positive",
         "stockPrice": "+8% over 3 months"
       },
-      "keyFactors": ["Quick apology", "Decisive action (disabling feature)", "Transparency"]
+      "summary": "The swift and transparent response helped rebuild user trust. The stock recovered and the app's user base grew steadily after the changes were implemented."
     }
   },
   {
     "id": "case_002",
-    "title": "Food Safety Crisis",
-    "description": "A food brand encounters a health scare related to one of its products. The PR response focuses on transparency and consumer safety.",
-    "background": "A popular beverage company had to recall millions of bottles after a small batch was found to be contaminated at a single bottling plant. News broke on social media before the company could make an official announcement, causing widespread panic and brand trust erosion.",
-    "industry": "food",
-    "difficulty": "high",
-    "totalRounds": 2,
+    "title": "Airline Service Failure",
+    "description": "An airline's mishandling of a passenger incident goes viral, causing significant brand damage. The PR team needs to perform crisis management.",
+    "background": "A video surfaced online showing airline staff forcibly removing a paying passenger from an overbooked flight. The video was viewed hundreds of millions of times, sparking international outrage. The CEO's initial response was widely criticized as victim-blaming and insincere.",
+    "industry": "aviation",
+    "difficulty": "hard",
+    "totalRounds": 3,
     "strategies": [
       {
         "round": 1,
-        "title": "Immediate Containment",
-        "content": "Issue a voluntary nationwide recall of the specific product line, even unaffected batches, to show utmost caution. The CEO should personally deliver the message. Activate a 24/7 consumer hotline and social media response team.",
-        "timeline": "Within 6 hours of confirmation"
+        "title": "Flawed Initial Statement",
+        "content": "Release an internal memo, which is leaked, defending the staff's actions and describing the passenger as 'disruptive and belligerent'.",
+        "timeline": "Within 24 hours"
       },
       {
         "round": 2,
-        "title": "Rebuilding Trust",
-        "content": "Provide full transparency about the investigation's findings. Announce new, stricter safety protocols across all plants. Offer full refunds and high-value coupons to affected customers. Launch a facility tour video series to showcase safety standards.",
-        "timeline": "1 week later"
+        "title": "Public Apology and Policy Change",
+        "content": "After continued public pressure and a plummeting stock price, the CEO issues a full, heartfelt public apology. The airline announces it will no longer use law enforcement to remove passengers from overbooked flights and will review its overbooking policies.",
+        "timeline": "48 hours"
+      },
+      {
+        "round": 3,
+        "title": "Compensation and Rebuilding",
+        "content": "Offer a full refund and compensation to all passengers on the flight. Launch a new ad campaign focused on customer service improvements. The CEO goes on a media tour to personally address the issue.",
+        "timeline": "1-3 weeks"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "metrics": {
+        "sentimentImprovement": 10,
+        "mediaCoverage": "negative",
+        "stockPrice": "-4% over 6 months"
+      },
+      "summary": "The initial poor response caused deep and lasting damage to the airline's reputation. While later actions were more appropriate, the brand became a case study in how not to handle a crisis. It took years for public perception to recover."
+    }
+  },
+  {
+    "id": "case_003",
+    "title": "Fast Food Ingredient Scandal",
+    "description": "A popular fast-food chain is accused of using substandard ingredients, leading to a food safety crisis.",
+    "background": "An investigative report, complete with undercover footage, revealed that a key supplier for a global fast-food chain was using expired meat. The news broke in several major markets simultaneously, causing a sales slump and calls for boycotts.",
+    "industry": "food & beverage",
+    "difficulty": "hard",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Immediate Action & Transparency",
+        "content": "Immediately sever ties with the supplier in question. Issue a public statement apologizing to customers and close affected restaurants for inspection. Place full-page ads in national newspapers to apologize and explain the actions being taken.",
+        "timeline": "Within 24 hours"
+      },
+      {
+        "round": 2,
+        "title": "Supply Chain Overhaul",
+        "content": "Announce a complete overhaul of the supply chain management and quality control processes. Invite media and food safety experts to tour new, approved facilities. Launch a dedicated website to provide transparent information about ingredient sourcing.",
+        "timeline": "1-2 weeks"
+      },
+      {
+        "round": 3,
+        "title": "Regaining Customer Trust",
+        "content": "Introduce new menu items with a focus on fresh, locally sourced ingredients. Run a marketing campaign centered on the theme of 'A Fresh Start'. Offer free items and discounts to encourage customers to return.",
+        "timeline": "1-3 months"
       }
     ],
     "realWorldOutcome": {
       "success": true,
       "metrics": {
-        "sentimentImprovement": 40,
-        "mediaCoverage": "neutral_to_positive",
-        "stockPrice": "Recovered to pre-crisis level within 6 weeks"
+        "sentimentImprovement": 45,
+        "mediaCoverage": "neutral to positive",
+        "sales": "Returned to pre-crisis levels within 6 months"
       },
-      "keyFactors": ["Proactive and broad recall", "CEO visibility", "Customer compensation"]
+      "summary": "The company's swift, decisive, and transparent actions were key to containing the damage. By taking visible steps to fix the problem and openly communicating with the public, they were able to gradually rebuild trust and recover their market position."
     }
   },
   {
-    "id": "case_003",
-    "title": "Test case 3",
-    "description": "A tech company faces backlash over a controversial product feature. The PR team must address user concerns and restore trust.",
-    "background": "A major tech firm launched a new social media app with a feature that automatically shared users' locations with friends by default. This led to a massive public outcry over privacy concerns, with #TechGiantIsWatching trending globally. The company's stock dropped 15% within 48 hours.",
-    "industry": "technology",
+    "id": "case_004",
+    "title": "Xibei's 'Pre-made Meals' Controversy",
+    "description": "Restaurant brand Xibei faced a nationwide discussion and trust crisis over 'pre-made meals' due to its founder's comments and the exposure of its 'central kitchen' model.",
+    "background": "In early 2024, Jia Guolong, chairman of Xibei Catering, stated in an interview that 'pre-made meals are an inevitable trend.' Simultaneously, vlogs from customers revealed that chefs in Xibei stores were more like 'food heaters' for pre-packaged meals rather than traditional cooks. This quickly ignited public opinion, with consumers feeling deceived, believing they were paying high prices for 'pre-made meals'. Hashtags like #XibeiIsActuallyPreMadeMeals trended, and the brand was labeled as 'expensive meal packages'.",
+    "industry": "Food & Beverage",
     "difficulty": "medium",
     "totalRounds": 3,
     "strategies": [
       {
         "round": 1,
-        "title": "Initial Response",
-        "content": "Immediately issue a public apology acknowledging the mistake. Temporarily disable the feature for all users. Promise a full review and a more transparent redesign.",
-        "timeline": "Within 12 hours"
+        "title": "Initial Explanation and Commitment",
+        "content": "Xibei quickly responded, admitting its dishes were prepared in a 'central kitchen' but emphasizing they were 'kung fu dishes' (dishes requiring complex preparation), not simple meal packages. It promised to clearly label on menus and in stores whether a dish was 'cooked on-site' or 'from the central kitchen' to protect consumers' right to know.",
+        "timeline": "24-48 hours after crisis erupted"
       },
       {
         "round": 2,
-        "title": "Follow-up Actions",
-        "content": "Publish a detailed blog post explaining what went wrong and the steps being taken. Announce the feature will be opt-in only in the future. Engage with privacy advocates and key tech journalists.",
-        "timeline": "48-72 hours"
+        "title": "Public Opinion Escalation and Founder's Second Statement",
+        "content": "The public did not buy the 'kung fu dish' explanation, and negative sentiment continued. Jia Guolong spoke publicly again, apologizing for poor communication while reiterating the concept of modernizing Chinese cuisine. He invited media and consumers to tour the central kitchen, attempting to showcase its standardization and food safety advantages.",
+        "timeline": "1 week after crisis"
       },
       {
         "round": 3,
-        "title": "Long-term Recovery",
-        "content": "Launch a 'Privacy First' marketing campaign. Roll out the redesigned feature with clear, user-friendly privacy controls. Partner with a respected third-party for a security audit.",
-        "timeline": "1-2 weeks"
+        "title": "Shifting the Narrative and Discussing Industry Standards",
+        "content": "Xibei began collaborating with industry associations and media to shift the discussion from 'Is Xibei selling pre-made meals?' to 'The future of standardization in the catering industry' and 'How to define pre-made meals,' trying to transform itself from the accused into a participant and leader in setting industry standards.",
+        "timeline": "2-4 weeks after crisis"
       }
     ],
     "realWorldOutcome": {
       "success": true,
       "metrics": {
-        "sentimentImprovement": 35,
-        "mediaCoverage": "positive",
-        "stockPrice": "+8% over 3 months"
+        "sentimentImprovement": 25,
+        "mediaCoverage": "Shifted to neutral, with increased industry discussion",
+        "sales": "Gradually recovered after a short-term decline"
       },
-      "keyFactors": ["Quick apology", "Decisive action (disabling feature)", "Transparency"]
+      "summary": "By responding quickly, committing to transparency, and successfully guiding the industry discussion, Xibei turned a brand crisis into an opportunity to promote standardization in the entire catering industry. Although the brand image was damaged in the short term, its candid and proactive problem-solving attitude eventually won back the understanding of some consumers."
+    }
+  },
+  {
+    "id": "case_005",
+    "title": "Nongfu Spring's Nationalism Controversy with Wahaha",
+    "description": "Following the death of a competitor's founder, Chinese beverage giant Nongfu Spring was embroiled in a public relations crisis driven by nationalist sentiment.",
+    "background": "In February 2024, the death of Wahaha's founder, Zong Qinghou, led to public mourning. Subsequently, numerous online posts compared Nongfu Spring and Wahaha, accusing Nongfu Spring's founder, Zhong Shanshan, of being 'ungrateful' and amplifying rumors about his son's American citizenship. The packaging design of Nongfu Spring's products was also interpreted as 'pro-Japan,' leading to a large-scale boycott both online and offline, causing sales and stock prices to plummet.",
+    "industry": "Food & Beverage",
+    "difficulty": "hard",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Founder's Personal Clarification",
+        "content": "Zhong Shanshan published an article titled 'A Few Things About Mr. Zong and Me' to clarify his relationship with Zong Qinghou, attempting to resolve the conflict with a personal, emotional touch. The effect was limited and seen as evasive, failing to quell the core accusations.",
+        "timeline": "Early stages of the crisis"
+      },
+      {
+        "round": 2,
+        "title": "Official Silence and Channel Management",
+        "content": "Facing escalating public opinion, Nongfu Spring's official channels chose to remain silent and not directly address the controversies, while working to stabilize its distributors. However, silence in the internet age was interpreted as an admission of guilt, causing the negative sentiment to snowball.",
+        "timeline": "Mid-crisis"
+      },
+      {
+        "round": 3,
+        "title": "Shifting Focus and Positive Promotion",
+        "content": "After several weeks, Nongfu Spring began releasing positive information through official channels, such as charity events and water source protection initiatives. It also invited media to tour its facilities, attempting to shift public attention to product quality and social responsibility.",
+        "timeline": "Late stage of the crisis"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "summary": "This was a typical PR black swan event caused by non-operational factors. Nongfu Spring's initial response was slow and failed to effectively guide public opinion, resulting in severe short-term brand damage. Although remedial measures were taken later, the destructive power of nationalist sentiment was immense, and restoring brand reputation will be a long and difficult process."
+    }
+  },
+  {
+    "id": "case_006",
+    "title": "Li Jiaqi's 'How is that expensive?' Livestream Gaffe",
+    "description": "Top livestreamer Li Jiaqi sparked a major trust crisis with inappropriate remarks during a broadcast, leading to widespread accusations that he had 'forgotten his roots'.",
+    "background": "In September 2023, while promoting an eyebrow pencil, a viewer commented that the product was 'getting more and more expensive.' Li Jiaqi retorted: 'How is that expensive? Sometimes you need to reflect on your own reasons. Has your salary increased after all these years? Have you been working hard?' This remark was perceived as arrogant and offensive to ordinary consumers, quickly going viral and causing him to lose over a million followers overnight.",
+    "industry": "E-commerce Livestreaming",
+    "difficulty": "hard",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Initial Apology",
+        "content": "Shortly after the livestream ended, Li Jiaqi posted a written apology on Weibo, but it was seen by netizens as insincere and like a 'PR script'.",
+        "timeline": "A few hours after the incident"
+      },
+      {
+        "round": 2,
+        "title": "Tearful Apology on Livestream",
+        "content": "The next day, Li Jiaqi tearfully apologized again during his livestream, admitting his comments were inappropriate and had betrayed everyone's trust. This emotional apology sparked wider discussion, but many still did not accept it.",
+        "timeline": "24 hours after the incident"
+      },
+      {
+        "round": 3,
+        "title": "Long-term Silence and Low-key Comeback",
+        "content": "After the two apologies, Li Jiaqi and his team maintained a low profile for a period. In subsequent livestreams, his attitude became more humble and cautious, and he increased promotions for domestic and cost-effective products in an attempt to rebuild his image as someone who 'looks out for consumers'.",
+        "timeline": "Weeks to months after the incident"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "summary": "Li Jiaqi's comments severely damaged the 'boy next door' and 'advocate for fans' persona that was crucial to his success. Despite timely apologies, the collapse of trust could not be repaired in the short term. The incident became a landmark event in the livestreaming e-commerce industry, warning all practitioners not to become detached from their consumers."
+    }
+  },
+  {
+    "id": "case_007",
+    "title": "Arc'teryx's Himalayan 'Fireworks Show' Marketing Controversy",
+    "description": "High-end outdoor brand Arc'teryx faced environmental criticism and a brand image crisis for a marketing event that involved setting off fireworks near the Himalayas.",
+    "background": "In January 2024, to promote its 'Year of the Dragon' limited edition products, Arc'teryx released a video on social media showing fireworks being set off in the Himalayan region. The video quickly drew strong criticism from outdoor enthusiasts and environmentalists, who considered setting off fireworks in a fragile high-altitude ecosystem to be extremely irresponsible and contrary to the brand's professed philosophy of 'respecting nature'.",
+    "industry": "Apparel / Outdoor Sports",
+    "difficulty": "medium",
+    "totalRounds": 2,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Deleting Video and Issuing an Apology",
+        "content": "As public opinion grew, Arc'teryx quickly deleted the video and issued an official statement apologizing to the public for its 'inconsiderate' actions. The statement explained that the event took place in a regulated area and promised to more strictly review future brand activities to ensure they meet environmental and social responsibility standards.",
+        "timeline": "Within 12 hours of the incident"
+      },
+      {
+        "round": 2,
+        "title": "Strengthening Environmental Narrative and Partnerships",
+        "content": "Following the apology, Arc'teryx significantly increased its focus on environmental issues in subsequent brand communications. For example, it launched environmental campaigns like 'Protect the Mountains' and partnered with well-known environmental organizations to repair its professional and eco-friendly image among its core users through concrete actions.",
+        "timeline": "1-3 months after the incident"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "summary": "Arc'teryx's crisis response was swift and sincere. The immediate apology and removal of the material effectively contained the crisis. Through subsequent and consistent environmental actions, the brand successfully turned a negative event into an opportunity to reaffirm its values, consolidating its position among its core consumer base."
+    }
+  },
+  {
+    "id": "case_008",
+    "title": "Bud Light's Partnership with Transgender Influencer Faces Boycott",
+    "description": "American beer brand Bud Light faced a severe boycott from its core conservative consumer base after partnering with transgender influencer Dylan Mulvaney, leading to a disastrous sales decline.",
+    "background": "In April 2023, Bud Light partnered with Dylan Mulvaney for a promotional video on her Instagram. The move was seen as an attempt by the brand to embrace diversity and attract younger consumers. However, it enraged the brand's traditional, more conservative blue-collar consumer base, who saw it as a betrayal of the brand's values. A large-scale boycott erupted on social media, featuring videos of celebrities smashing Bud Light cans, and #BoycottBudLight became a trending topic.",
+    "industry": "Alcoholic Beverages",
+    "difficulty": "hard",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Vague Initial Response",
+        "content": "The CEO of parent company Anheuser-Busch released a vague statement attempting to appease both sides, saying, 'We never intended to be part of a discussion that divides people.' This attempt to please everyone ended up angering both conservative and pro-LGBTQ+ groups.",
+        "timeline": "A few days after the crisis erupted"
+      },
+      {
+        "round": 2,
+        "title": "Executive Leave and Marketing Pivot",
+        "content": "Under pressure from plummeting sales, the company placed the two marketing vice presidents responsible for the partnership on leave. Simultaneously, it quickly launched new ads featuring traditional American values, such as Clydesdale horses and the American flag, in an attempt to win back its traditional customer base.",
+        "timeline": "A few weeks after the crisis"
+      },
+      {
+        "round": 3,
+        "title": "Distributor Support and Summer Promotions",
+        "content": "The company invested heavily in supporting its struggling distributors and launched a massive summer promotion, including buying back expired beer and offering discounts, to salvage its sales channels.",
+        "timeline": "1-2 months after the crisis"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "summary": "The Bud Light case became a landmark example of 'Go Woke, Go Broke.' In its attempt to expand its consumer base, the brand severely underestimated the reaction of its core audience. Its wavering response to the crisis ultimately pleased no one, resulting in long-term damage to sales and market share, from which the brand has yet to fully recover."
+    }
+  },
+  {
+    "id": "case_009",
+    "title": "Balenciaga's Global Controversy Over 'Problematic Ads'",
+    "description": "Luxury brand Balenciaga sparked a global outcry and brand crisis after releasing two ad campaigns accused of involving 'child sexualization' and 'inappropriate suggestions'.",
+    "background": "In late 2022, Balenciaga released its 'Gift Collection' campaign, which featured children holding teddy bears dressed in BDSM-style gear. Almost simultaneously, another of its campaigns was found to contain a printout of a Supreme Court ruling on child pornography laws in the background. The two campaigns quickly sparked global outrage, being condemned for 'sexualizing children' and placing the brand under unprecedented ethical scrutiny.",
+    "industry": "Luxury / Fashion",
+    "difficulty": "hard",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Ad Removal and Initial Apology",
+        "content": "After the backlash erupted, Balenciaga quickly pulled all related ads and issued a brief apology on social media, stating it 'strongly condemns child abuse.' This apology was seen as too simplistic and failed to explain how the situation occurred.",
+        "timeline": "Within 24 hours of the incident"
+      },
+      {
+        "round": 2,
+        "title": "Suing the Production Company to Shift Blame",
+        "content": "Balenciaga announced a $25 million lawsuit against the third-party production company responsible for the campaign, attempting to shift the blame to its partners. However, this move was widely seen as 'passing the buck' and did not quell public anger.",
+        "timeline": "A few days after the incident"
+      },
+      {
+        "round": 3,
+        "title": "Creative Director's In-depth Apology and Reform Promise",
+        "content": "Under continued pressure, creative director Demna Gvasalia issued a lengthy personal apology, taking full responsibility. He pledged to reform the internal creative review process and to partner with child protection organizations. The brand also announced several charitable initiatives aimed at helping children.",
+        "timeline": "One week after the incident"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "summary": "Balenciaga's crisis management was a complete failure. The problem originated from the creative content itself, and the subsequent response, especially the attempt to shift blame, further exacerbated public outrage. Although the brand eventually adopted a more responsible stance, its image suffered devastating damage, and its 'edgy' and 'daring' brand identity became tainted."
+    }
+  },
+  {
+    "id": "case_010",
+    "title": "OpenAI CEO Sam Altman's Ousting and Return",
+    "description": "The sudden dismissal of CEO Sam Altman by the OpenAI board triggered a corporate earthquake and global tech industry attention, ultimately ending with Altman's return and a board reshuffle.",
+    "background": "On November 17, 2023, the OpenAI board suddenly announced the firing of CEO Sam Altman, citing that he 'was not consistently candid in his communications with the board.' The decision shocked the entire tech industry. Company president Greg Brockman also resigned in protest. Over the next five days, more than 95% of OpenAI employees signed a letter demanding the board resign and reinstate Altman, threatening to leave en masse for Microsoft otherwise.",
+    "industry": "Artificial Intelligence / Tech",
+    "difficulty": "medium",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "The Board's Surprise Move and Vague Statement",
+        "content": "The board issued a vague dismissal statement, which gave Altman and his supporters significant room to shape the public narrative. The board vastly underestimated Altman's immense influence both inside and outside the company, as well as the loyalty of the employees.",
+        "timeline": "Day 1"
+      },
+      {
+        "round": 2,
+        "title": "Altman and Employees' Public Counter-attack",
+        "content": "Altman and Brockman provided real-time updates via social media (X), gaining widespread public and employee sympathy. The employees' collective threat to resign became the decisive factor, placing immense pressure on the board and investors.",
+        "timeline": "Days 2-4"
+      },
+      {
+        "round": 3,
+        "title": "Investor Intervention and Negotiated Return",
+        "content": "Key investors, led by Microsoft, actively mediated. Ultimately, under the threat of a mass employee walkout, the original board relented. Altman returned as CEO, and a new initial board was formed. The event was seen as a victory for an 'employee coup'.",
+        "timeline": "Day 5"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "summary": "This case demonstrates how, in modern tech companies, the loyalty commanded by key founders and talent can sometimes override traditional board authority. Altman's side successfully used social media and internal unity to turn an internal power struggle into a public opinion battle, which they ultimately won. Although OpenAI experienced turmoil, its cohesion was ultimately strengthened."
+    }
+  },
+  {
+    "id": "case_011",
+    "title": "Haitian Flavouring's 'Double Standard' Incident",
+    "description": "Chinese condiment giant Haitian Flavouring was accused of using different ingredient standards for products in domestic and foreign markets, sparking a huge controversy over 'food additives' and 'corporate integrity'.",
+    "background": "In September 2022, a social media user pointed out that Haitian soy sauce sold in Japan had a clean ingredient list with only natural ingredients like water and soybeans, while the same type of product sold in China contained multiple food additives. This 'double standard' accusation quickly went viral. Although the use of additives complied with Chinese national standards, consumers felt discriminated against and unfairly treated, leading to a sharp decline in trust for the national brand.",
+    "industry": "Food",
+    "difficulty": "hard",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Aggressive Response and 'Educational' Statements",
+        "content": "Haitian issued two consecutive, aggressively-worded statements. The first accused 'people with ulterior motives' of creating panic online. The second emphasized that its products met national standards, attempting to 'educate' consumers. This condescending approach was perceived as arrogant and further fueled public antagonism.",
+        "timeline": "Early stages of the crisis"
+      },
+      {
+        "round": 2,
+        "title": "Industry Association and Competitor Involvement",
+        "content": "The China Condiment Association publicly supported Haitian, but this was seen as the industry 'closing ranks' and had limited credibility. Meanwhile, some competitors (like Qianhe) used the opportunity to market their 'zero-additive' concept, further squeezing Haitian's market space.",
+        "timeline": "Mid-crisis"
+      },
+      {
+        "round": 3,
+        "title": "Softening Stance and Opening Factories",
+        "content": "After its stock price plummeted and public opinion remained negative, Haitian's attitude began to soften. It issued a third statement that no longer emphasized 'legal compliance' but instead focused on communication. It also invited people from all walks of life and the media to tour its 'sunshine factories' to showcase its production process and rebuild trust.",
+        "timeline": "Late stage of the crisis"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "summary": "Haitian's 'double standard' crisis is a classic case of PR failure. The arrogant initial response missed the best window for communication, escalating a resolvable 'standards difference' issue into a crisis of 'corporate integrity' and 'national sentiment.' Although some remedial actions were taken, the brand's image was severely damaged, creating an opportunity for its competitors."
+    }
+  },
+  {
+    "id": "case_012",
+    "title": "SHEIN's Influencer Factory Tour Backfires",
+    "description": "Fast-fashion giant SHEIN invited a group of influencers to tour its 'innovation center' in Guangzhou to counter 'sweatshop' allegations, resulting in an even bigger PR disaster.",
+    "background": "For a long time, SHEIN has been criticized for its opaque supply chain and alleged labor issues. In June 2023, in an attempt to improve its image, SHEIN organized a carefully curated influencer tour. However, the videos and posts published by the influencers were highly uniform, filled with praise for the 'modern' and 'clean' factory, while avoiding the core issue of labor rights. This was widely perceived by the public as a 'whitewashing' campaign.",
+    "industry": "Fast Fashion / E-commerce",
+    "difficulty": "medium",
+    "totalRounds": 2,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Launching the Influencer Marketing Campaign",
+        "content": "SHEIN carefully selected a group of lifestyle influencers, rather than investigative journalists or fashion critics, hoping their positive portrayals would sway public opinion. This was the initial promotional strategy.",
+        "timeline": "Campaign planning and execution"
+      },
+      {
+        "round": 2,
+        "title": "Public Backlash and Influencer Apologies",
+        "content": "After the campaign videos were released, a storm of criticism erupted on social media. Netizens accused the influencers of being 'bought' and 'complicit.' The immense public pressure forced several participating influencers to delete their videos and issue public apologies, admitting they were not fully informed. SHEIN's attempt at whitewashing completely backfired, deepening the public's negative impression.",
+        "timeline": "Within 1 week of the campaign"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "summary": "SHEIN's case illustrates that when facing serious ethical allegations, attempting to 'fix' a brand's image with superficial, orchestrated influencer marketing is extremely risky. This approach not only fails to address the root problem but also can cause secondary damage to the brand's credibility due to its perceived insincerity."
+    }
+  },
+  {
+    "id": "case_013",
+    "title": "Unity Engine's 'Installation Fee' Policy Turmoil",
+    "description": "Game engine company Unity announced it would charge developers a 'runtime fee' based on game installations, triggering a collective boycott from global game developers and a crisis of trust.",
+    "background": "In September 2023, Unity abruptly announced a new pricing policy, effective 2024, that would charge developers a fee each time a game meeting certain revenue and install thresholds was installed by a player. The policy was retroactive, and the calculation method for pirated or repeat installs was unclear. It was seen as a 'stab in the back' to the developer community, severely harming their interests and trust in the platform.",
+    "industry": "Gaming / Software",
+    "difficulty": "hard",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Policy Announcement and Confused Explanations",
+        "content": "Following the announcement, official Unity staff provided contradictory explanations on social media and forums, which exacerbated developer panic and anger. Many prominent game studios publicly declared they would abandon the Unity engine.",
+        "timeline": "1-3 days after the incident"
+      },
+      {
+        "round": 2,
+        "title": "Initial Apology and Promise to Revise",
+        "content": "Facing a massive backlash, Unity issued an apology letter a few days later, admitting the new policy had caused 'confusion and angst' and promised to revise it based on community feedback.",
+        "timeline": "About 1 week after the incident"
+      },
+      {
+        "round": 3,
+        "title": "Retraction of Key Terms and CEO's Departure",
+        "content": "Ultimately, Unity released a revised policy with significant concessions: it removed the retroactive clause, raised the fee threshold, and gave developers more control over reporting. A few weeks later, the CEO who spearheaded the policy, John Riccitiello, announced his retirement. These actions finally pacified the developer community.",
+        "timeline": "2-3 weeks after the incident"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "summary": "Unity's 'installation fee' turmoil was a classic B2B PR crisis, at its core a breach of trust with its developer community. Although the company eventually salvaged the situation through a complete policy reversal and leadership change, its brand credibility and standing among developers suffered permanent damage. The event proved that the collective power of the developer community is strong enough to influence a major tech company's decisions."
+    }
+  },
+  {
+    "id": "case_014",
+    "title": "Pang Dong Lai's 'Grievance Award' Creates Positive PR Buzz",
+    "description": "Chinese retail company Pang Dong Lai gained viral fame on social media for its unique, humane employee care policies like the 'Grievance Award,' becoming a model for positive corporate culture PR.",
+    "background": "From 2023 to 2024, stories about the 'god-tier benefits' at Pang Dong Lai, a supermarket in Xuchang, Henan, continuously went viral online. The most notable was the 'Grievance Award,' where employees who receive unreasonable complaints or grievances from customers are given a bonus of 5,000 to 10,000 RMB as consolation. When this policy was revealed, it sparked immense national interest and praise for Pang Dong Lai's corporate culture.",
+    "industry": "Retail",
+    "difficulty": "easy",
+    "totalRounds": 2,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Founder's Confirmation and Philosophy Explanation",
+        "content": "In response to the online buzz, Pang Dong Lai's founder, Yu Donglai, publicly confirmed the existence of the 'Grievance Award' and other policies through various channels (including videos of other entrepreneurs visiting, media interviews, etc.). He repeatedly explained his business philosophy of 'making employees happy,' and his simple, sincere communication style was highly persuasive.",
+        "timeline": "During the public opinion fermentation period"
+      },
+      {
+        "round": 2,
+        "title": "Openness, Transparency, and Experience Sharing",
+        "content": "Pang Dong Lai did not treat its management model as a trade secret. Instead, it openly shared its practices with the public, including publishing its management regulations and allowing other entrepreneurs to conduct 'in-depth study tours.' This transparency further enhanced its brand reputation and sparked a broad social discussion about 'humane management.'",
+        "timeline": "During the public opinion peak"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "summary": "Pang Dong Lai's case is a phenomenal positive PR event. It didn't stem from a meticulously planned marketing campaign but was the natural result of its long-standing, unique corporate culture. In a social climate of intense competition and '996' work culture, Pang Dong Lai's humane management struck a chord with the public, earning it invaluable brand reputation and customer loyalty."
+    }
+  },
+  {
+    "id": "case_015",
+    "title": "Tesla Cybertruck's 'Bulletproof Glass' Launch Fail",
+    "description": "During the highly anticipated Cybertruck launch event, the 'bulletproof glass' demonstration failed when the glass cracked after being hit by a steel ball, becoming a classic 'live demonstration fail'.",
+    "background": "In November 2019, Tesla CEO Elon Musk hosted the Cybertruck launch event. To demonstrate its durability, he had the lead designer throw a large steel ball at the 'Tesla Armor Glass.' Unexpectedly, both the front and rear windows cracked upon impact. Musk had to awkwardly complete the rest of the presentation in front of the two shattered windows. The moment quickly became a global laughing stock.",
+    "industry": "Automotive / Tech",
+    "difficulty": "medium",
+    "totalRounds": 2,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "On-stage Humor and Perseverance",
+        "content": "Despite the extreme awkwardness, Musk defused the tension with remarks like 'Oh my f---ing God' and 'Room for improvement,' and proceeded to finish the presentation. This on-the-spot reaction showcased his personal charisma to some extent.",
+        "timeline": "At the moment of the incident"
+      },
+      {
+        "round": 2,
+        "title": "Transformation into Viral Marketing on Social Media",
+        "content": "Tesla and Musk did not try to hide the failure. Instead, they embraced it. Musk later explained on Twitter that the glass broke because its base was cracked from being hit with a sledgehammer earlier to demonstrate the door's strength. More importantly, the incident itself became a massive internet meme, generating explosive global awareness and discussion for the Cybertruck that traditional advertising could never achieve. Tesla even sold limited-edition t-shirts featuring the shattered glass design.",
+        "timeline": "Days to weeks after the incident"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "summary": "The 'failed' Cybertruck launch was cleverly turned into an incredibly successful viral marketing event by Musk and his team. It proved that in the social media age, a seemingly disastrous live demonstration, if handled correctly, can generate unexpected positive buzz due to its authenticity, drama, and entertainment value. The incident, far from hurting orders, made the Cybertruck one of the most talked-about vehicles in the world."
+    }
+  },
+  {
+    "id": "case_016",
+    "title": "Luckin Coffee's Rebirth After Accounting Fraud Scandal",
+    "description": "After a shocking financial fraud scandal, Luckin Coffee miraculously came back to life through a series of successful PR and operational strategies.",
+    "background": "In April 2020, Luckin Coffee admitted to fabricating 2.2 billion RMB in revenue. The company's image collapsed overnight, and it faced massive fines, class-action lawsuits, and delisting from the stock market. It was widely believed that Luckin would go bankrupt. However, the company did not give up and began a difficult path to recovery.",
+    "industry": "Food & Beverage / Coffee",
+    "difficulty": "hard",
+    "totalRounds": 4,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "Complete Severance and Apology",
+        "content": "The company quickly cut ties with the management involved in the fraud, fired those responsible, and issued apologies to the public, investors, and regulators, showing its determination to reform.",
+        "timeline": "Early stages of the scandal"
+      },
+      {
+        "round": 2,
+        "title": "Maintaining Operations and Focusing on Product",
+        "content": "While dealing with legal issues, Luckin's thousands of stores across the country remained open, ensuring stability for employees and customers. The company kept a low PR profile and focused all its energy on product development, beginning to frequently launch hit products.",
+        "timeline": "First year after the scandal"
+      },
+      {
+        "round": 3,
+        "title": "Hit Product Ignites Social Media",
+        "content": "In 2021, Luckin launched the 'Coconut Cloud Latte.' With its unique taste, the product quickly went viral on social media, becoming a phenomenal success and often selling out. This successful product marketing dramatically shifted public attention from the 'fraudulent company' to its 'delicious products.'",
+        "timeline": "1-2 years after the scandal"
+      },
+      {
+        "round": 4,
+        "title": "Co-branding and Brand Reinvention",
+        "content": "Following the success of the Coconut Cloud Latte, Luckin launched a series of high-frequency IP co-branding campaigns. Collaborations with brands like 'Coconut Palm Coconut Juice,' 'JoJo's Bizarre Adventure,' and 'Kweichow Moutai' constantly created new social media buzz, successfully reinventing Luckin as a young, trendy, and playful coffee brand.",
+        "timeline": "2-3 years after the scandal"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "summary": "Luckin's case is a miracle in PR history. It proves that in the consumer goods sector, even if a brand's reputation suffers a devastating blow, it is still possible to win back consumers if the core business (the store network) is preserved and supported by continuous, exceptional product innovation. Luckin's core PR strategy was 'less talk, more action,' using product and marketing success to overshadow its negative history, ultimately achieving a brand rebirth."
+    }
+  },
+  {
+    "id": "case_017",
+    "title": "East Buy's 'Little Essay' Incident",
+    "description": "Livestreaming e-commerce company East Buy faced a crisis involving its star anchor, company, and CEO over the authorship of its promotional copy, leading to a stock plunge and the CEO's dismissal.",
+    "background": "In December 2023, after an event in Jilin, the copy on East Buy's official account was claimed by a staff member to be a 'team creation,' not originally written by star anchor Dong Yuhui. This response sparked intense backlash from Dong Yuhui's fans, who felt the company was 'backstabbing' him and trying to 'de-Dong Yuhui-ize' the brand. The incident quickly escalated into a denunciation of the company's management and culture.",
+    "industry": "E-commerce Livestreaming / Education",
+    "difficulty": "hard",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "CEO's Inappropriate Response Escalates Conflict",
+        "content": "East Buy's CEO, Sun Dongxu, addressed the issue during a livestream, but his attitude and remarks were seen as arrogant. He even exhibited inappropriate behavior like 'slamming his phone' and revealed Dong Yuhui's salary. This added fuel to the fire, leading to a massive wave of unfollows and boycotts from fans.",
+        "timeline": "2-3 days after the incident erupted"
+      },
+      {
+        "round": 2,
+        "title": "Founder Intervenes with Leadership Change",
+        "content": "As the situation spiraled out of control, East Buy's founder, Yu Minhong, stepped in to apologize and announced the dismissal of Sun Dongxu as CEO. Yu also held a livestream conversation with Dong Yuhui to appease fans and promised to better manage their relationship.",
+        "timeline": "About 1 week after the incident erupted"
+      },
+      {
+        "round": 3,
+        "title": "Dong Yuhui's Role Change and New Channel Launch",
+        "content": "Ultimately, East Buy announced the creation of a separate livestreaming channel, 'A Walk with Hui,' to be led by Dong Yuhui. Dong's title was also upgraded from 'anchor' to 'Senior Partner' of East Buy. These moves finally ended the crisis by appeasing the core anchor and his fanbase.",
+        "timeline": "Within 2 weeks of the incident erupted"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": true,
+      "summary": "The 'Little Essay' incident exposed the inherent conflict between MCN companies and their top IP, as well as the profound impact of fan culture on modern business. East Buy's initial response was disastrous, but founder Yu Minhong's decisive final actions—sacrificing his CEO to protect his star anchor—successfully prevented a complete corporate collapse. It was a costly but ultimately successful crisis management."
+    }
+  },
+  {
+    "id": "case_018",
+    "title": "Purcotton's 'Makeup Remover Wipes' Ad Accused of Insulting Women",
+    "description": "A creative ad by lifestyle brand Purcotton sparked a large-scale gender controversy because its plot was accused of 'demonizing and objectifying women'.",
+    "background": "In January 2021, Purcotton released a short video ad for its makeup remover wipes on social media. In the video, a young woman being followed by a man at night uses the wipes to remove her makeup. Her 'uglier' appearance after removing makeup scares the stalker away. The ad was fiercely criticized by netizens for its implied 'victim-blaming' and its discriminatory portrayal of women's appearance.",
+    "industry": "Consumer Goods / Retail",
+    "difficulty": "medium",
+    "totalRounds": 3,
+    "strategies": [
+      {
+        "round": 1,
+        "title": "First Apology Evades the Main Issue",
+        "content": "After the backlash, Purcotton issued its first apology, calling the video an 'ad creative' and apologizing for 'causing discomfort.' This apology was seen as insincere and failing to grasp the severity of the issue, triggering a second round of criticism.",
+        "timeline": "Within 24 hours of the incident"
+      },
+      {
+        "round": 2,
+        "title": "Issuing a Lengthy 'Apology and Confession'",
+        "content": "After the first failed apology, Purcotton published a long 'apology and confession' letter, detailing the company's history and brand philosophy in an attempt to win back favor with an emotional appeal. However, the self-congratulatory tone and continued avoidance of the core issue led to it being mocked by netizens as 'condescending PR,' making the situation worse.",
+        "timeline": "2-3 days after the incident"
+      },
+      {
+        "round": 3,
+        "title": "Final Formal Apology and Action",
+        "content": "After two failed PR attempts, Purcotton finally issued a third, formally and sincerely worded apology. It admitted its mistake, announced the formation of a rectification team, took action against the personnel involved, and suspended the responsible social media accounts. This apology finally earned the understanding of some netizens.",
+        "timeline": "About 1 week after the incident"
+      }
+    ],
+    "realWorldOutcome": {
+      "success": false,
+      "summary": "The Purcotton ad controversy is a classic example of a brand crisis caused by mishandling gender issues. Its subsequent two failed PR attempts added fuel to the fire, serving as a textbook case of what not to do. The incident highlights that brands must be highly sensitive to social sentiment and gender issues in their creative marketing, or they risk severe backlash."
     }
   }
 ]
