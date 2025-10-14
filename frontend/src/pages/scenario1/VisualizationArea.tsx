@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Typography, Spin } from 'antd';
+import { Card, Typography } from 'antd';
+import NetworkVisualization from '../../components/NetworkVisualization';
 import './VisualizationArea.css';
 
 const { Title } = Typography;
@@ -11,8 +12,8 @@ interface VisualizationAreaProps {
 }
 
 const VisualizationArea: React.FC<VisualizationAreaProps> = ({
-  isLoading = false,
-  networkData: _networkData,
+  isLoading: _isLoading = false,
+  networkData,
   simulationResult: _simulationResult,
 }) => {
   return (
@@ -22,21 +23,13 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
       </Title>
       
       <div className="visualization-content">
-        {isLoading ? (
-          <div className="loading-container">
-            <Spin size="large" />
-            <p className="loading-text">Running simulation...</p>
-          </div>
-        ) : _networkData ? (
+        {networkData ? (
           <div className="network-visualization">
-            {/* 这里将来会集成网络可视化组件 */}
-            <div className="network-placeholder">
-              <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZyHKnKuy5qhOKSSAnkvVplxEz5RVjCAHwcfSQ1qkFcI_i3n_hDxkEU9b39I8ytQzQ8gDz23YO1lCtQhJ7hHdPF0Ao_0_linds5V7G0W8lEkx_3gqsHKmnuUR1Lg7Xe3e4AOpebxyhRTkx1gnf97-VcKbkCumWF5JHFL0zL4M0mejmAuU6xIeDjzt5zjruXiZcjTzxPIcA6T5yVG_FNie4KAyycAi8G2KLhsEpu_iAEGKp52_Gsh3tjgRl_Ky3YGBi35X6XJghbuA"
-                alt="Network Visualization"
-                className="network-image"
-              />
-            </div>
+            <NetworkVisualization 
+              users={networkData.users}
+              platforms={networkData.platforms}
+              isLoading={false}
+            />
           </div>
         ) : (
           <div className="empty-state">

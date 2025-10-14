@@ -86,6 +86,29 @@
   line-height: 1.5;
 }
 
+.results-action {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.show-results-button {
+  background: #137fec !important;
+  border-color: #137fec !important;
+  border-radius: 8px !important;
+  font-weight: 500;
+  height: 44px;
+  padding: 0 24px;
+  box-shadow: 0 4px 12px rgba(19, 127, 236, 0.3);
+  transition: all 0.3s ease;
+}
+
+.show-results-button:hover {
+  background: #0f6fd8 !important;
+  border-color: #0f6fd8 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(19, 127, 236, 0.4);
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .visualization-content {
@@ -95,5 +118,11 @@
   .empty-text {
     font-size: 14px;
     max-width: 250px;
+  }
+  
+  .show-results-button {
+    height: 40px;
+    padding: 0 20px;
+    font-size: 14px;
   }
 }

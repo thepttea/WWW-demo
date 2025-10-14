@@ -1,0 +1,58 @@
+{
+  "overallSentiment": 72,
+  "engagementRate": 15.3,
+  "reach": 850,
+  "sentimentTrend": "+12%",
+  "prEffectiveness": 85,
+  "keyInsights": "The PR strategy has shown significant effectiveness in shifting public opinion. The sentiment analysis reveals a 12% positive trend over the simulation period, with high engagement rates indicating strong public interest. The strategy successfully mitigated initial negative sentiment and built positive momentum.",
+  "recommendations": [
+    "Continue the current communication strategy as it shows strong positive momentum",
+    "Focus on maintaining engagement through regular updates and transparency",
+    "Monitor key opinion leaders and influencers for potential amplification opportunities",
+    "Consider expanding the message to reach additional demographic segments"
+  ],
+  "influentialNodes": [
+    {
+      "node": "Media Outlet A",
+      "influence_score": 95,
+      "sentiment": "Positive",
+      "reach": 120
+    },
+    {
+      "node": "Industry Expert B",
+      "influence_score": 88,
+      "sentiment": "Positive",
+      "reach": 85
+    },
+    {
+      "node": "Social Media Influencer C",
+      "influence_score": 82,
+      "sentiment": "Neutral",
+      "reach": 200
+    },
+    {
+      "node": "Community Leader D",
+      "influence_score": 78,
+      "sentiment": "Positive",
+      "reach": 65
+    }
+  ],
+  "sentimentDistribution": {
+    "positive": 45,
+    "neutral": 35,
+    "negative": 20
+  },
+  "trendData": {
+    "positive": "+8%",
+    "engagement": "+8%",
+    "reach": "+15%"
+  },
+  "effectivenessRating": {
+    "score": 85,
+    "rating": "Excellent",
+    "thresholds": {
+      "excellent": 80,
+      "good": 60
+    }
+  }
+}

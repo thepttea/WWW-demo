@@ -30,15 +30,17 @@ def create_new_chat_session() -> Dict[str, Any]:
     
     # 3. 调用LLM获取第一条欢迎语
     initial_response = llm.invoke(message_history)
+    welcome_content = initial_response.content
+    log_message(f"LLM response received: {welcome_content[:50]}...")
     
     # 4. 将AI的第一条消息也加入历史记录
     welcome_message = {
         "id": f"msg_{uuid.uuid4()}",
         "type": "llm",
-        "content": initial_response.content,
+        "content": welcome_content,
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
-    message_history.append(AIMessage(content=initial_response.content))
+    message_history.append(AIMessage(content=welcome_content))
     
     # 5. 在内存中存储会话
     _chat_sessions[session_id] = {
@@ -77,15 +79,17 @@ def add_message_to_session(session_id: str, user_message: str) -> Dict[str, Any]
     # 2. 调用LLM获取回复
     llm = get_llm()
     ai_response = llm.invoke(session["message_history_langchain"])
+    response_content = ai_response.content
+    log_message(f"LLM response received: {response_content[:50]}...")
     
     # 3. 将LLM的回复添加到历史记录
     response_message = {
         "id": f"msg_{uuid.uuid4()}",
         "type": "llm",
-        "content": ai_response.content,
+        "content": response_content,
         "timestamp": datetime.now(timezone.utc).isoformat()
     }
-    session["message_history_langchain"].append(AIMessage(content=ai_response.content))
+    session["message_history_langchain"].append(AIMessage(content=response_content))
     session["message_history_api"].append(response_message)
     
     log_message(f"Session {session_id} LLM response: '{response_message['content'][:50]}...'")

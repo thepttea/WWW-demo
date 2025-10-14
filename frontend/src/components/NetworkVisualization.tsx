@@ -1,0 +1,1040 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Button } from 'antd';
+import { HistoryOutlined } from '@ant-design/icons';
+import NodeDetailModal from './NodeDetailModal';
+import MessageNotification from './MessageNotification';
+import MessageHistoryModal from './MessageHistoryModal';
+import './NetworkVisualization.css';
+
+interface User {
+  username: string;
+  influence_score: number;
+  primary_platform: string;
+  emotional_style: string;
+  final_decision: string;
+  objective_stance_score?: number;
+}
+
+interface Platform {
+  name: string;
+  type: string;
+  userCount: number;
+  activeUsers: string[];
+  message_propagation?: Array<{
+    sender: string;
+    receivers: string[];
+    content: string;
+    sentiment: string;
+    timestamp: string;
+  }>;
+  message_flow?: Array<{
+    from: string;
+    to: string[];
+    timestamp: string;
+  }>;
+}
+
+interface NetworkVisualizationProps {
+  users?: User[];
+  platforms?: Platform[];
+  isLoading?: boolean;
+  networkData?: {
+    users: User[];
+    platforms: Platform[];
+  };
+  simulationResult?: any;
+}
+
+const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
+  users: _users = [],
+  platforms: _platforms = [],
+  isLoading: _isLoading = false,
+  networkData,
+  simulationResult: _simulationResult
+}) => {
+  // 优先使用networkData，如果没有则使用传入的users和platforms
+  const users = networkData?.users || _users;
+  const platforms = networkData?.platforms || _platforms;
+  const [currentStep, setCurrentStep] = useState(0);
+  const [_isAnimating, setIsAnimating] = useState(false);
+  const [currentPhase, setCurrentPhase] = useState(0); // 0: 发送者, 1: 发送者+平台, 2: 发送者+平台+接收者, 3: 流动边
+  const [animationStartTime, setAnimationStartTime] = useState<number | null>(null);
+  const animationStartTimeRef = useRef<number | null>(null);
+  const [forceUpdate, setForceUpdate] = useState(0); // 用于强制重新渲染
+  
+  // 颜色状态持久化 - 记录每个用户的上一次颜色状态
+  const [userColorStates, setUserColorStates] = useState<{ [username: string]: { r: number; g: number; b: number } }>({});
+  // 动画开始时的初始颜色 - 用于颜色渐变计算
+  const [animationInitialColors, setAnimationInitialColors] = useState<{ [username: string]: { r: number; g: number; b: number } }>({});
+  
+  // 节点详情弹窗状态
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
+  const [selectedNodeType, setSelectedNodeType] = useState<'user' | 'platform' | null>(null);
+
+  // 消息历史弹窗状态
+  const [historyModalVisible, setHistoryModalVisible] = useState(false);
+  const [animationCompleted, setAnimationCompleted] = useState(false);
+  
+  // 边过渡动画状态
+  const [edgeTransitionStep, setEdgeTransitionStep] = useState(-1);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [activeEdges, setActiveEdges] = useState<{
+    senderToPlatform: boolean;
+    platformToReceivers: boolean;
+  }>({
+    senderToPlatform: false,
+    platformToReceivers: false
+  });
+
+
+  // 从实际数据生成消息传播步骤 - 使用后端提供的实际数据
+  const messageSteps = React.useMemo(() => {
+    console.log('NetworkVisualization - platforms:', platforms);
+    console.log('NetworkVisualization - users:', users);
+    
+    if (!platforms || platforms.length === 0) {
+      console.log('NetworkVisualization - No platforms data available');
+      return [];
+    }
+
+    const steps: Array<{
+      id: string;
+      type: string;
+      sender: string;
+      platform: string;
+      receivers: string[];
+      content: string;
+      delay: number;
+      duration: number;
+    }> = [];
+
+    // 用户名映射
+    const usernameMapping: { [key: string]: string } = {
+      'MarketingPro_Serena': 'Serena',
+      'Skeptical_Journalist': 'Journalist',
+      'TechBro_Elon': 'Elon',
+      'TechEnthusiast_Alex': 'Alex',
+      'ValueInvestor_Graham': 'Graham',
+      'Regulator_Tom': 'Tom',
+      'ArtStudent_Vivian': 'Vivian',
+      'SocialMedia_Intern': 'Intern',
+      'Cynical_Dev': 'Dev',
+      'Ethical_Philosopher': 'Philosopher'
+    };
+
+    // 平台名映射
+    const platformMapping: { [key: string]: string } = {
+      'Weibo/Twitter-like': 'Weibo',
+      'WeChat Moments-like': 'WeChat',
+      'TikTok-like': 'TikTok',
+      'Forum-like': 'Forum'
+    };
+
+    // 收集所有消息 - 保持后端提供的顺序
+    const allMessages: Array<{
+      platform: string;
+      message: any;
+      platformName: string;
+    }> = [];
+
+    platforms.forEach(platform => {
+      console.log('NetworkVisualization - Processing platform:', platform.name);
+      console.log('NetworkVisualization - Platform message_propagation:', platform.message_propagation);
+      
+      if (platform.message_propagation && Array.isArray(platform.message_propagation)) {
+        console.log('NetworkVisualization - Found', platform.message_propagation.length, 'messages for platform', platform.name);
+        platform.message_propagation.forEach(message => {
+          allMessages.push({
+            platform: platform.name,
+            message,
+            platformName: platformMapping[platform.name] || platform.name
+          });
+        });
+      } else {
+        console.log('NetworkVisualization - No message_propagation data for platform', platform.name);
+      }
+    });
+
+    // 使用后端提供的实际数据，不进行随机排序
+    // 分配相对时间戳
+    let currentDelay = 0;
+    let messageIndex = 1;
+
+    allMessages.forEach(({ message, platformName }) => {
+      const shortSender = usernameMapping[message.sender] || message.sender;
+      const shortReceivers = message.receivers.map((receiver: string) => 
+        usernameMapping[receiver] || receiver
+      );
+
+      steps.push({
+        id: `message${messageIndex}`,
+        type: 'message_flow',
+        sender: shortSender,
+        platform: platformName,
+        receivers: shortReceivers,
+        content: message.content,
+        delay: currentDelay,  // 使用实际的时间间隔
+        duration: 6000
+      });
+
+      currentDelay += 6000;  // 每条消息间隔6秒
+      messageIndex++;
+    });
+
+    console.log('NetworkVisualization - Generated', steps.length, 'message steps');
+    console.log('NetworkVisualization - Message steps:', steps);
+    return steps;
+  }, [platforms]);
+
+  // 获取用户坐标 - 优化为现代美学的不规则圆形分布
+  const getUserCoordinates = (username: string) => {
+    // 中心点坐标
+    const centerX = 500;
+    const centerY = 350;
+    
+    // 定义每个节点的半径和角度（微调角度避免三点一线）
+    const nodeConfigs: { [key: string]: { radius: number; angle: number } } = {
+      'Serena': { radius: 320, angle: 0.05 },           // 右侧，稍微上移
+      'Journalist': { radius: 280, angle: 0.23 },       // 右上，半径稍小
+      'Elon': { radius: 350, angle: 0.41 },             // 右上偏上，半径较大
+      'Alex': { radius: 300, angle: 0.63 },             // 上侧，标准半径
+      'Graham': { radius: 290, angle: 0.87 },           // 左上偏上，半径稍小
+      'Tom': { radius: 330, angle: 1.12 },              // 左侧，半径稍大
+      'Vivian': { radius: 310, angle: 1.35 },           // 左下偏下，半径较小
+      'Intern': { radius: 290, angle: 1.58 },           // 下侧，标准半径
+      'Dev': { radius: 340, angle: 1.82 },              // 右下偏下，半径较大
+      'Philosopher': { radius: 275, angle: 1.95 }       // 右下，半径较小，修正角度避免重叠
+    };
+    
+    const config = nodeConfigs[username];
+    if (!config) {
+      // 默认位置作为fallback
+      return { x: centerX, y: centerY };
+    }
+    
+    const x = centerX + config.radius * Math.cos(config.angle * Math.PI);
+    const y = centerY + config.radius * Math.sin(config.angle * Math.PI);
+    
+    return { x, y };
+  };
+
+  // 获取平台坐标 - 集中在中心区域
+  const getPlatformCoordinates = (platformName: string) => {
+    const coordinates: { [key: string]: { x: number; y: number } } = {
+      'Weibo': { x: 500, y: 250 }, // 右上
+      'WeChat': { x: 600, y: 350 }, // 右下
+      'TikTok': { x: 500, y: 450 }, // 左下
+      'Forum': { x: 400, y: 350 } // 左上
+    };
+    return coordinates[platformName];
+  };
+
+  // 根据objective_stance_score计算最终颜色 (-3到3，红蓝渐变)
+  const getStanceColor = (stanceScore: number) => {
+    // 将-3到3的范围映射到0到1
+    const normalizedScore = (stanceScore + 3) / 6;
+    
+    // 红色(反对)到蓝色(支持)的渐变
+    // 反对(-3): 红色 #EF4444
+    // 中性(0): 灰色 #6B7280  
+    // 支持(3): 蓝色 #3B82F6
+    
+    if (normalizedScore <= 0.5) {
+      // 从红色到灰色的渐变
+      const t = normalizedScore * 2; // 0到1
+      const r = Math.round(239 + (107 - 239) * t);
+      const g = Math.round(68 + (114 - 68) * t);
+      const b = Math.round(68 + (128 - 68) * t);
+      return `rgb(${r}, ${g}, ${b})`;
+    } else {
+      // 从灰色到蓝色的渐变
+      const t = (normalizedScore - 0.5) * 2; // 0到1
+      const r = Math.round(107 + (59 - 107) * t);
+      const g = Math.round(114 + (130 - 114) * t);
+      const b = Math.round(128 + (246 - 128) * t);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+  };
+
+
+  // 获取动态颜色 - 根据动画进度从上一轮颜色渐变到最终颜色
+  const getDynamicColor = (username: string) => {
+    // 优先返回当前保存的颜色状态
+    const savedColor = userColorStates[username];
+    
+    if (savedColor) {
+      return `rgb(${savedColor.r}, ${savedColor.g}, ${savedColor.b})`;
+    }
+
+    // 如果没有保存的颜色状态，返回默认灰色
+    return '#6B7280';
+  };
+
+  // 获取用户颜色 - 使用动态颜色变化
+  const getUserColor = (username: string) => {
+    return getDynamicColor(username);
+  };
+
+  // 获取平台颜色
+  const getPlatformColor = (platformName: string) => {
+    const colors: { [key: string]: string } = {
+      'Weibo': '#00D4FF',
+      'WeChat': '#00FF88',
+      'TikTok': '#FF00FF',
+      'Forum': '#FF9F43'
+    };
+    return colors[platformName] || '#00D4FF';
+  };
+
+  // 开始动画序列 - 当有网络数据时自动开始
+  useEffect(() => {
+    console.log('NetworkVisualization - Animation trigger check:');
+    console.log('  - users.length:', users.length);
+    console.log('  - messageSteps.length:', messageSteps.length);
+    console.log('  - platforms?.length:', platforms?.length);
+    
+    if (users.length > 0 && messageSteps.length > 0) {
+      console.log('NetworkVisualization - Starting animation with', messageSteps.length, 'steps');
+      setIsAnimating(true);
+      setCurrentStep(0);
+      setCurrentPhase(0);
+      // 重置动画开始时间，确保每次都能重新开始
+      const newStartTime = Date.now();
+      animationStartTimeRef.current = newStartTime;
+      setAnimationStartTime(newStartTime);
+      setAnimationCompleted(false); // 重置动画完成状态
+      
+      // 保存动画开始时的初始颜色
+      const initialColors: { [username: string]: { r: number; g: number; b: number } } = {};
+      users.forEach(user => {
+        const usernameMapping: { [key: string]: string } = {
+          'MarketingPro_Serena': 'Serena',
+          'Skeptical_Journalist': 'Journalist',
+          'TechBro_Elon': 'Elon',
+          'TechEnthusiast_Alex': 'Alex',
+          'ValueInvestor_Graham': 'Graham',
+          'Regulator_Tom': 'Tom',
+          'ArtStudent_Vivian': 'Vivian',
+          'SocialMedia_Intern': 'Intern',
+          'Cynical_Dev': 'Dev',
+          'Ethical_Philosopher': 'Philosopher'
+        };
+        const shortUsername = usernameMapping[user.username] || user.username;
+        // 使用当前保存的颜色作为初始颜色，如果没有则使用默认灰色
+        initialColors[shortUsername] = userColorStates[shortUsername] || { r: 107, g: 114, b: 128 };
+      });
+      setAnimationInitialColors(initialColors);
+      
+      // 使用 setTimeout 来精确控制每个消息的显示时机
+      const timers: NodeJS.Timeout[] = [];
+      
+      messageSteps.forEach((step, index) => {
+        const messageStartTime = step.delay;
+        
+        // 阶段1: 闪烁发送者 (1s) - 边不激活
+        const phase1Timer = setTimeout(() => {
+          setCurrentStep(index);
+          setCurrentPhase(0);
+          setEdgeTransitionStep(index);
+          setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+        }, messageStartTime);
+        
+        // 阶段2: 闪烁发送者和平台 (1s) - 激活发送者到平台的边
+        const phase2Timer = setTimeout(() => {
+          setCurrentPhase(1);
+          setActiveEdges({ senderToPlatform: true, platformToReceivers: false });
+        }, messageStartTime + 1000);
+        
+        // 阶段3: 闪烁发送者、平台和接收者 (1s) - 激活平台到接收者的边
+        const phase3Timer = setTimeout(() => {
+          setCurrentPhase(2);
+          setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
+        }, messageStartTime + 2000);
+        
+        // 阶段4: 开始流动边 (3s) - 保持所有边激活
+        const phase4Timer = setTimeout(() => {
+          setCurrentPhase(3);
+          setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
+        }, messageStartTime + 3000);
+        
+        timers.push(phase1Timer, phase2Timer, phase3Timer, phase4Timer);
+      });
+      
+      // 添加动画结束逻辑 - 在最后一条消息结束后停止动画
+      if (messageSteps.length > 0) {
+        const lastMessage = messageSteps[messageSteps.length - 1];
+        const animationEndTime = lastMessage.delay + lastMessage.duration;
+        
+        const endTimer = setTimeout(() => {
+          setIsAnimating(false);
+          setCurrentStep(-1); // 重置为-1表示没有当前消息
+          setCurrentPhase(0);
+          setEdgeTransitionStep(-1); // 重置边过渡步骤
+          setActiveEdges({ senderToPlatform: false, platformToReceivers: false }); // 重置边激活状态
+          setAnimationCompleted(true); // 标记动画完成
+          // 强制重新渲染以重置所有路径状态
+          setForceUpdate(prev => prev + 1);
+        }, animationEndTime);
+        
+        timers.push(endTimer);
+      }
+      
+      // 清理所有定时器
+      return () => {
+        timers.forEach(timer => clearTimeout(timer));
+      };
+    } else {
+      // 重置状态
+      setCurrentStep(0);
+      setCurrentPhase(0);
+      setIsAnimating(false);
+      animationStartTimeRef.current = null;
+      setAnimationStartTime(null);
+      setAnimationCompleted(false);
+      setEdgeTransitionStep(-1);
+      setIsTransitioning(false);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+    }
+  }, [users.length, platforms?.length, messageSteps.length]);
+
+  // 颜色动画定时器 - 每100ms更新一次颜色和颜色状态
+  useEffect(() => {
+    if (!animationStartTime) return;
+
+    const interval = setInterval(() => {
+      // 使用 ref 中的开始时间，确保是最新的
+      const startTime = animationStartTimeRef.current;
+      if (!startTime) return;
+      
+      setUserColorStates(prev => {
+        const newStates = { ...prev };
+        let hasChanges = false;
+        
+        // 在useEffect内部计算动画时长，与消息动画保持一致
+        const calculateAnimationDuration = () => {
+          // 使用实际的后端数据计算时长，与消息动画保持一致
+          if (users.length > 0 && platforms.length > 0) {
+            let totalMessages = 0;
+            
+            platforms.forEach((platform) => {
+              const messages = platform.message_propagation || platform.message_flow || [];
+              
+              if (Array.isArray(messages) && messages.length > 0) {
+                totalMessages += messages.length;
+              }
+            });
+            
+            if (totalMessages > 0) {
+              // 与消息动画保持一致：总时长 = 消息数量 * 6000ms
+              const duration = totalMessages * 6000;
+              return duration;
+            } else {
+              return 0;
+            }
+          }
+          
+          // 如果没有后端数据，返回默认时长
+          return 0;
+        };
+        
+        // 更新所有用户的颜色状态
+        users.forEach(user => {
+          const usernameMapping: { [key: string]: string } = {
+            'MarketingPro_Serena': 'Serena',
+            'Skeptical_Journalist': 'Journalist',
+            'TechBro_Elon': 'Elon',
+            'TechEnthusiast_Alex': 'Alex',
+            'ValueInvestor_Graham': 'Graham',
+            'Regulator_Tom': 'Tom',
+            'ArtStudent_Vivian': 'Vivian',
+            'SocialMedia_Intern': 'Intern',
+            'Cynical_Dev': 'Dev',
+            'Ethical_Philosopher': 'Philosopher'
+          };
+          const shortUsername = usernameMapping[user.username] || user.username;
+          
+          if (user.objective_stance_score !== undefined) {
+            const totalDuration = calculateAnimationDuration();
+            
+            if (totalDuration > 0) {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min(elapsed / totalDuration, 1);
+              
+              
+              // 使用动画开始时的初始颜色
+              const initialColor = animationInitialColors[shortUsername] || { r: 107, g: 114, b: 128 };
+              
+              // 计算最终颜色
+              const finalColorStr = getStanceColor(user.objective_stance_score);
+              const finalColorMatch = finalColorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
+              
+              if (finalColorMatch) {
+                const finalColor = {
+                  r: parseInt(finalColorMatch[1]),
+                  g: parseInt(finalColorMatch[2]),
+                  b: parseInt(finalColorMatch[3])
+                };
+                
+                // 计算当前颜色 - 从初始颜色渐变到最终颜色
+                const currentColor = {
+                  r: Math.round(initialColor.r + (finalColor.r - initialColor.r) * progress),
+                  g: Math.round(initialColor.g + (finalColor.g - initialColor.g) * progress),
+                  b: Math.round(initialColor.b + (finalColor.b - initialColor.b) * progress)
+                };
+                
+                
+                // 检查是否有变化
+                const savedColor = prev[shortUsername];
+                if (!savedColor || 
+                    savedColor.r !== currentColor.r || 
+                    savedColor.g !== currentColor.g || 
+                    savedColor.b !== currentColor.b) {
+                  newStates[shortUsername] = currentColor;
+                  hasChanges = true;
+                }
+              }
+            }
+          }
+        });
+        
+        return hasChanges ? newStates : prev;
+      });
+      
+      setForceUpdate(prev => prev + 1);
+    }, 100); // 恢复为100ms更新一次
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [animationStartTime, users.length, platforms?.length]);
+
+  // 获取所有静态路径（一开始就显示）
+  const getAllStaticPaths = () => {
+    const allPaths: Array<{
+      id: string;
+      d: string;
+      stroke: string;
+      delay: number;
+      isActive: boolean;
+      messageId: string;
+    }> = [];
+
+    // 用于跟踪已经显示过的通道
+    const shownChannels = new Set<string>();
+    const shownPlatformToUserChannels = new Set<string>();
+
+    // 首先生成所有静态路径（不激活）
+    messageSteps.forEach((step) => {
+      if (step.type === 'message_flow') {
+        const senderCoords = getUserCoordinates(step.sender);
+        const platformCoords = getPlatformCoordinates(step.platform);
+        
+        if (senderCoords && platformCoords) {
+          // 发送者到平台的路径 - 每个用户到平台只显示一次
+          const senderToPlatformChannel = `${step.sender}-${step.platform}`;
+          if (!shownChannels.has(senderToPlatformChannel)) {
+            allPaths.push({
+              id: `sender-to-platform-${step.sender}-${step.platform}`,
+              d: `M ${senderCoords.x} ${senderCoords.y} L ${platformCoords.x} ${platformCoords.y}`,
+              stroke: getUserColor(step.sender),
+              delay: 0,
+              isActive: false, // 初始状态不激活
+              messageId: step.id
+            });
+            shownChannels.add(senderToPlatformChannel);
+          }
+          
+          // 平台到接收者的路径 - 每个平台到用户只显示一次
+          step.receivers.forEach(receiver => {
+            const receiverCoords = getUserCoordinates(receiver);
+            if (receiverCoords) {
+              const platformToUserChannel = `${step.platform}-${receiver}`;
+              if (!shownPlatformToUserChannels.has(platformToUserChannel)) {
+                allPaths.push({
+                  id: `platform-to-user-${step.platform}-${receiver}`,
+                  d: `M ${platformCoords.x} ${platformCoords.y} L ${receiverCoords.x} ${receiverCoords.y}`,
+                  stroke: getPlatformColor(step.platform),
+                  delay: 0,
+                  isActive: false, // 初始状态不激活
+                  messageId: step.id
+                });
+                shownPlatformToUserChannels.add(platformToUserChannel);
+              }
+            }
+          });
+        }
+      }
+    });
+
+    // 然后根据当前步骤和边激活状态激活相应的边
+    if (edgeTransitionStep >= 0 && edgeTransitionStep < messageSteps.length) {
+      const currentStepData = messageSteps[edgeTransitionStep];
+      if (currentStepData.type === 'message_flow') {
+        const senderCoords = getUserCoordinates(currentStepData.sender);
+        const platformCoords = getPlatformCoordinates(currentStepData.platform);
+        
+        if (senderCoords && platformCoords) {
+          // 根据activeEdges状态激活发送者到平台的路径
+          if (activeEdges.senderToPlatform) {
+            const senderToPlatformId = `sender-to-platform-${currentStepData.sender}-${currentStepData.platform}`;
+            const senderToPlatformPath = allPaths.find(path => path.id === senderToPlatformId);
+            if (senderToPlatformPath) {
+              senderToPlatformPath.isActive = true;
+              senderToPlatformPath.messageId = currentStepData.id;
+            }
+          }
+          
+          // 根据activeEdges状态激活平台到接收者的路径
+          if (activeEdges.platformToReceivers) {
+            currentStepData.receivers.forEach(receiver => {
+              const platformToUserId = `platform-to-user-${currentStepData.platform}-${receiver}`;
+              const platformToUserPath = allPaths.find(path => path.id === platformToUserId);
+              if (platformToUserPath) {
+                platformToUserPath.isActive = true;
+                platformToUserPath.messageId = currentStepData.id;
+              }
+            });
+          }
+        }
+      }
+    } else {
+      // 如果没有活跃的步骤，确保所有路径都是不激活的
+      allPaths.forEach(path => {
+        path.isActive = false;
+      });
+    }
+
+    return allPaths;
+  };
+
+  // 获取当前应该闪烁的节点
+  const getCurrentFlashingNodes = () => {
+    if (currentStep < 0 || currentStep >= messageSteps.length) {
+      return {
+        sender: null,
+        platform: null,
+        receivers: [] as string[]
+      };
+    }
+    
+    const step = messageSteps[currentStep];
+    
+    if (step.type === 'message_flow') {
+      // 根据当前阶段决定闪烁哪些节点
+      switch (currentPhase) {
+        case 0: // 阶段1: 只闪烁发送者
+          return {
+            sender: step.sender,
+            platform: null,
+            receivers: [] as string[]
+          };
+        case 1: // 阶段2: 闪烁发送者和平台
+          return {
+            sender: step.sender,
+            platform: step.platform,
+            receivers: [] as string[]
+          };
+        case 2: // 阶段3: 闪烁发送者、平台和接收者
+          return {
+            sender: step.sender,
+            platform: step.platform,
+            receivers: step.receivers
+          };
+        case 3: // 阶段4: 继续闪烁发送者、平台和接收者，同时开始流动
+        default:
+          return {
+            sender: step.sender,
+            platform: step.platform,
+            receivers: step.receivers
+          };
+      }
+    }
+    
+    return {
+      sender: null,
+      platform: null,
+      receivers: [] as string[]
+    };
+  };
+
+  // 处理节点点击事件
+  const handleNodeClick = (nodeType: 'user' | 'platform', nodeName: string) => {
+    if (nodeType === 'user') {
+      const user = users.find(u => u.username === nodeName);
+      if (user) {
+        setSelectedNode(user);
+        setSelectedNodeType('user');
+        setModalVisible(true);
+      }
+    } else if (nodeType === 'platform') {
+      const platform = platforms.find(p => p.name === nodeName);
+      if (platform) {
+        setSelectedNode(platform);
+        setSelectedNodeType('platform');
+        setModalVisible(true);
+      }
+    }
+  };
+
+  // 关闭弹窗
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setSelectedNode(null);
+    setSelectedNodeType(null);
+  };
+
+  // 处理消息历史弹窗
+  const handleOpenHistoryModal = () => {
+    setHistoryModalVisible(true);
+  };
+
+  const handleCloseHistoryModal = () => {
+    setHistoryModalVisible(false);
+  };
+
+  // 获取所有路径和当前闪烁节点
+  const allPaths = getAllStaticPaths();
+  const flashingNodes = getCurrentFlashingNodes();
+  
+  // 强制重新渲染当activeEdges状态变化时
+  useEffect(() => {
+    setForceUpdate(prev => prev + 1);
+  }, [activeEdges, edgeTransitionStep]);
+
+  // 使用forceUpdate来触发重新渲染
+  void forceUpdate;
+
+
+
+  return (
+    <div className="network-visualization-container">
+      <svg width="1000" height="700" viewBox="0 0 1000 700" className="network-svg">
+        {/* 平台节点 */}
+        <g id="platforms">
+          {/* Weibo平台 */}
+          <g 
+            className={`platform-node ${flashingNodes.platform === 'Weibo' ? 'flashing-platform' : ''}`}
+            onClick={() => handleNodeClick('platform', 'Weibo/Twitter-like')}
+            style={{ cursor: 'pointer' }}
+          >
+            <circle 
+              cx={getPlatformCoordinates('Weibo').x} 
+              cy={getPlatformCoordinates('Weibo').y} 
+              r="30" 
+              fill="#1DA1F2" 
+              opacity="0.8" 
+            />
+            <image
+              x={getPlatformCoordinates('Weibo').x - 20}
+              y={getPlatformCoordinates('Weibo').y - 20}
+              width="40"
+              height="40"
+              href="/data/icons/weibo.png"
+              className="platform-icon"
+            />
+          </g>
+          <text x={getPlatformCoordinates('Weibo').x} y={getPlatformCoordinates('Weibo').y + 50} fill="white" fontSize="14" textAnchor="middle" className="platform-label">Weibo</text>
+          
+          {/* WeChat平台 */}
+          <g 
+            className={`platform-node ${flashingNodes.platform === 'WeChat' ? 'flashing-platform' : ''}`}
+            onClick={() => handleNodeClick('platform', 'WeChat Moments-like')}
+            style={{ cursor: 'pointer' }}
+          >
+            <circle 
+              cx={getPlatformCoordinates('WeChat').x} 
+              cy={getPlatformCoordinates('WeChat').y} 
+              r="30" 
+              fill="#07C160" 
+              opacity="0.8" 
+            />
+            <image
+              x={getPlatformCoordinates('WeChat').x - 20}
+              y={getPlatformCoordinates('WeChat').y - 20}
+              width="40"
+              height="40"
+              href="/data/icons/wechat.png"
+              className="platform-icon"
+            />
+          </g>
+          <text x={getPlatformCoordinates('WeChat').x} y={getPlatformCoordinates('WeChat').y + 50} fill="white" fontSize="14" textAnchor="middle" className="platform-label">WeChat</text>
+          
+          {/* TikTok平台 */}
+          <g 
+            className={`platform-node ${flashingNodes.platform === 'TikTok' ? 'flashing-platform' : ''}`}
+            onClick={() => handleNodeClick('platform', 'TikTok-like')}
+            style={{ cursor: 'pointer' }}
+          >
+            <circle 
+              cx={getPlatformCoordinates('TikTok').x} 
+              cy={getPlatformCoordinates('TikTok').y} 
+              r="30" 
+              fill="#FF6B9D" 
+              opacity="0.8" 
+            />
+            <image
+              x={getPlatformCoordinates('TikTok').x - 20}
+              y={getPlatformCoordinates('TikTok').y - 20}
+              width="40"
+              height="40"
+              href="/data/icons/tiktok.png"
+              className="platform-icon"
+            />
+          </g>
+          <text x={getPlatformCoordinates('TikTok').x} y={getPlatformCoordinates('TikTok').y + 50} fill="white" fontSize="14" textAnchor="middle" className="platform-label">TikTok</text>
+          
+          {/* Forum平台 */}
+          <g 
+            className={`platform-node ${flashingNodes.platform === 'Forum' ? 'flashing-platform' : ''}`}
+            onClick={() => handleNodeClick('platform', 'Forum-like')}
+            style={{ cursor: 'pointer' }}
+          >
+            <circle 
+              cx={getPlatformCoordinates('Forum').x} 
+              cy={getPlatformCoordinates('Forum').y} 
+              r="30" 
+              fill="#8B5CF6" 
+              opacity="0.8" 
+            />
+            <image
+              x={getPlatformCoordinates('Forum').x - 20}
+              y={getPlatformCoordinates('Forum').y - 20}
+              width="40"
+              height="40"
+              href="/data/icons/forum.png"
+              className="platform-icon"
+            />
+          </g>
+          <text x={getPlatformCoordinates('Forum').x} y={getPlatformCoordinates('Forum').y + 50} fill="white" fontSize="14" textAnchor="middle" className="platform-label">Forum</text>
+        </g>
+
+        {/* 用户节点 */}
+        <g id="users">
+          {/* Serena */}
+          <circle 
+            cx={getUserCoordinates('Serena').x} 
+            cy={getUserCoordinates('Serena').y} 
+            r="25" 
+            fill={getUserColor('Serena')} 
+            stroke={getUserColor('Serena')} 
+            strokeWidth="3" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Serena' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Serena') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'MarketingPro_Serena')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Serena').x} y={getUserCoordinates('Serena').y + 30} fill={getUserColor('Serena')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Serena</text>
+          
+          {/* Journalist */}
+          <circle 
+            cx={getUserCoordinates('Journalist').x} 
+            cy={getUserCoordinates('Journalist').y} 
+            r="20" 
+            fill={getUserColor('Journalist')} 
+            stroke={getUserColor('Journalist')} 
+            strokeWidth="3" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Journalist' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Journalist') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'Skeptical_Journalist')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Journalist').x} y={getUserCoordinates('Journalist').y - 20} fill={getUserColor('Journalist')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Journalist</text>
+          
+          {/* Elon */}
+          <circle 
+            cx={getUserCoordinates('Elon').x} 
+            cy={getUserCoordinates('Elon').y} 
+            r="22" 
+            fill={getUserColor('Elon')} 
+            stroke={getUserColor('Elon')} 
+            strokeWidth="3" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Elon' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Elon') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'TechBro_Elon')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Elon').x} y={getUserCoordinates('Elon').y + 30} fill={getUserColor('Elon')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Elon</text>
+          
+          {/* Alex */}
+          <circle 
+            cx={getUserCoordinates('Alex').x} 
+            cy={getUserCoordinates('Alex').y} 
+            r="12" 
+            fill={getUserColor('Alex')} 
+            stroke={getUserColor('Alex')} 
+            strokeWidth="2" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Alex' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Alex') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'TechEnthusiast_Alex')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Alex').x} y={getUserCoordinates('Alex').y + 20} fill={getUserColor('Alex')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Alex</text>
+          
+          {/* Graham */}
+          <circle 
+            cx={getUserCoordinates('Graham').x} 
+            cy={getUserCoordinates('Graham').y} 
+            r="18" 
+            fill={getUserColor('Graham')} 
+            stroke={getUserColor('Graham')} 
+            strokeWidth="2" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Graham' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Graham') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'ValueInvestor_Graham')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Graham').x} y={getUserCoordinates('Graham').y + 25} fill={getUserColor('Graham')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Graham</text>
+          
+          {/* Tom */}
+          <circle 
+            cx={getUserCoordinates('Tom').x} 
+            cy={getUserCoordinates('Tom').y} 
+            r="15" 
+            fill={getUserColor('Tom')} 
+            stroke={getUserColor('Tom')} 
+            strokeWidth="2" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Tom' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Tom') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'Regulator_Tom')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Tom').x} y={getUserCoordinates('Tom').y + 20} fill={getUserColor('Tom')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Tom</text>
+          
+          {/* Vivian */}
+          <circle 
+            cx={getUserCoordinates('Vivian').x} 
+            cy={getUserCoordinates('Vivian').y} 
+            r="10" 
+            fill={getUserColor('Vivian')} 
+            stroke={getUserColor('Vivian')} 
+            strokeWidth="2" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Vivian' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Vivian') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'ArtStudent_Vivian')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Vivian').x} y={getUserCoordinates('Vivian').y + 15} fill={getUserColor('Vivian')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Vivian</text>
+          
+          {/* Intern */}
+          <circle 
+            cx={getUserCoordinates('Intern').x} 
+            cy={getUserCoordinates('Intern').y} 
+            r="8" 
+            fill={getUserColor('Intern')} 
+            stroke={getUserColor('Intern')} 
+            strokeWidth="2" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Intern' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Intern') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'SocialMedia_Intern')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Intern').x} y={getUserCoordinates('Intern').y + 15} fill={getUserColor('Intern')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Intern</text>
+          
+          {/* Dev */}
+          <circle 
+            cx={getUserCoordinates('Dev').x} 
+            cy={getUserCoordinates('Dev').y} 
+            r="14" 
+            fill={getUserColor('Dev')} 
+            stroke={getUserColor('Dev')} 
+            strokeWidth="2" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Dev' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Dev') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'Cynical_Dev')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Dev').x} y={getUserCoordinates('Dev').y + 20} fill={getUserColor('Dev')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Dev</text>
+          
+          {/* Philosopher */}
+          <circle 
+            cx={getUserCoordinates('Philosopher').x} 
+            cy={getUserCoordinates('Philosopher').y} 
+            r="16" 
+            fill={getUserColor('Philosopher')} 
+            stroke={getUserColor('Philosopher')} 
+            strokeWidth="2" 
+            className={`agent-node stance-color-transition ${
+              flashingNodes.sender === 'Philosopher' ? 'flashing-sender' : 
+              flashingNodes.receivers.includes('Philosopher') ? 'flashing-receiver' : ''
+            }`}
+            onClick={() => handleNodeClick('user', 'Ethical_Philosopher')}
+            style={{ cursor: 'pointer' }}
+          />
+          <text x={getUserCoordinates('Philosopher').x} y={getUserCoordinates('Philosopher').y + 20} fill={getUserColor('Philosopher')} fontSize="12" textAnchor="middle" className="user-label stance-color-transition">Philosopher</text>
+        </g>
+
+        {/* 所有消息流动路径 */}
+        <g id="message-flows">
+          {allPaths.map((path) => (
+            <path
+              key={path.id}
+              className={`animated-flow ${path.isActive ? 'animate-flow' : 'inactive-flow'} ${isTransitioning ? 'transitioning' : ''}`}
+              d={path.d}
+              stroke={path.stroke}
+              style={{ animationDelay: `${path.delay / 1000}s` }}
+              fill="none"
+            />
+          ))}
+        </g>
+      </svg>
+      
+      {/* 节点详情弹窗 */}
+      <NodeDetailModal
+        visible={modalVisible}
+        onClose={handleCloseModal}
+        nodeData={selectedNode}
+        nodeType={selectedNodeType}
+      />
+      
+      {/* 消息通知 */}
+      <MessageNotification
+        currentStep={currentStep}
+        messageSteps={messageSteps}
+      />
+
+      {/* 消息历史按钮 - 只在动画完成后显示 */}
+      {animationCompleted && (
+        <div className="message-history-button-container">
+          <Button
+            type="primary"
+            icon={<HistoryOutlined />}
+            onClick={handleOpenHistoryModal}
+            className="message-history-button"
+            size="large"
+          >
+            View All Messages
+          </Button>
+        </div>
+      )}
+
+      {/* 消息历史弹窗 */}
+      <MessageHistoryModal
+        visible={historyModalVisible}
+        onClose={handleCloseHistoryModal}
+        messageSteps={messageSteps}
+        currentStep={currentStep}
+      />
+    </div>
+  );
+};
+
+export default NetworkVisualization;

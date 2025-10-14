@@ -8,6 +8,7 @@ import uvicorn
 import chat_manager
 import case_manager
 import simulation_manager
+from logger import log_message
 
 # 初始化FastAPI应用
 app = FastAPI(
@@ -52,6 +53,7 @@ class StartScenario1Request(BaseModel):
     initialTopic: str  # 用户输入的初始话题
     llmModel: str
     simulationConfig: SimulationConfigRequest
+    prStrategy: str = ""  # 第一轮公关策略（可选）
 
 class AddPRStrategyRequest(BaseModel):
     prStrategy: str = ""  # 公关策略内容（可选）
@@ -121,13 +123,14 @@ def get_chat_history(session_id: str):
 @app.post("/api/scenario1/simulation/start", response_model=ApiResponse, tags=["Scenario 1 - Simulation"])
 def start_scenario1_sim(request: StartScenario1Request):
     """
-    1.2.1 启动Scenario 1模拟（支持用户输入初始话题）
+    1.2.1 启动Scenario 1模拟（支持用户输入初始话题和第一轮PR策略）
     """
     try:
         sim_data = simulation_manager.start_scenario1_simulation(
             initial_topic=request.initialTopic,  # 接收用户输入的话题
             llm_model=request.llmModel,
-            simulation_config=request.simulationConfig.model_dump() 
+            simulation_config=request.simulationConfig.model_dump(),
+            pr_strategy=request.prStrategy  # 接收第一轮PR策略
         )
         return ApiResponse(success=True, data=sim_data)
     except Exception as e:
@@ -296,6 +299,28 @@ def generate_scenario1_report(request: GenerateReportRequest):
         import traceback
         print(f"❌ Error generating report: {str(e)}")
         print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=str(e))
+
+# --- 通用接口 ---
+
+@app.post("/api/simulation/{simulation_id}/reset", response_model=ApiResponse, tags=["General"])
+def reset_simulation(simulation_id: str):
+    """
+    重置模拟（通用接口）
+    """
+    try:
+        # 这里可以添加重置逻辑，比如清理模拟数据等
+        # 目前只是返回成功响应
+        log_message(f"Simulation {simulation_id} reset requested")
+        return ApiResponse(
+            success=True, 
+            data={
+                "simulationId": simulation_id,
+                "status": "reset",
+                "message": "Simulation has been reset successfully"
+            }
+        )
+    except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 # --- [NEW] API Endpoints for 2. Scenario 2 ---

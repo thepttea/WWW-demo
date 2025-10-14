@@ -66,7 +66,7 @@ def get_personalized_feed(agent_id, agents, G, all_posts_last_round):
     log_message(f"--- Agent {agent_id} found {len(feed)} new posts in their feed ---")
     return feed
 
-def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_config: Dict) -> Dict[str, Any]:
+def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_config: Dict, pr_strategy: str = "") -> Dict[str, Any]:
     """
     启动一个新的Scenario 1模拟任务。
     
@@ -74,6 +74,7 @@ def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_co
         initial_topic: 用户输入的初始话题
         llm_model: 使用的LLM模型
         simulation_config: 模拟配置参数
+        pr_strategy: 第一轮公关策略（可选）
     
     Returns:
         包含simulationId和websocketUrl的字典
@@ -81,6 +82,8 @@ def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_co
     sim_id = f"sim_scenario1_{uuid.uuid4()}"
     log_message(f"Starting Scenario 1 simulation: {sim_id}")
     log_message(f"Initial topic: {initial_topic}")
+    if pr_strategy:
+        log_message(f"First round PR strategy: {pr_strategy[:100]}...")
     
     
     # 创建网络和agents
@@ -106,6 +109,39 @@ def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_co
     }
     
     log_message(f"Simulation {sim_id} initialized with {num_agents} agents")
+    
+    # 如果提供了PR strategy，直接执行第一轮模拟
+    if pr_strategy:
+        log_message(f"Executing first round simulation with PR strategy...")
+        try:
+            # 添加PR策略到历史记录
+            _simulations[sim_id]["prStrategies"].append(pr_strategy)
+            _simulations[sim_id]["discourseHistory"].append(("system", f"[Official PR Statement] {pr_strategy}", 1, None))
+            
+            # 执行第一轮模拟
+            result = run_scenario1_round(sim_id)
+            
+            # 更新状态
+            _simulations[sim_id]["status"] = "round_completed"
+            _simulations[sim_id]["currentRound"] = 1
+            
+            log_message(f"First round simulation completed for {sim_id}")
+            
+            return {
+                "simulationId": sim_id,
+                "status": "round_completed",
+                "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}",
+                "result": result
+            }
+        except Exception as e:
+            log_message(f"Error executing first round simulation: {str(e)}")
+            # 如果第一轮模拟失败，仍然返回初始化的状态
+            return {
+                "simulationId": sim_id,
+                "status": "initialized",
+                "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}",
+                "error": str(e)
+            }
     
     return {
         "simulationId": sim_id,
