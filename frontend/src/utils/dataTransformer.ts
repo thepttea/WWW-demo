@@ -68,6 +68,7 @@ interface BackendSimulationResult {
 
 // 前端期望的用户数据格式
 interface FrontendUser {
+  agentId?: string;
   username: string;
   influence_score: number;
   primary_platform: string;
@@ -109,6 +110,7 @@ export function transformSimulationResultToNetworkData(
 ): FrontendNetworkData {
   // 1. 转换用户数据
   const users: FrontendUser[] = simulationResult.agents.map(agent => ({
+    agentId: agent.agentId,
     username: agent.username,
     influence_score: agent.influenceScore,
     primary_platform: agent.primaryPlatform,
@@ -259,6 +261,7 @@ export function transformAgentsToNetworkData(
   agents: BackendSimulationResult['agents']
 ): FrontendNetworkData {
   const users: FrontendUser[] = agents.map(agent => ({
+    agentId: agent.agentId,
     username: agent.username,
     influence_score: agent.influenceScore,
     primary_platform: agent.primaryPlatform,

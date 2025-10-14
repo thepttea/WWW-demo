@@ -7,6 +7,7 @@ import MessageHistoryModal from './MessageHistoryModal';
 import './NetworkVisualization.css';
 
 interface User {
+  agentId?: string;
   username: string;
   influence_score: number;
   primary_platform: string;

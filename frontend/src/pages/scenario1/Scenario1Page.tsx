@@ -263,7 +263,8 @@ const Scenario1Page: React.FC = () => {
                       ...simulationResultData.data,
                       agents: simulationResultData.data.agents.map(agent => ({
                         ...agent,
-                        influenceScore: agent.influence_score || 0
+                        // 后端返回的字段名已经是 influenceScore，不需要转换
+                        influenceScore: agent.influenceScore || agent.influence_score || 0
                       }))
                     };
                     
@@ -287,7 +288,8 @@ const Scenario1Page: React.FC = () => {
                       // 转换数据格式以匹配期望的接口
                       const transformedAgents = simulationResultData.data.agents.map(agent => ({
                         ...agent,
-                        influenceScore: agent.influence_score || 0
+                        // 后端返回的字段名已经是 influenceScore，不需要转换
+                        influenceScore: agent.influenceScore || agent.influence_score || 0
                       }));
                       return transformAgentsToNetworkData(transformedAgents);
                     }
