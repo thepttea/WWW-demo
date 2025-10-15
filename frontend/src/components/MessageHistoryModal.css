@@ -79,6 +79,37 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
+/* 可点击的消息卡片 */
+.message-card.clickable-message {
+  cursor: pointer;
+  position: relative;
+}
+
+.message-card.clickable-message:hover {
+  background: rgba(19, 127, 236, 0.1);
+  border-color: rgba(19, 127, 236, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(19, 127, 236, 0.2);
+}
+
+.message-card.clickable-message::after {
+  content: "点击播放传播动画";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(19, 127, 236, 0.8);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.message-card.clickable-message:hover::after {
+  opacity: 1;
+}
+
 /* 不同状态的消息卡片 */
 .message-card.completed {
   border-left: 4px solid #52c41a;
