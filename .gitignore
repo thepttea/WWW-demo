@@ -24,6 +24,7 @@ yarn-error.log*
 # ====================
 # Python 字节码
 __pycache__/
+backend/code/__pycache__
 *.py[cod]
 *$py.class
 *.so

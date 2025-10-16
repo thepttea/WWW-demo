@@ -3,6 +3,7 @@ import { Modal } from 'antd';
 import './NodeDetailModal.css';
 
 interface User {
+  agentId?: string;
   username: string;
   description: string;
   emotional_style: string;
@@ -43,14 +44,25 @@ const NodeDetailModal: React.FC<NodeDetailModalProps> = ({
 }) => {
   if (!nodeData || !nodeType) return null;
 
-  const renderUserDetails = (user: User) => (
-    <div className="node-detail-content">
-      <div className="node-detail-header">
-        <div className="node-detail-title">
-          <p className="node-detail-subtitle">Agent {user.influence_score}</p>
-          <h3 className="node-detail-name">{user.username}</h3>
+  const renderUserDetails = (user: User) => {
+    // 从 agentId 中提取编号部分，例如 "sim_scenario1_xxx_agent_2" -> "AGENT_2"
+    const getAgentNumber = (agentId?: string): string => {
+      if (!agentId) return 'N/A';
+      const match = agentId.match(/_agent_(\d+)$/);
+      if (match) {
+        return `AGENT_${match[1]}`;
+      }
+      return agentId;
+    };
+
+    return (
+      <div className="node-detail-content">
+        <div className="node-detail-header">
+          <div className="node-detail-title">
+            <p className="node-detail-subtitle">{getAgentNumber(user.agentId)}</p>
+            <h3 className="node-detail-name">{user.username}</h3>
+          </div>
         </div>
-      </div>
       
       <div className="node-detail-body">
         <div className="node-detail-section">
@@ -95,7 +107,8 @@ const NodeDetailModal: React.FC<NodeDetailModalProps> = ({
       
       <div className="node-detail-footer"></div>
     </div>
-  );
+    );
+  };
 
   const renderPlatformDetails = (platform: Platform) => (
     <div className="node-detail-content">

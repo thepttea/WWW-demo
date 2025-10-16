@@ -7,6 +7,7 @@ import MessageHistoryModal from './MessageHistoryModal';
 import './NetworkVisualization.css';
 
 interface User {
+  agentId?: string;
   username: string;
   influence_score: number;
   primary_platform: string;
@@ -75,6 +76,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   // 消息历史弹窗状态
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [animationCompleted, setAnimationCompleted] = useState(false);
+  
+  // 单条消息循环播放状态
+  const [singleMessageMode, setSingleMessageMode] = useState(false);
+  const [selectedMessageIndex, setSelectedMessageIndex] = useState<number | null>(null);
+  const [singleMessageTimer, setSingleMessageTimer] = useState<NodeJS.Timeout | null>(null);
   
   // 边过渡动画状态
   const [edgeTransitionStep, setEdgeTransitionStep] = useState(-1);
@@ -293,6 +299,13 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     console.log('  - users.length:', users.length);
     console.log('  - messageSteps.length:', messageSteps.length);
     console.log('  - platforms?.length:', platforms?.length);
+    console.log('  - singleMessageMode:', singleMessageMode);
+    
+    // 如果处于单条消息模式，不启动正常的动画序列
+    if (singleMessageMode) {
+      console.log('NetworkVisualization - Skipping normal animation due to single message mode');
+      return;
+    }
     
     if (users.length > 0 && messageSteps.length > 0) {
       console.log('NetworkVisualization - Starting animation with', messageSteps.length, 'steps');
@@ -396,7 +409,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setIsTransitioning(false);
       setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
     }
-  }, [users.length, platforms?.length, messageSteps.length]);
+  }, [users.length, platforms?.length, messageSteps.length, singleMessageMode]);
 
   // 颜色动画定时器 - 每100ms更新一次颜色和颜色状态
   useEffect(() => {
@@ -693,6 +706,100 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     setHistoryModalVisible(false);
   };
 
+  // 处理单条消息点击
+  const handleMessageClick = (messageIndex: number) => {
+    console.log('NetworkVisualization - Starting single message animation for index:', messageIndex);
+    
+    // 自动关闭消息历史弹窗
+    setHistoryModalVisible(false);
+    
+    // 停止当前的单条消息循环
+    if (singleMessageTimer) {
+      clearTimeout(singleMessageTimer);
+      setSingleMessageTimer(null);
+    }
+    
+    // 设置单条消息模式
+    setSingleMessageMode(true);
+    setSelectedMessageIndex(messageIndex);
+    setCurrentStep(messageIndex);
+    setCurrentPhase(0);
+    setEdgeTransitionStep(messageIndex);
+    setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+    
+    // 开始单条消息的循环播放
+    startSingleMessageLoop(messageIndex);
+  };
+
+  // 单条消息循环播放函数
+  const startSingleMessageLoop = (messageIndex: number) => {
+    const step = messageSteps[messageIndex];
+    if (!step) return;
+
+    const playMessage = () => {
+      console.log('NetworkVisualization - Playing single message:', messageIndex);
+      
+      // 阶段1: 闪烁发送者 (1s)
+      setCurrentPhase(0);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+      
+      setTimeout(() => {
+        // 阶段2: 闪烁发送者和平台 (1s)
+        setCurrentPhase(1);
+        setActiveEdges({ senderToPlatform: true, platformToReceivers: false });
+        
+        setTimeout(() => {
+          // 阶段3: 闪烁发送者、平台和接收者 (1s)
+          setCurrentPhase(2);
+          setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
+          
+          setTimeout(() => {
+            // 阶段4: 开始流动边 (3s)
+            setCurrentPhase(3);
+            setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
+            
+            // 3秒后重新开始循环
+            const timer = setTimeout(() => {
+              if (singleMessageMode && selectedMessageIndex === messageIndex) {
+                playMessage(); // 递归调用，实现循环
+              }
+            }, 3000);
+            
+            setSingleMessageTimer(timer);
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    };
+
+    playMessage();
+  };
+
+  // 停止单条消息循环
+  const stopSingleMessageLoop = () => {
+    if (singleMessageTimer) {
+      clearTimeout(singleMessageTimer);
+      setSingleMessageTimer(null);
+    }
+    setSingleMessageMode(false);
+    setSelectedMessageIndex(null);
+    setCurrentStep(-1);
+    setCurrentPhase(0);
+    setEdgeTransitionStep(-1);
+    setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+  };
+
+  // 重置动画状态 - 当数据更新时调用
+  const resetAnimationState = () => {
+    console.log('NetworkVisualization - Resetting animation state for new data');
+    stopSingleMessageLoop();
+    setAnimationCompleted(false);
+    setIsAnimating(false);
+    setCurrentStep(0);
+    setCurrentPhase(0);
+    setEdgeTransitionStep(-1);
+    setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+  };
+
   // 获取所有路径和当前闪烁节点
   const allPaths = getAllStaticPaths();
   const flashingNodes = getCurrentFlashingNodes();
@@ -704,6 +811,23 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 使用forceUpdate来触发重新渲染
   void forceUpdate;
+
+  // 清理函数 - 组件卸载时清理定时器
+  useEffect(() => {
+    return () => {
+      if (singleMessageTimer) {
+        clearTimeout(singleMessageTimer);
+      }
+    };
+  }, [singleMessageTimer]);
+
+  // 监听数据变化，重置动画状态
+  useEffect(() => {
+    if (users.length > 0 && platforms?.length > 0 && messageSteps.length > 0) {
+      console.log('NetworkVisualization - Data changed, resetting animation state');
+      resetAnimationState();
+    }
+  }, [users.length, platforms?.length, messageSteps.length]);
 
 
 
@@ -1005,11 +1129,13 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         nodeType={selectedNodeType}
       />
       
-      {/* 消息通知 */}
-      <MessageNotification
-        currentStep={currentStep}
-        messageSteps={messageSteps}
-      />
+       {/* 消息通知 - 只在非单条消息模式下显示 */}
+       {!singleMessageMode && (
+         <MessageNotification
+           currentStep={currentStep}
+           messageSteps={messageSteps}
+         />
+       )}
 
       {/* 消息历史按钮 - 只在动画完成后显示 */}
       {animationCompleted && (
@@ -1032,6 +1158,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         onClose={handleCloseHistoryModal}
         messageSteps={messageSteps}
         currentStep={currentStep}
+        onMessageClick={handleMessageClick}
       />
     </div>
   );
