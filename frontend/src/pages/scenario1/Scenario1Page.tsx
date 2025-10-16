@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Typography, message } from 'antd';
 import ConfigurationPanel from './ConfigurationPanel';
 import VisualizationArea from './VisualizationArea';
@@ -20,6 +20,7 @@ const Scenario1Page: React.FC = () => {
   const [reportData, setReportData] = useState<any>(null);
   const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
+  const [hasCompletedSimulation, setHasCompletedSimulation] = useState<boolean>(false);
 
   // API hooks
   const startSimulationMutation = useStartSimulation();
@@ -67,6 +68,63 @@ const Scenario1Page: React.FC = () => {
       setIsSimulationRunning(false);
     }
   }, [simulationResultData, isSimulationRunning]);
+
+  // 监听所有数据状态，判断数据是否准备好（但不立即标记为完成）
+  useEffect(() => {
+    const hasStatusData = !!simulationStatusData?.success;
+    const hasResultData = !!simulationResultData?.success;
+    const hasNetworkData = !!networkData?.success;
+    
+    if (hasStatusData && hasResultData && hasNetworkData) {
+      console.log('All simulation data ready, data is available for animation');
+      // 不在这里设置hasCompletedSimulation，让动画先开始
+    }
+  }, [simulationStatusData, simulationResultData, networkData]);
+
+  // 使用useMemo缓存网络数据转换结果，避免不必要的重新计算
+  const memoizedNetworkData = useMemo(() => {
+    // 数据转换：将后端格式转换为前端期望的格式
+    if (simulationResultData?.success && simulationResultData.data) {
+      try {
+        // 转换数据格式以匹配期望的接口
+        const transformedData = {
+          ...simulationResultData.data,
+          agents: simulationResultData.data.agents.map(agent => ({
+            ...agent,
+            // 后端返回的字段名是 influence_score，需要转换
+            influenceScore: agent.influence_score || 0
+          }))
+        };
+        
+        // 优先使用完整的模拟结果数据
+        const backendNetworkData = networkData?.success && networkData.data ? {
+          ...networkData.data,
+          nodes: networkData.data.nodes.map(node => ({
+            ...node,
+            influenceScore: node.influence_score || 0
+          })),
+          edges: networkData.data.edges || []
+        } : undefined;
+        return transformSimulationResultToNetworkData(
+          transformedData,
+          backendNetworkData
+        );
+      } catch (error) {
+        console.error('Error transforming simulation data:', error);
+        // 如果转换失败，尝试简化版转换
+        if (simulationResultData.data.agents) {
+          // 转换数据格式以匹配期望的接口
+          const transformedAgents = simulationResultData.data.agents.map(agent => ({
+            ...agent,
+            // 后端返回的字段名是 influence_score，需要转换
+            influenceScore: agent.influence_score || 0
+          }));
+          return transformAgentsToNetworkData(transformedAgents);
+        }
+      }
+    }
+    return undefined;
+  }, [simulationResultData, networkData]);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
     console.log('Scenario1Page - handleStartSimulation called with config:', config);
@@ -241,6 +299,7 @@ const Scenario1Page: React.FC = () => {
       setReportData(null);
       setIsSimulationRunning(false);
       setIsGeneratingReport(false);
+      setHasCompletedSimulation(false);
       
       message.success('Simulation reset successfully');
     } catch (error) {
@@ -314,49 +373,9 @@ const Scenario1Page: React.FC = () => {
             <VisualizationArea
               isLoading={startSimulationMutation.isPending || addPRStrategyMutation.isPending}
               isSimulationRunning={isSimulationRunning}
-              networkData={(() => {
-                // 数据转换：将后端格式转换为前端期望的格式
-                if (simulationResultData?.success && simulationResultData.data) {
-                  try {
-                    // 转换数据格式以匹配期望的接口
-                    const transformedData = {
-                      ...simulationResultData.data,
-                      agents: simulationResultData.data.agents.map(agent => ({
-                        ...agent,
-                        // 后端返回的字段名是 influence_score，需要转换
-                        influenceScore: agent.influence_score || 0
-                      }))
-                    };
-                    
-                    // 优先使用完整的模拟结果数据
-                    const backendNetworkData = networkData?.success && networkData.data ? {
-                      ...networkData.data,
-                      nodes: networkData.data.nodes.map(node => ({
-                        ...node,
-                        influenceScore: node.influence_score || 0
-                      })),
-                      edges: networkData.data.edges || []
-                    } : undefined;
-                    return transformSimulationResultToNetworkData(
-                      transformedData,
-                      backendNetworkData
-                    );
-                  } catch (error) {
-                    console.error('Error transforming simulation data:', error);
-                    // 如果转换失败，尝试简化版转换
-                    if (simulationResultData.data.agents) {
-                      // 转换数据格式以匹配期望的接口
-                      const transformedAgents = simulationResultData.data.agents.map(agent => ({
-                        ...agent,
-                        // 后端返回的字段名是 influence_score，需要转换
-                        influenceScore: agent.influence_score || 0
-                      }));
-                      return transformAgentsToNetworkData(transformedAgents);
-                    }
-                  }
-                }
-                return undefined;
-              })()}
+              hasCompletedSimulation={hasCompletedSimulation}
+              onAnimationCompleted={() => setHasCompletedSimulation(true)}
+              networkData={memoizedNetworkData}
               simulationResult={simulationResultData?.success ? simulationResultData.data : undefined}
             />
           </div>

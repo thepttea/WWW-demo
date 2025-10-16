@@ -39,6 +39,8 @@ interface NetworkVisualizationProps {
   users?: User[];
   platforms?: Platform[];
   isLoading?: boolean;
+  hasCompletedSimulation?: boolean;
+  onAnimationCompleted?: () => void;
   networkData?: {
     users: User[];
     platforms: Platform[];
@@ -50,6 +52,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   users: _users = [],
   platforms: _platforms = [],
   isLoading: _isLoading = false,
+  hasCompletedSimulation = false,
+  onAnimationCompleted,
   networkData,
   simulationResult: _simulationResult
 }) => {
@@ -300,10 +304,59 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     console.log('  - messageSteps.length:', messageSteps.length);
     console.log('  - platforms?.length:', platforms?.length);
     console.log('  - singleMessageMode:', singleMessageMode);
+    console.log('  - hasCompletedSimulation:', hasCompletedSimulation);
     
     // 如果处于单条消息模式，不启动正常的动画序列
     if (singleMessageMode) {
       console.log('NetworkVisualization - Skipping normal animation due to single message mode');
+      return;
+    }
+    
+    // 如果模拟已经完成，直接显示最终状态
+    if (hasCompletedSimulation) {
+      console.log('NetworkVisualization - Simulation already completed, showing final state');
+      setAnimationCompleted(true);
+      setCurrentStep(-1); // 设置为-1表示没有当前消息
+      setCurrentPhase(0);
+      setEdgeTransitionStep(-1);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+      
+      // 确保节点显示最终颜色状态
+      if (users.length > 0) {
+        const finalColors: { [username: string]: { r: number; g: number; b: number } } = {};
+        users.forEach(user => {
+          const usernameMapping: { [key: string]: string } = {
+            'MarketingPro_Serena': 'Serena',
+            'Skeptical_Journalist': 'Journalist',
+            'TechBro_Elon': 'Elon',
+            'TechEnthusiast_Alex': 'Alex',
+            'ValueInvestor_Graham': 'Graham',
+            'Regulator_Tom': 'Tom',
+            'ArtStudent_Vivian': 'Vivian',
+            'SocialMedia_Intern': 'Intern',
+            'Cynical_Dev': 'Dev',
+            'Philosopher_Philosopher': 'Philosopher'
+          };
+          const shortUsername = usernameMapping[user.username] || user.username;
+          
+          // 使用用户的最终立场颜色
+          const stance = user.objective_stance_score || 0;
+          const finalColorStr = getStanceColor(stance);
+          const finalColorMatch = finalColorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
+          
+          if (finalColorMatch) {
+            finalColors[shortUsername] = {
+              r: parseInt(finalColorMatch[1]),
+              g: parseInt(finalColorMatch[2]),
+              b: parseInt(finalColorMatch[3])
+            };
+          } else {
+            // 如果解析失败，使用默认灰色
+            finalColors[shortUsername] = { r: 107, g: 114, b: 128 };
+          }
+        });
+        setUserColorStates(finalColors);
+      }
       return;
     }
     
@@ -386,6 +439,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           setEdgeTransitionStep(-1); // 重置边过渡步骤
           setActiveEdges({ senderToPlatform: false, platformToReceivers: false }); // 重置边激活状态
           setAnimationCompleted(true); // 标记动画完成
+          onAnimationCompleted?.(); // 通知父组件动画已完成
           // 强制重新渲染以重置所有路径状态
           setForceUpdate(prev => prev + 1);
         }, animationEndTime);
@@ -409,7 +463,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setIsTransitioning(false);
       setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
     }
-  }, [users.length, platforms?.length, messageSteps.length, singleMessageMode]);
+  }, [users.length, platforms?.length, messageSteps.length, singleMessageMode, hasCompletedSimulation]);
 
   // 颜色动画定时器 - 每100ms更新一次颜色和颜色状态
   useEffect(() => {
@@ -821,13 +875,23 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     };
   }, [singleMessageTimer]);
 
-  // 监听数据变化，重置动画状态
+  // 监听数据变化，重置动画状态 - 只有在动画未完成时才重置
   useEffect(() => {
-    if (users.length > 0 && platforms?.length > 0 && messageSteps.length > 0) {
+    console.log('NetworkVisualization - Data change check:', {
+      usersLength: users.length,
+      platformsLength: platforms?.length,
+      messageStepsLength: messageSteps.length,
+      hasCompletedSimulation,
+      shouldReset: users.length > 0 && platforms?.length > 0 && messageSteps.length > 0 && !hasCompletedSimulation
+    });
+    
+    if (users.length > 0 && platforms?.length > 0 && messageSteps.length > 0 && !hasCompletedSimulation) {
       console.log('NetworkVisualization - Data changed, resetting animation state');
       resetAnimationState();
+    } else if (hasCompletedSimulation) {
+      console.log('NetworkVisualization - Simulation already completed, skipping animation reset');
     }
-  }, [users.length, platforms?.length, messageSteps.length]);
+  }, [users.length, platforms?.length, messageSteps.length, hasCompletedSimulation]);
 
 
 
@@ -1129,8 +1193,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         nodeType={selectedNodeType}
       />
       
-       {/* 消息通知 - 只在非单条消息模式下显示 */}
-       {!singleMessageMode && (
+       {/* 消息通知 - 只在非单条消息模式下且动画未完成时显示 */}
+       {!singleMessageMode && !animationCompleted && (
          <MessageNotification
            currentStep={currentStep}
            messageSteps={messageSteps}

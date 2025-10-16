@@ -8,6 +8,8 @@ const { Title } = Typography;
 interface VisualizationAreaProps {
   isLoading?: boolean;
   isSimulationRunning?: boolean;
+  hasCompletedSimulation?: boolean;
+  onAnimationCompleted?: () => void;
   networkData?: any;
   simulationResult?: any;
 }
@@ -15,12 +17,15 @@ interface VisualizationAreaProps {
 const VisualizationArea: React.FC<VisualizationAreaProps> = ({
   isLoading: _isLoading = false,
   isSimulationRunning = false,
+  hasCompletedSimulation = false,
+  onAnimationCompleted,
   networkData,
   simulationResult: _simulationResult,
 }) => {
   console.log('VisualizationArea - Props:', { 
     isLoading: _isLoading, 
     isSimulationRunning, 
+    hasCompletedSimulation,
     hasNetworkData: !!networkData 
   });
   return (
@@ -56,6 +61,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
               users={networkData.users}
               platforms={networkData.platforms}
               isLoading={false}
+              hasCompletedSimulation={hasCompletedSimulation}
+              onAnimationCompleted={onAnimationCompleted}
             />
           </div>
         ) : (
