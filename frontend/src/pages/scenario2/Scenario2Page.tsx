@@ -4,6 +4,7 @@ import CaseSelectionPanel from './CaseSelectionPanel';
 import VisualizationArea from './VisualizationArea';
 import Scenario2SimulationPage from './Scenario2SimulationPage';
 import { SimulationConfig, HistoricalCase } from '../../types';
+import { apiClient } from '../../services/api';
 import './Scenario2Page.css';
 
 const { Title, Paragraph } = Typography;
@@ -15,20 +16,19 @@ const Scenario2Page: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [simulationResult] = useState<any>(null);
   const [selectedCase, setSelectedCase] = useState<HistoricalCase | null>(null);
-  const [historicalCases, setHistoricalCases] = useState<HistoricalCase[]>([]); // 新增 state
+  const [historicalCases, setHistoricalCases] = useState<HistoricalCase[]>([]);
 
-  // 新增 useEffect 以获取案例数据
+  // 获取案例列表
   useEffect(() => {
     const fetchCases = async () => {
       setIsLoading(true);
       try {
-        const response = await fetch('/api/scenario2/cases');
-        const result = await response.json();
-        if (result.success && Array.isArray(result.data)) {
-          setHistoricalCases(result.data);
+        const response = await apiClient.getHistoricalCases();
+        if (response.success && Array.isArray(response.data)) {
+          setHistoricalCases(response.data);
         } else {
           message.error('Failed to load historical cases.');
-          console.error("API Error:", result.error || "Unknown error");
+          console.error("API Error:", response.error || "Unknown error");
         }
       } catch (error) {
         message.error('Error connecting to the server to fetch cases.');
@@ -55,6 +55,7 @@ const Scenario2Page: React.FC = () => {
 
 
   const handleCaseSelect = (caseItem: HistoricalCase) => {
+    // Modal已经获取了完整的案例详情，直接使用即可
     setSelectedCase(caseItem);
     message.success(`Selected case: ${caseItem.title}`);
   };

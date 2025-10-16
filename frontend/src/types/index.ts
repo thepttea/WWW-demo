@@ -59,13 +59,33 @@ export interface SimulationResult {
   }>;
 }
 
+export interface HistoricalPRStrategy {
+  round: number;
+  title: string;
+  content: string;
+  timeline: string;
+}
+
+export interface RealWorldOutcome {
+  success: boolean;
+  metrics: {
+    sentimentImprovement: number | string;
+    mediaCoverage: string;
+    stockPrice: string;
+  };
+  keyFactors: string[];
+}
+
 export interface HistoricalCase {
   id: string;
   title: string;
   description: string;
-  originalStrategy: string;
-  actualOutcome: string;
-  successRate: number;
+  background: string;
+  industry: string;
+  difficulty: string;
+  totalRounds: number;
+  strategies: HistoricalPRStrategy[];
+  realWorldOutcome: RealWorldOutcome;
 }
 
 export interface ChatMessage {

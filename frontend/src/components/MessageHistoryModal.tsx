@@ -21,13 +21,15 @@ interface MessageHistoryModalProps {
   onClose: () => void;
   messageSteps: MessageStep[];
   currentStep: number;
+  onMessageClick?: (messageIndex: number) => void;
 }
 
 const MessageHistoryModal: React.FC<MessageHistoryModalProps> = ({
   visible,
   onClose,
   messageSteps,
-  currentStep
+  currentStep,
+  onMessageClick
 }) => {
   // 获取平台颜色
   const getPlatformColor = (platformName: string) => {
@@ -86,9 +88,13 @@ const MessageHistoryModal: React.FC<MessageHistoryModalProps> = ({
             return (
               <Card
                 key={step.id}
-                className={`message-card ${messageStatus.status}`}
+                className={`message-card ${messageStatus.status} ${onMessageClick ? 'clickable-message' : ''}`}
                 size="small"
-                style={{ marginBottom: 12 }}
+                style={{ 
+                  marginBottom: 12,
+                  cursor: onMessageClick ? 'pointer' : 'default'
+                }}
+                onClick={() => onMessageClick?.(index)}
               >
                 <div className="message-card-header">
                   <div className="message-meta">

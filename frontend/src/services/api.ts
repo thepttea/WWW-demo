@@ -302,6 +302,42 @@ class ApiClient {
       method: 'GET',
     });
   }
+
+  // Scenario 2 相关API
+  async getHistoricalCases(): Promise<ApiResponse<any[]>> {
+    return this.request('/scenario2/cases', {
+      method: 'GET',
+    });
+  }
+
+  async getHistoricalCaseDetail(caseId: string): Promise<ApiResponse<any>> {
+    return this.request(`/scenario2/cases/${caseId}`, {
+      method: 'GET',
+    });
+  }
+
+  async startScenario2Simulation(request: {
+    caseId: string;
+    llmModel: string;
+    simulationConfig: any;
+  }): Promise<ApiResponse<{ simulationId: string; status: string }>> {
+    return this.request('/scenario2/simulation/start', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  async advanceScenario2NextRound(simulationId: string): Promise<ApiResponse<any>> {
+    return this.request(`/scenario2/simulation/${simulationId}/next-round`, {
+      method: 'POST',
+    });
+  }
+
+  async getScenario2Result(simulationId: string): Promise<ApiResponse<any>> {
+    return this.request(`/scenario2/simulation/${simulationId}/result`, {
+      method: 'GET',
+    });
+  }
 }
 
 // 导出API客户端实例
