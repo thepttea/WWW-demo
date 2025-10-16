@@ -93,7 +93,7 @@
 }
 
 .message-card.clickable-message::after {
-  content: "Click to replay the animation";
+  content: "点击播放传播动画";
   position: absolute;
   top: 8px;
   right: 8px;

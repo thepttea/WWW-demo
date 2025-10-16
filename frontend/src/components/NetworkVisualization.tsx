@@ -788,6 +788,18 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
   };
 
+  // 重置动画状态 - 当数据更新时调用
+  const resetAnimationState = () => {
+    console.log('NetworkVisualization - Resetting animation state for new data');
+    stopSingleMessageLoop();
+    setAnimationCompleted(false);
+    setIsAnimating(false);
+    setCurrentStep(0);
+    setCurrentPhase(0);
+    setEdgeTransitionStep(-1);
+    setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+  };
+
   // 获取所有路径和当前闪烁节点
   const allPaths = getAllStaticPaths();
   const flashingNodes = getCurrentFlashingNodes();
@@ -808,6 +820,14 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       }
     };
   }, [singleMessageTimer]);
+
+  // 监听数据变化，重置动画状态
+  useEffect(() => {
+    if (users.length > 0 && platforms?.length > 0 && messageSteps.length > 0) {
+      console.log('NetworkVisualization - Data changed, resetting animation state');
+      resetAnimationState();
+    }
+  }, [users.length, platforms?.length, messageSteps.length]);
 
 
 
