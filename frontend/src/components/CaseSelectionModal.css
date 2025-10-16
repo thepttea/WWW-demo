@@ -1,35 +1,44 @@
+/* ✅ Modal样式 */
 .case-selection-modal .ant-modal-content {
-  background: rgba(16, 25, 34, 0.95);
+  background: rgba(16, 25, 34, 0.95) !important;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   color: white;
-  height: 98vh;
-  max-height: 1000px;
-  min-height: 800px;
-  display: flex;
-  flex-direction: column;
+  height: 90vh !important;
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 .case-selection-modal .ant-modal-body {
-  padding: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  height: 100% !important;
 }
 
-.modal-content {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.case-selection-modal .modal-content {
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  position: relative !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
 }
 
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 20px 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
 }
@@ -41,21 +50,27 @@
 }
 
 
-.modal-body {
-  flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  padding: 20px;
-  overflow: hidden;
-  min-height: 0;
+.case-selection-modal .modal-body {
+  flex: 1 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  grid-template-rows: 1fr !important;
+  gap: 16px !important;
+  padding: 16px 20px !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: calc(100% - 160px) !important; /* 为header和footer留出空间 */
 }
 
-.case-list-section {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-height: 0;
+.case-selection-modal .case-list-section {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  grid-row: 1 !important;
+  grid-column: 1 !important;
 }
 
 .case-list {
@@ -135,13 +150,17 @@
   margin: 0 !important;
 }
 
-.case-details-section {
-  display: flex;
-  flex-direction: column;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  overflow: hidden;
-  min-height: 0;
+.case-selection-modal .case-details-section {
+  display: flex !important;
+  flex-direction: column !important;
+  background: rgba(0, 0, 0, 0.2) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  flex: 1 !important;
+  grid-row: 1 !important;
+  grid-column: 2 !important;
 }
 
 .details-header {
@@ -160,16 +179,29 @@
   margin: 0 !important;
 }
 
-.details-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 24px;
+.case-selection-modal .details-content {
+  flex: 1 !important;
+  overflow-y: auto !important;
+  padding: 24px !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
 }
 
-.strategy-details {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.case-selection-modal .strategy-details {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+  flex: 1 !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: none !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
 }
 
 .strategy-section {
@@ -192,11 +224,13 @@
   margin: 0 !important;
 }
 
-.empty-details {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
+.case-selection-modal .empty-details {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 1 !important;
+  min-height: 200px !important;
+  height: 100% !important;
 }
 
 .empty-text {
@@ -205,12 +239,29 @@
   margin: 0 !important;
 }
 
-.modal-footer {
-  display: flex;
-  justify-content: flex-start;
-  padding: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
+.case-selection-modal .loading-container {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex: 1 !important;
+  min-height: 200px !important;
+  height: 100% !important;
+}
+
+.case-selection-modal .modal-footer {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  padding: 16px 24px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  flex-shrink: 0 !important;
+  background: rgba(16, 25, 34, 0.95) !important;
+  backdrop-filter: blur(10px) !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  z-index: 10 !important;
+  margin-top: auto !important;
 }
 
 .confirm-button {
@@ -242,22 +293,26 @@
   .modal-body {
     grid-template-columns: 1fr;
     gap: 16px;
+    height: auto;
+    min-height: 0;
   }
   
   .case-list-section {
     max-height: 300px;
+    flex-shrink: 0;
   }
   
   .case-details-section {
     max-height: 400px;
+    flex-shrink: 0;
   }
 }
 
 @media (max-width: 768px) {
   .case-selection-modal .ant-modal-content {
-    height: 98vh;
+    height: 98vh !important;
     margin: 4px;
-    max-height: none;
+    max-height: 98vh !important;
     min-height: 700px;
   }
   
@@ -272,6 +327,8 @@
   .modal-body {
     padding: 16px;
     gap: 12px;
+    height: auto;
+    min-height: 0;
   }
   
   .case-item {
