@@ -27,14 +27,66 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
   simulationResult,
   selectedCase,
 }) => {
+  const renderCaseDetails = () => {
+    if (!selectedCase) return null;
+
+    return (
+      <div className="case-details-display">
+        <Card className="case-info-card" style={{ marginBottom: '16px' }}>
+          <Title level={5}>Case Background</Title>
+          <Text>{selectedCase.background}</Text>
+          
+          <Divider />
+          
+          <Row gutter={16} style={{ marginTop: '16px' }}>
+            <Col span={8}>
+              <Text type="secondary">Industry:</Text>
+              <br />
+              <Text strong>{selectedCase.industry}</Text>
+            </Col>
+            <Col span={8}>
+              <Text type="secondary">Difficulty:</Text>
+              <br />
+              <Text strong style={{ textTransform: 'capitalize' }}>{selectedCase.difficulty}</Text>
+            </Col>
+            <Col span={8}>
+              <Text type="secondary">Total Rounds:</Text>
+              <br />
+              <Text strong>{selectedCase.totalRounds}</Text>
+            </Col>
+          </Row>
+        </Card>
+
+        {selectedCase.strategies && selectedCase.strategies.length > 0 && (
+          <Card className="strategy-preview-card">
+            <Title level={5}>Round 1 Strategy Preview</Title>
+            <Text strong style={{ display: 'block', marginBottom: '8px' }}>
+              {selectedCase.strategies[0].title}
+            </Text>
+            <Text>{selectedCase.strategies[0].content}</Text>
+            {selectedCase.strategies[0].timeline && (
+              <Text type="secondary" style={{ display: 'block', marginTop: '8px', fontStyle: 'italic' }}>
+                Timeline: {selectedCase.strategies[0].timeline}
+              </Text>
+            )}
+          </Card>
+        )}
+      </div>
+    );
+  };
+
   const renderNetworkVisualization = () => {
     if (isLoading) {
       return (
         <div className="loading-container">
           <Spin size="large" />
-          <Text className="loading-text">Simulating public opinion propagation...</Text>
+          <Text className="loading-text">Loading case information...</Text>
         </div>
       );
+    }
+
+    if (!simulationResult && selectedCase) {
+      return renderCaseDetails();
     }
 
     if (!simulationResult) {
@@ -42,10 +94,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
       <div className="placeholder-container">
         <ClusterOutlined className="placeholder-icon" />
         <Text className="placeholder-text">
-          {selectedCase 
-            ? 'Click "Start Simulation" to begin the analysis'
-            : 'Select a classic PR case to start simulation'
-          }
+          Select a classic PR case to start simulation
         </Text>
       </div>
       );
