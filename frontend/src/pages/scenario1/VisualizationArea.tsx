@@ -7,15 +7,22 @@ const { Title } = Typography;
 
 interface VisualizationAreaProps {
   isLoading?: boolean;
+  isSimulationRunning?: boolean;
   networkData?: any;
   simulationResult?: any;
 }
 
 const VisualizationArea: React.FC<VisualizationAreaProps> = ({
   isLoading: _isLoading = false,
+  isSimulationRunning = false,
   networkData,
   simulationResult: _simulationResult,
 }) => {
+  console.log('VisualizationArea - Props:', { 
+    isLoading: _isLoading, 
+    isSimulationRunning, 
+    hasNetworkData: !!networkData 
+  });
   return (
     <Card className="visualization-area glassmorphism">
       <Title level={4} className="visualization-title">
@@ -23,7 +30,27 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
       </Title>
       
       <div className="visualization-content">
-        {networkData ? (
+        {(() => {
+          console.log('VisualizationArea - Rendering decision:', { isSimulationRunning, hasNetworkData: !!networkData });
+          return null;
+        })()}
+        {isSimulationRunning ? (
+          <div className="simulation-running-state">
+            <div className="simulation-loading-icon">
+              <div className="loading-spinner"></div>
+            </div>
+            <h3 className="simulation-title">Running Simulation...</h3>
+            <p className="simulation-description">
+              The AI agents are processing your PR strategy and simulating public opinion propagation.
+              This may take a few moments.
+            </p>
+            <div className="simulation-progress">
+              <div className="progress-bar">
+                <div className="progress-fill"></div>
+              </div>
+            </div>
+          </div>
+        ) : networkData ? (
           <div className="network-visualization">
             <NetworkVisualization 
               users={networkData.users}

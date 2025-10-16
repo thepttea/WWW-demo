@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, message } from 'antd';
 import ConfigurationPanel from './ConfigurationPanel';
 import VisualizationArea from './VisualizationArea';
 import StrategyRefinementDrawer from '../../components/StrategyRefinementDrawer';
 import Scenario1ResultsPageStatic from './Scenario1ResultsPageStatic';
 import { SimulationConfig, SimulationParameters, SimulationState } from '../../types';
-import { useStartSimulation, useAddPRStrategy, useSimulationResult, useGenerateReport, useResetSimulation, useNetworkData } from '../../hooks/useApi';
+import { useStartSimulation, useAddPRStrategy, useSimulationStatus, useSimulationResult, useGenerateReport, useResetSimulation, useNetworkData } from '../../hooks/useApi';
 import { transformSimulationResultToNetworkData, transformAgentsToNetworkData } from '../../utils/dataTransformer';
 import './Scenario1Page.css';
 
@@ -18,17 +18,59 @@ const Scenario1Page: React.FC = () => {
   const [simulationId, setSimulationId] = useState<string | null>(null);
   const [showResults, setShowResults] = useState<boolean>(false);
   const [reportData, setReportData] = useState<any>(null);
+  const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(false);
+  const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
 
   // API hooks
   const startSimulationMutation = useStartSimulation();
   const addPRStrategyMutation = useAddPRStrategy();
   const generateReportMutation = useGenerateReport();
   const resetSimulationMutation = useResetSimulation();
+  const { data: simulationStatusData } = useSimulationStatus(simulationId, isSimulationRunning);
   const { data: simulationResultData } = useSimulationResult(simulationId);
   const { data: networkData } = useNetworkData(simulationId);
 
+  // 调试日志
+  console.log('Scenario1Page - Current state:', {
+    simulationId,
+    isSimulationRunning,
+    hasStatusData: !!simulationStatusData,
+    hasResultData: !!simulationResultData,
+    hasNetworkData: !!networkData,
+    statusData: simulationStatusData,
+    resultData: simulationResultData,
+    networkData: networkData
+  });
+
+  // 监听模拟状态变化
+  useEffect(() => {
+    if (simulationStatusData?.success && simulationStatusData.data) {
+      const status = simulationStatusData.data.status;
+      console.log('Simulation status:', status);
+      
+      if (status === 'completed' && isSimulationRunning) {
+        console.log('Simulation completed, stopping polling and fetching results');
+        setIsSimulationRunning(false);
+        // 这里不需要手动获取结果，useSimulationResult会自动获取
+      } else if (status === 'error') {
+        console.log('Simulation failed');
+        setIsSimulationRunning(false);
+        message.error('Simulation failed');
+      }
+    }
+  }, [simulationStatusData, isSimulationRunning]);
+
+  // 监听数据获取结果，如果有数据就停止加载状态
+  useEffect(() => {
+    if (simulationResultData?.success && simulationResultData.data && isSimulationRunning) {
+      console.log('Simulation result data received, stopping loading state');
+      setIsSimulationRunning(false);
+    }
+  }, [simulationResultData, isSimulationRunning]);
 
   const handleStartSimulation = async (config: SimulationConfig) => {
+    console.log('Scenario1Page - handleStartSimulation called with config:', config);
+    
     if (!config.eventDescription?.trim()) {
       message.warning('Please enter event description first');
       return;
@@ -38,6 +80,9 @@ const Scenario1Page: React.FC = () => {
       return;
     }
 
+    // 立即设置运行状态，给用户即时反馈
+    setIsSimulationRunning(true);
+    
     try {
       message.loading('Starting simulation...', 0);
       const result = await startSimulationMutation.mutateAsync({
@@ -60,7 +105,9 @@ const Scenario1Page: React.FC = () => {
       message.destroy();
       
       if (result.success && result.data) {
+        console.log('Scenario1Page - Start simulation result:', result);
         setSimulationId(result.data.simulationId);
+        // 已经在try块开始时设置了isSimulationRunning = true
         setSimulationState({
           isRunning: true,
           currentRound: 1,
@@ -76,10 +123,13 @@ const Scenario1Page: React.FC = () => {
         });
         message.success('Simulation started successfully!');
       } else {
+        console.log('Scenario1Page - Start simulation failed, result:', result);
+        setIsSimulationRunning(false);
         message.error(result.error?.message || 'Failed to start simulation');
       }
     } catch (error) {
       message.destroy();
+      setIsSimulationRunning(false);
       message.error('Failed to start simulation. Please try again.');
       console.error('Start simulation error:', error);
     }
@@ -140,6 +190,9 @@ const Scenario1Page: React.FC = () => {
       return;
     }
 
+    // 立即设置报告生成状态
+    setIsGeneratingReport(true);
+
     try {
       message.loading('Generating report...', 0);
       const result = await generateReportMutation.mutateAsync({
@@ -153,13 +206,16 @@ const Scenario1Page: React.FC = () => {
       if (result.success && result.data) {
         setReportData(result.data);
         setShowResults(true);
+        setIsGeneratingReport(false);
         message.success('Report generated successfully!');
         console.log('Generated report:', result.data);
       } else {
+        setIsGeneratingReport(false);
         message.error(result.error?.message || 'Failed to generate report');
       }
     } catch (error) {
       message.destroy();
+      setIsGeneratingReport(false);
       message.error('Failed to generate report');
       console.error('Generate report error:', error);
     }
@@ -183,6 +239,8 @@ const Scenario1Page: React.FC = () => {
       setIsDrawerVisible(false);
       setShowResults(false);
       setReportData(null);
+      setIsSimulationRunning(false);
+      setIsGeneratingReport(false);
       
       message.success('Simulation reset successfully');
     } catch (error) {
@@ -249,11 +307,13 @@ const Scenario1Page: React.FC = () => {
               onOpenDrawer={handleOpenDrawer}
               simulationState={simulationState}
               confirmedStrategy={confirmedStrategy}
+              isGeneratingReport={isGeneratingReport}
             />
           </div>
           <div className="visualization-column">
             <VisualizationArea
               isLoading={startSimulationMutation.isPending || addPRStrategyMutation.isPending}
+              isSimulationRunning={isSimulationRunning}
               networkData={(() => {
                 // 数据转换：将后端格式转换为前端期望的格式
                 if (simulationResultData?.success && simulationResultData.data) {
@@ -263,8 +323,8 @@ const Scenario1Page: React.FC = () => {
                       ...simulationResultData.data,
                       agents: simulationResultData.data.agents.map(agent => ({
                         ...agent,
-                        // 后端返回的字段名已经是 influenceScore，不需要转换
-                        influenceScore: agent.influenceScore || agent.influence_score || 0
+                        // 后端返回的字段名是 influence_score，需要转换
+                        influenceScore: agent.influence_score || 0
                       }))
                     };
                     
@@ -288,8 +348,8 @@ const Scenario1Page: React.FC = () => {
                       // 转换数据格式以匹配期望的接口
                       const transformedAgents = simulationResultData.data.agents.map(agent => ({
                         ...agent,
-                        // 后端返回的字段名已经是 influenceScore，不需要转换
-                        influenceScore: agent.influenceScore || agent.influence_score || 0
+                        // 后端返回的字段名是 influence_score，需要转换
+                        influenceScore: agent.influence_score || 0
                       }));
                       return transformAgentsToNetworkData(transformedAgents);
                     }
