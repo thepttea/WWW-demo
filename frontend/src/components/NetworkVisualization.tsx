@@ -893,6 +893,16 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     }
   }, [users.length, platforms?.length, messageSteps.length, hasCompletedSimulation]);
 
+  // 监听数据变化，当有新数据时重置颜色状态
+  useEffect(() => {
+    if (users.length > 0) {
+      console.log('NetworkVisualization - Users data updated, resetting color states');
+      // 重置颜色状态，让新数据能够正确显示
+      setUserColorStates({});
+      setAnimationInitialColors({});
+    }
+  }, [users.length]);
+
 
 
   return (

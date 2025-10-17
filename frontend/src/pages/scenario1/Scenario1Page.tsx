@@ -21,6 +21,7 @@ const Scenario1Page: React.FC = () => {
   const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(false);
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
   const [hasCompletedSimulation, setHasCompletedSimulation] = useState<boolean>(false);
+  const [isStartingNewRound, setIsStartingNewRound] = useState<boolean>(false);
 
   // API hooks
   const startSimulationMutation = useStartSimulation();
@@ -31,17 +32,6 @@ const Scenario1Page: React.FC = () => {
   const { data: simulationResultData } = useSimulationResult(simulationId);
   const { data: networkData } = useNetworkData(simulationId);
 
-  // 调试日志
-  console.log('Scenario1Page - Current state:', {
-    simulationId,
-    isSimulationRunning,
-    hasStatusData: !!simulationStatusData,
-    hasResultData: !!simulationResultData,
-    hasNetworkData: !!networkData,
-    statusData: simulationStatusData,
-    resultData: simulationResultData,
-    networkData: networkData
-  });
 
   // 监听模拟状态变化
   useEffect(() => {
@@ -63,11 +53,17 @@ const Scenario1Page: React.FC = () => {
 
   // 监听数据获取结果，如果有数据就停止加载状态
   useEffect(() => {
+    // 如果正在开始新轮次，忽略旧的缓存数据
+    if (isStartingNewRound) {
+      console.log('Ignoring cached data because isStartingNewRound is true');
+      return;
+    }
+    
     if (simulationResultData?.success && simulationResultData.data && isSimulationRunning) {
       console.log('Simulation result data received, stopping loading state');
       setIsSimulationRunning(false);
     }
-  }, [simulationResultData, isSimulationRunning]);
+  }, [simulationResultData, isSimulationRunning, isStartingNewRound]);
 
   // 监听所有数据状态，判断数据是否准备好（但不立即标记为完成）
   useEffect(() => {
@@ -83,6 +79,18 @@ const Scenario1Page: React.FC = () => {
 
   // 使用useMemo缓存网络数据转换结果，避免不必要的重新计算
   const memoizedNetworkData = useMemo(() => {
+    console.log('memoizedNetworkData - Computing with:', {
+      isStartingNewRound,
+      hasSimulationResultData: !!simulationResultData?.success,
+      hasNetworkData: !!networkData?.success
+    });
+    
+    // 如果正在开始新轮次，不返回数据，让界面显示"Running Simulation..."
+    if (isStartingNewRound) {
+      console.log('memoizedNetworkData - Returning undefined due to isStartingNewRound');
+      return undefined;
+    }
+    
     // 数据转换：将后端格式转换为前端期望的格式
     if (simulationResultData?.success && simulationResultData.data) {
       try {
@@ -124,7 +132,20 @@ const Scenario1Page: React.FC = () => {
       }
     }
     return undefined;
-  }, [simulationResultData, networkData]);
+  }, [simulationResultData, networkData, isStartingNewRound]);
+
+  // 调试日志 - 移到memoizedNetworkData定义之后
+  console.log('Scenario1Page - Current state:', {
+    simulationId,
+    isSimulationRunning,
+    isStartingNewRound,
+    hasStatusData: !!simulationStatusData,
+    hasResultData: !!simulationResultData,
+    hasNetworkData: !!networkData,
+    hasCompletedSimulation,
+    hasMemoizedNetworkData: !!memoizedNetworkData,
+    simulationState: simulationState
+  });
 
   const handleStartSimulation = async (config: SimulationConfig) => {
     console.log('Scenario1Page - handleStartSimulation called with config:', config);
@@ -205,8 +226,17 @@ const Scenario1Page: React.FC = () => {
       return;
     }
 
+    // 立即设置运行状态，给用户即时反馈
+    console.log('handleStartNextRound - Setting states:', {
+      before: { isSimulationRunning, hasCompletedSimulation, isStartingNewRound }
+    });
+    setIsSimulationRunning(true);
+    setHasCompletedSimulation(false); // 重置完成状态，准备新的动画
+    setIsStartingNewRound(true); // 标记正在开始新轮次，清除旧数据
+    console.log('handleStartNextRound - States set, should show running simulation');
+    
     try {
-      message.loading('Starting next round...', 0);
+      message.loading('Starting next round simulation...', 0);
       const result = await addPRStrategyMutation.mutateAsync({
         simulationId,
         prStrategy: strategy,
@@ -216,6 +246,12 @@ const Scenario1Page: React.FC = () => {
       
       if (result.success && result.data) {
         const roundNumber = result.data.round;
+        console.log('Next round simulation started, round:', roundNumber);
+        console.log('Backend returned new data, clearing isStartingNewRound flag');
+        
+        // 后端返回了新数据，清除新轮次标记
+        setIsStartingNewRound(false);
+        
         // 更新模拟状态，将当前策略添加到历史中
         setSimulationState(prev => prev ? {
           ...prev,
@@ -231,12 +267,17 @@ const Scenario1Page: React.FC = () => {
           nextRoundStrategy: strategy,
         } : undefined);
 
-        message.success(`Round ${roundNumber || 'next'} simulation completed!`);
+        message.success(`Round ${roundNumber || 'next'} simulation started!`);
       } else {
+        console.log('Next round simulation failed, result:', result);
+        setIsSimulationRunning(false);
+        setIsStartingNewRound(false);
         message.error(result.error?.message || 'Failed to start next round');
       }
     } catch (error) {
       message.destroy();
+      setIsSimulationRunning(false);
+      setIsStartingNewRound(false);
       message.error('Next round simulation failed. Please try again.');
       console.error('Next round error:', error);
     }
@@ -300,6 +341,7 @@ const Scenario1Page: React.FC = () => {
       setIsSimulationRunning(false);
       setIsGeneratingReport(false);
       setHasCompletedSimulation(false);
+      setIsStartingNewRound(false);
       
       message.success('Simulation reset successfully');
     } catch (error) {

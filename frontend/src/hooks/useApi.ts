@@ -58,8 +58,10 @@ export const useAddPRStrategy = () => {
       apiClient.addPRStrategy(simulationId, prStrategy),
     onSuccess: (data, variables) => {
       console.log('PR strategy added:', data);
-      // 更新模拟结果缓存
-      queryClient.setQueryData(['simulationResult', variables.simulationId], data);
+      // 清除相关的查询缓存，强制重新获取最新数据
+      queryClient.invalidateQueries({ queryKey: ['simulationStatus', variables.simulationId] });
+      queryClient.invalidateQueries({ queryKey: ['simulationResult', variables.simulationId] });
+      queryClient.invalidateQueries({ queryKey: ['networkData', variables.simulationId] });
     },
     onError: (error) => {
       console.error('Failed to add PR strategy:', error);

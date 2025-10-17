@@ -26,7 +26,8 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
     isLoading: _isLoading, 
     isSimulationRunning, 
     hasCompletedSimulation,
-    hasNetworkData: !!networkData 
+    hasNetworkData: !!networkData,
+    networkData: networkData
   });
   return (
     <Card className="visualization-area glassmorphism">
@@ -36,7 +37,14 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
       
       <div className="visualization-content">
         {(() => {
-          console.log('VisualizationArea - Rendering decision:', { isSimulationRunning, hasNetworkData: !!networkData });
+          console.log('VisualizationArea - Rendering decision:', { 
+            isSimulationRunning, 
+            hasNetworkData: !!networkData,
+            networkData: networkData,
+            willShowRunning: isSimulationRunning,
+            willShowNetwork: !isSimulationRunning && !!networkData,
+            willShowEmpty: !isSimulationRunning && !networkData
+          });
           return null;
         })()}
         {isSimulationRunning ? (
