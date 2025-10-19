@@ -21,6 +21,7 @@ interface ConfigurationPanelProps {
   pollingStatus?: SimulationStatus | null;
   isPolling?: boolean;
   pollingError?: string | null;
+  isGeneratingReport?: boolean;
 }
 
 const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
@@ -35,6 +36,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   pollingStatus = null,
   isPolling = false,
   pollingError = null,
+  isGeneratingReport = false,
 }) => {
   const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4-turbo');
   const [eventDescription, setEventDescription] = useState<string>('');
@@ -188,8 +190,10 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
                 size="large"
                 className="action-button secondary-button"
                 onClick={onGenerateReport}
+                loading={isGeneratingReport}
+                disabled={isGeneratingReport}
               >
-                Generate Report & View Results
+                {isGeneratingReport ? 'Generating Report...' : 'Generate Report & View Results'}
               </Button>
               
               <Button

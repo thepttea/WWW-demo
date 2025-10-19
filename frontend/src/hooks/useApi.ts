@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { apiClient, type StartSimulationRequest, type ReportRequest, type SimulationResultData } from '../services/api';
+import { apiClient, type StartSimulationRequest, type ReportRequest } from '../services/api';
 
 // LLM Chat相关hooks
 export const useInitChatSession = () => {
@@ -58,8 +58,10 @@ export const useAddPRStrategy = () => {
       apiClient.addPRStrategy(simulationId, prStrategy),
     onSuccess: (data, variables) => {
       console.log('PR strategy added:', data);
-      // 更新模拟结果缓存
-      queryClient.setQueryData(['simulationResult', variables.simulationId], data);
+      // 清除相关的查询缓存，强制重新获取最新数据
+      queryClient.invalidateQueries({ queryKey: ['simulationStatus', variables.simulationId] });
+      queryClient.invalidateQueries({ queryKey: ['simulationResult', variables.simulationId] });
+      queryClient.invalidateQueries({ queryKey: ['networkData', variables.simulationId] });
     },
     onError: (error) => {
       console.error('Failed to add PR strategy:', error);
@@ -67,12 +69,12 @@ export const useAddPRStrategy = () => {
   });
 };
 
-export const useSimulationStatus = (simulationId: string | null) => {
+export const useSimulationStatus = (simulationId: string | null, isRunning: boolean = true) => {
   return useQuery({
     queryKey: ['simulationStatus', simulationId],
     queryFn: () => apiClient.getSimulationStatus(simulationId!),
-    enabled: !!simulationId,
-    refetchInterval: 2000, // 每2秒刷新一次
+    enabled: !!simulationId && isRunning,
+    refetchInterval: isRunning ? 2000 : false, // 只在运行时轮询
   });
 };
 
@@ -82,6 +84,8 @@ export const useSimulationResult = (simulationId: string | null) => {
     queryFn: () => apiClient.getSimulationResult(simulationId!),
     enabled: !!simulationId,
     staleTime: 30 * 1000, // 30秒
+    retry: 3, // 重试3次
+    retryDelay: 1000, // 重试间隔1秒
   });
 };
 
@@ -91,6 +95,8 @@ export const useNetworkData = (simulationId: string | null) => {
     queryFn: () => apiClient.getNetworkData(simulationId!),
     enabled: !!simulationId,
     staleTime: 60 * 1000, // 1分钟
+    retry: 3, // 重试3次
+    retryDelay: 1000, // 重试间隔1秒
   });
 };
 
