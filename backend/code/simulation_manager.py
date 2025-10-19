@@ -604,38 +604,37 @@ def generate_scenario1_report(simulation_id: str, report_type: str = "comprehens
 def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: Dict) -> Dict[str, Any]:
     """
     启动一个新的Scenario 2模拟任务。
+    使用与Scenario1完全相同的模拟系统，只是输入来源不同。
     """
     case = cm.get_case_by_id(case_id)
     if not case:
         raise ValueError(f"Case ID '{case_id}' does not exist.")
 
-    sim_id = f"sim_scenario2_{uuid.uuid4()}"
-    log_message(f"Starting Scenario 2 simulation: {sim_id}, case: {case['title']}")
+    # 从案例中获取事件描述和第一轮策略
+    initial_topic = case.get("background", "")
+    first_strategy = ""
+    if case.get("strategies") and len(case["strategies"]) > 0:
+        first_strategy = case["strategies"][0].get("content", "")
 
-    # 存储模拟状态
-    _simulations[sim_id] = {
-        "simulationId": sim_id,
-        "caseId": case_id,
-        "status": "started",
-        "totalRounds": case.get("totalRounds", 1),
-        "currentRound": 1,
-        "llmModel": llm_model,
-        "simulationConfig": simulation_config,
-        "results": [] # 存储每轮的结果
-    }
-
-    return {
-        "simulationId": sim_id,
-        "caseId": case_id,
-        "status": "started",
-        "totalRounds": case.get("totalRounds", 1),
-        "currentRound": 1,
-        "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}"
-    }
+    # 直接调用Scenario1的模拟启动函数
+    sim_data = start_scenario1_simulation(
+        initial_topic=initial_topic,
+        llm_model=llm_model,
+        simulation_config=simulation_config,
+        pr_strategy=first_strategy
+    )
+    
+    # 在模拟数据中添加案例ID信息
+    sim_data["caseId"] = case_id
+    
+    log_message(f"Started Scenario 2 simulation using Scenario1 system: {sim_data['simulationId']}, case: {case['title']}")
+    
+    return sim_data
 
 def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     """
     将模拟推进到下一轮。
+    使用与Scenario1完全相同的系统。
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -645,29 +644,43 @@ def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     if sim["currentRound"] >= sim["totalRounds"]:
         raise ValueError("Simulation has already reached the final round and cannot continue.")
 
-    sim["currentRound"] += 1
-    sim["status"] = "running"
-    
-    log_message(f"Simulation {simulation_id} advancing to round {sim['currentRound']}.")
-
-    case = cm.get_case_by_id(sim["caseId"])
+    # 获取下一轮策略
+    case = cm.get_case_by_id(sim.get("caseId", ""))
+    next_round = sim["currentRound"] + 1
     round_strategy = "No strategy found for this round."
+    
     if case and 'strategies' in case:
         for strategy in case['strategies']:
-            if strategy.get('round') == sim['currentRound']:
+            if strategy.get('round') == next_round:
                 round_strategy = strategy.get('content', round_strategy)
                 break
 
-    return {
-        "simulationId": simulation_id,
-        "currentRound": sim["currentRound"],
-        "status": sim["status"],
-        "roundStrategy": round_strategy
-    }
+    # 直接调用Scenario1的添加策略函数
+    result = add_pr_strategy_and_simulate(simulation_id, round_strategy)
+    
+    log_message(f"Scenario 2 simulation {simulation_id} advanced to round {next_round} using Scenario1 system.")
+    
+    return result
 
 def get_scenario2_result(simulation_id: str) -> Dict[str, Any]:
     """
-    获取Scenario 2当前轮次的模拟结果（模拟）。
+    获取Scenario 2当前轮次的模拟结果。
+    直接使用Scenario1的结果系统。
+    """
+    # 直接调用Scenario1的结果获取函数
+    result = get_scenario1_result(simulation_id)
+    
+    # 添加案例ID信息
+    if simulation_id in _simulations:
+        result["caseId"] = _simulations[simulation_id].get("caseId", "")
+    
+    log_message(f"Retrieved Scenario 2 result using Scenario1 system: {simulation_id}")
+    
+    return result
+
+def generate_scenario2_report(simulation_id: str) -> Dict[str, Any]:
+    """
+    生成Scenario 2的对比分析报告（模拟）。
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -677,40 +690,76 @@ def get_scenario2_result(simulation_id: str) -> Dict[str, Any]:
     if not case:
         raise ValueError(f"Associated case '{sim['caseId']}' not found for simulation.")
 
-    # --- 这里是实际模拟逻辑的入口 ---
-    # 目前，我们只生成一个模拟/伪造的结果用于API测试
-    log_message(f"Generating mock result for simulation {simulation_id} (Round {sim['currentRound']}).")
+    log_message(f"Generating Scenario 2 comparison report for simulation {simulation_id}")
     
-    # 模拟情感值的微小随机变化
-    simulated_sentiment = case["realWorldOutcome"]["metrics"]["sentimentImprovement"] / 100 + (random.random() - 0.5) * 0.1
-    
-    mock_result = {
-        "round": sim["currentRound"],
-        "summary": {
-            "totalAgents": sim["simulationConfig"].get("agents", 100),
-            "activeAgents": random.randint(85, 98),
-            "totalPosts": random.randint(150, 300),
-            "positiveSentiment": max(0, min(1, simulated_sentiment + random.uniform(-0.05, 0.05))),
-            "negativeSentiment": max(0, min(1, 1 - (simulated_sentiment + random.uniform(-0.1, 0.1)))),
-            "neutralSentiment": 0.1
-        },
-        "realWorldComparison": {
-            "round": sim["currentRound"],
-            "realWorldSentiment": case["realWorldOutcome"]["metrics"]["sentimentImprovement"] / 100.0,
-            "simulationSentiment": simulated_sentiment,
-            "accuracy": max(0, 1 - abs(case["realWorldOutcome"]["metrics"]["sentimentImprovement"] / 100.0 - simulated_sentiment))
-        },
-        # ... 其他API文档中定义的字段可以类似地模拟
-    }
-
-    # 检查是否是最后一轮
-    if sim["currentRound"] >= sim["totalRounds"]:
-        sim["status"] = "completed"
-        log_message(f"Simulation {simulation_id} has completed.")
-
-    return {
+    # 模拟对比分析报告
+    mock_report = {
+        "reportId": f"report_scenario2_{simulation_id}",
         "simulationId": simulation_id,
         "caseId": sim["caseId"],
-        "status": sim["status"],
-        **mock_result
+        "caseTitle": case["title"],
+        "comparisonAnalysis": {
+            "accuracyScore": 87,
+            "rating": "High Accuracy",
+            "simulatedOutcome": {
+                "sentimentDistribution": {
+                    "positive": 45,
+                    "negative": 20,
+                    "neutral": 35
+                },
+                "overallSentiment": 72,
+                "engagementRate": 15.3,
+                "reach": 850
+            },
+            "realWorldOutcome": case["realWorldOutcome"],
+            "alignment": {
+                "sentimentAlignment": 92,
+                "outcomeAlignment": 85,
+                "trendAlignment": 88
+            }
+        },
+        "keyInsights": "The simulation successfully predicted the positive outcome of the PR strategy. The sentiment distribution closely matches reported media coverage patterns. The model accurately captured the importance of quick response and transparency.",
+        "deviations": [
+            "Simulation slightly overestimated negative sentiment in Round 1",
+            "Engagement rate prediction was 2% higher than actual"
+        ],
+        "modelValidation": {
+            "strengths": [
+                "Accurate prediction of overall sentiment trend",
+                "Successfully identified key influencers",
+                "Realistic propagation patterns"
+            ],
+            "improvements": [
+                "Fine-tune initial sentiment distribution",
+                "Improve engagement rate modeling"
+            ]
+        },
+        "visualizations": {
+            "sentimentComparison": {
+                "simulated": { "positive": 45, "negative": 20, "neutral": 35 },
+                "estimated_real": { "positive": 48, "negative": 18, "neutral": 34 }
+            },
+            "timelineComparison": [
+                {
+                    "round": 1,
+                    "simulated_sentiment": 58,
+                    "estimated_real_sentiment": 55
+                },
+                {
+                    "round": 2,
+                    "simulated_sentiment": 68,
+                    "estimated_real_sentiment": 70
+                },
+                {
+                    "round": 3,
+                    "simulated_sentiment": 72,
+                    "estimated_real_sentiment": 75
+                }
+            ]
+        },
+        "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%S.000Z")
     }
+
+    log_message(f"Scenario 2 report generated: {mock_report['reportId']}")
+    
+    return mock_report

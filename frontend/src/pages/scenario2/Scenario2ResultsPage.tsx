@@ -10,6 +10,7 @@ interface Scenario2ResultsPageProps {
   selectedCase: HistoricalCase | null;
   simulationResults: any;
   realWorldResults: any;
+  reportData?: any;
   onBack: () => void;
   onClose: () => void;
 }
@@ -18,6 +19,7 @@ const Scenario2ResultsPage: React.FC<Scenario2ResultsPageProps> = ({
   selectedCase: _selectedCase,
   simulationResults,
   realWorldResults,
+  reportData,
   onBack,
   onClose,
 }) => {

@@ -155,3 +155,71 @@ export const useResetSimulation = () => {
     },
   });
 };
+
+// Scenario 2 相关hooks
+export const useStartScenario2Simulation = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (request: { caseId: string; llmModel: string; simulationConfig: any }) => 
+      apiClient.startScenario2Simulation(request),
+    onSuccess: (data) => {
+      console.log('Scenario 2 simulation started:', data);
+      // 清除相关的查询缓存
+      queryClient.invalidateQueries({ queryKey: ['scenario2Simulation'] });
+    },
+    onError: (error) => {
+      console.error('Failed to start Scenario 2 simulation:', error);
+    },
+  });
+};
+
+export const useAddScenario2Strategy = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (simulationId: string) => apiClient.addScenario2Strategy(simulationId),
+    onSuccess: (data, simulationId) => {
+      console.log('Scenario 2 strategy added:', data);
+      // 清除相关的查询缓存，强制重新获取最新数据
+      queryClient.invalidateQueries({ queryKey: ['scenario2SimulationStatus', simulationId] });
+      queryClient.invalidateQueries({ queryKey: ['scenario2SimulationResult', simulationId] });
+      queryClient.invalidateQueries({ queryKey: ['scenario2NetworkData', simulationId] });
+    },
+    onError: (error) => {
+      console.error('Failed to add Scenario 2 strategy:', error);
+    },
+  });
+};
+
+export const useScenario2SimulationStatus = (simulationId: string | null, isRunning: boolean = true) => {
+  return useQuery({
+    queryKey: ['scenario2SimulationStatus', simulationId],
+    queryFn: () => apiClient.getScenario2Status(simulationId!),
+    enabled: !!simulationId && isRunning,
+    refetchInterval: isRunning ? 2000 : false, // 只在运行时轮询
+  });
+};
+
+export const useScenario2SimulationResult = (simulationId: string | null) => {
+  return useQuery({
+    queryKey: ['scenario2SimulationResult', simulationId],
+    queryFn: () => apiClient.getScenario2Result(simulationId!),
+    enabled: !!simulationId,
+    staleTime: 30 * 1000, // 30秒
+    retry: 3, // 重试3次
+    retryDelay: 1000, // 重试间隔1秒
+  });
+};
+
+export const useGenerateScenario2Report = () => {
+  return useMutation({
+    mutationFn: (simulationId: string) => apiClient.generateScenario2Report(simulationId),
+    onSuccess: (data) => {
+      console.log('Scenario 2 report generated:', data);
+    },
+    onError: (error) => {
+      console.error('Failed to generate Scenario 2 report:', error);
+    },
+  });
+};

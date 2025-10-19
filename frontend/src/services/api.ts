@@ -327,15 +327,31 @@ class ApiClient {
     });
   }
 
-  async advanceScenario2NextRound(simulationId: string): Promise<ApiResponse<any>> {
-    return this.request(`/scenario2/simulation/${simulationId}/next-round`, {
+  async addScenario2Strategy(simulationId: string): Promise<ApiResponse<any>> {
+    return this.request(`/scenario2/simulation/${simulationId}/add-strategy`, {
       method: 'POST',
+    });
+  }
+
+  async getScenario2Status(simulationId: string): Promise<ApiResponse<SimulationStatus>> {
+    return this.request<SimulationStatus>(`/scenario2/simulation/${simulationId}/status`, {
+      method: 'GET',
     });
   }
 
   async getScenario2Result(simulationId: string): Promise<ApiResponse<any>> {
     return this.request(`/scenario2/simulation/${simulationId}/result`, {
       method: 'GET',
+    });
+  }
+
+  async generateScenario2Report(simulationId: string): Promise<ApiResponse<ReportResponse>> {
+    return this.request<ReportResponse>(`/scenario2/simulation/${simulationId}/generate-report`, {
+      method: 'POST',
+      body: JSON.stringify({
+        reportType: 'comparison',
+        includeVisualizations: true
+      }),
     });
   }
 }

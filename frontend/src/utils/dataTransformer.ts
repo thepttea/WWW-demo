@@ -185,6 +185,15 @@ export function transformSimulationResultToNetworkData(
               receivers.push(receiver.username);
             }
           });
+      } else {
+        // 如果没有网络数据，从agents中随机选择一些作为接收者
+        const otherAgents = simulationResult.agents.filter(a => a.agentId !== path.from);
+        const numReceivers = Math.min(3, otherAgents.length);
+        for (let i = 0; i < numReceivers; i++) {
+          const randomIndex = Math.floor(Math.random() * otherAgents.length);
+          receivers.push(otherAgents[randomIndex].username);
+          otherAgents.splice(randomIndex, 1); // 避免重复选择
+        }
       }
 
       const sentiment = path.stance > 0 ? 'positive' : path.stance < 0 ? 'negative' : 'neutral';
@@ -215,9 +224,19 @@ export function transformSimulationResultToNetworkData(
         const sentiment = agent.stanceScore > 0 ? 'positive' : 
                          agent.stanceScore < 0 ? 'negative' : 'neutral';
         
+        // 为消息生成一些接收者
+        const otherAgents = simulationResult.agents.filter(a => a.agentId !== agent.agentId);
+        const numReceivers = Math.min(3, otherAgents.length);
+        const receivers: string[] = [];
+        for (let i = 0; i < numReceivers; i++) {
+          const randomIndex = Math.floor(Math.random() * otherAgents.length);
+          receivers.push(otherAgents[randomIndex].username);
+          otherAgents.splice(randomIndex, 1); // 避免重复选择
+        }
+
         messagePropagationMap.get(platform)!.push({
           sender: agent.username,
-          receivers: [], // 没有详细信息时为空
+          receivers: receivers,
           content: agent.latestPost,
           sentiment: sentiment,
           timestamp: new Date(Date.now() + index * 6000).toISOString(),
@@ -301,9 +320,19 @@ export function transformAgentsToNetworkData(
       const sentiment = agent.stanceScore > 0 ? 'positive' : 
                        agent.stanceScore < 0 ? 'negative' : 'neutral';
       
+      // 为消息生成一些接收者
+      const otherAgents = agents.filter(a => a.agentId !== agent.agentId);
+      const numReceivers = Math.min(3, otherAgents.length);
+      const receivers: string[] = [];
+      for (let i = 0; i < numReceivers; i++) {
+        const randomIndex = Math.floor(Math.random() * otherAgents.length);
+        receivers.push(otherAgents[randomIndex].username);
+        otherAgents.splice(randomIndex, 1); // 避免重复选择
+      }
+
       platform.message_propagation.push({
         sender: agent.username,
-        receivers: [], // 没有详细信息时为空
+        receivers: receivers,
         content: agent.latestPost,
         sentiment: sentiment,
         timestamp: new Date().toISOString(),

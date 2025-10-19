@@ -33,7 +33,7 @@ class ChatMessageRequest(BaseModel):
     message: str
 
 class SimulationConfigRequest(BaseModel):
-    agents: int = 100
+    agents: int = 10
     num_rounds: int = 1 
     interactionProbability: float = 0.5
     positiveResponseProbability: float = 0.3
@@ -375,10 +375,10 @@ def start_scenario2_sim(request: StartScenario2Request):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/api/scenario2/simulation/{simulation_id}/next-round", response_model=ApiResponse, tags=["Scenario 2 - Cases & Simulation"])
-def next_round_scenario2_sim(simulation_id: str):
+@app.post("/api/scenario2/simulation/{simulation_id}/add-strategy", response_model=ApiResponse, tags=["Scenario 2 - Cases & Simulation"])
+def add_scenario2_strategy(simulation_id: str):
     """
-    2.2.2 继续下一轮模拟
+    2.2.2 继续下一轮模拟（添加策略）
     """
     try:
         round_data = simulation_manager.advance_to_next_round(simulation_id)
@@ -392,14 +392,54 @@ def next_round_scenario2_sim(simulation_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/api/scenario2/simulation/{simulation_id}/status", response_model=ApiResponse, tags=["Scenario 2 - Cases & Simulation"])
+def get_scenario2_status(simulation_id: str):
+    """
+    2.2.2 获取Scenario 2模拟状态
+    直接使用Scenario1的状态系统。
+    """
+    try:
+        # 直接调用Scenario1的状态查询函数
+        status_response = get_scenario1_status(simulation_id)
+        
+        # 添加案例ID信息
+        if simulation_id in simulation_manager._simulations:
+            case_id = simulation_manager._simulations[simulation_id].get("caseId", "")
+            if status_response.success and status_response.data:
+                status_response.data["caseId"] = case_id
+        
+        return status_response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/api/scenario2/simulation/{simulation_id}/result", response_model=ApiResponse, tags=["Scenario 2 - Cases & Simulation"])
 def get_scenario2_sim_result(simulation_id: str):
     """
     2.2.3 获取Scenario 2模拟结果
+    直接使用Scenario1的结果系统。
     """
     try:
-        result_data = simulation_manager.get_scenario2_result(simulation_id)
-        return ApiResponse(success=True, data=result_data)
+        # 直接调用Scenario1的结果获取函数
+        result_response = get_scenario1_result(simulation_id)
+        
+        # 添加案例ID信息
+        if simulation_id in simulation_manager._simulations:
+            case_id = simulation_manager._simulations[simulation_id].get("caseId", "")
+            if result_response.success and result_response.data:
+                result_response.data["caseId"] = case_id
+        
+        return result_response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/scenario2/simulation/{simulation_id}/generate-report", response_model=ApiResponse, tags=["Scenario 2 - Reports"])
+def generate_scenario2_report(simulation_id: str):
+    """
+    生成 Scenario 2 对比分析报告
+    """
+    try:
+        report_data = simulation_manager.generate_scenario2_report(simulation_id)
+        return ApiResponse(success=True, data=report_data)
     except ValueError as e:
         error_payload = {"code": "SIMULATION_NOT_FOUND", "message": str(e)}
         return JSONResponse(
