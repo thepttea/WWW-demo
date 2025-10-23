@@ -348,10 +348,6 @@ class ApiClient {
   async generateScenario2Report(simulationId: string): Promise<ApiResponse<ReportResponse>> {
     return this.request<ReportResponse>(`/scenario2/simulation/${simulationId}/generate-report`, {
       method: 'POST',
-      body: JSON.stringify({
-        reportType: 'comparison',
-        includeVisualizations: true
-      }),
     });
   }
 }

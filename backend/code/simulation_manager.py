@@ -627,6 +627,11 @@ def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: 
     # 在模拟数据中添加案例ID信息
     sim_data["caseId"] = case_id
     
+    # ✅ 重要：同时也需要将caseId添加到存储在_simulations中的实际对象中
+    simulation_id = sim_data["simulationId"]
+    if simulation_id in _simulations:
+        _simulations[simulation_id]["caseId"] = case_id
+    
     log_message(f"Started Scenario 2 simulation using Scenario1 system: {sim_data['simulationId']}, case: {case['title']}")
     
     return sim_data
@@ -686,9 +691,16 @@ def generate_scenario2_report(simulation_id: str) -> Dict[str, Any]:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
 
     sim = _simulations[simulation_id]
-    case = cm.get_case_by_id(sim["caseId"])
+    
+    # 检查是否有 caseId（使用 .get() 方法避免 KeyError）
+    case_id = sim.get("caseId")
+    if not case_id:
+        raise ValueError(f"Simulation '{simulation_id}' is not a Scenario 2 simulation (missing caseId).")
+    
+    # 获取案例信息
+    case = cm.get_case_by_id(case_id)
     if not case:
-        raise ValueError(f"Associated case '{sim['caseId']}' not found for simulation.")
+        raise ValueError(f"Associated case '{case_id}' not found for simulation.")
 
     log_message(f"Generating Scenario 2 comparison report for simulation {simulation_id}")
     

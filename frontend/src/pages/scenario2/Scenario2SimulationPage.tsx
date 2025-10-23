@@ -338,6 +338,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         isLoading={startSimulationMutation.isPending || addPRStrategyMutation.isPending || isSimulationRunning || isStartingNewRound}
         isSimulationRunning={isSimulationRunning || isStartingNewRound}
         hasCompletedSimulation={hasCompletedSimulation}
+        onAnimationCompleted={() => setHasCompletedSimulation(true)}
         networkData={memoizedNetworkData}
         simulationResult={simulationResultData?.success ? simulationResultData.data : undefined}
       />

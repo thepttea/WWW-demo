@@ -447,6 +447,9 @@ def generate_scenario2_report(simulation_id: str):
             content={"success": False, "error": error_payload}
         )
     except Exception as e:
+        import traceback
+        print(f"❌ Error generating Scenario 2 report: {str(e)}")
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
 
