@@ -393,16 +393,19 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
             </Button>
           ) : (
             <>
-              <Button
-                size="large"
-                className="action-button primary-button"
-                onClick={handleContinueNextRound}
-                disabled={hasCompletedSimulation || isStartingNewRound}
-                loading={addPRStrategyMutation.isPending}
-                icon={<ReloadOutlined />}
-              >
-                {hasCompletedSimulation ? 'Simulation Complete' : 'Continue Next Round Simulation'}
-              </Button>
+              {/* 只有在还有下一轮策略时才显示Continue按钮 */}
+              {selectedCase && currentRound < selectedCase.strategies.length && (
+                <Button
+                  size="large"
+                  className="action-button primary-button"
+                  onClick={handleContinueNextRound}
+                  disabled={isStartingNewRound}
+                  loading={addPRStrategyMutation.isPending}
+                  icon={<ReloadOutlined />}
+                >
+                  Continue Next Round Simulation
+                </Button>
+              )}
 
               <Button
                 size="large"
