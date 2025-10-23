@@ -214,13 +214,18 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     setIsSimulationRunning(true);
     setHasCompletedSimulation(false); // 重置完成状态，准备新的动画
     setIsStartingNewRound(true); // 标记正在开始新轮次，清除旧数据
+    
+    // 立即更新到下一轮，让用户看到下一轮的策略
+    const nextRound = currentRound + 1;
+    setCurrentRound(nextRound);
+    
     console.log('handleContinueNextRound - States set, should show running simulation');
     
     try {
       message.loading('Starting next round simulation...', 0);
       
       // 获取下一轮策略
-      const nextRoundStrategy = getCurrentRoundStrategy(selectedCase?.strategies || [], currentRound + 1);
+      const nextRoundStrategy = getCurrentRoundStrategy(selectedCase?.strategies || [], nextRound);
       const strategyContent = nextRoundStrategy.replace(/<[^>]*>/g, ''); // 移除HTML标签
       
       const result = await addPRStrategyMutation.mutateAsync({
@@ -234,16 +239,23 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         const roundNumber = result.data.round;
         console.log('Next round simulation started, round:', roundNumber);
         setIsStartingNewRound(false);
-        setCurrentRound(roundNumber);
+        // 确保轮次与后端返回的一致
+        if (roundNumber !== nextRound) {
+          setCurrentRound(roundNumber);
+        }
       } else {
         message.error(result.error?.message || 'Failed to start next round');
         setIsSimulationRunning(false);
         setIsStartingNewRound(false);
+        // 如果失败，回退到上一轮
+        setCurrentRound(currentRound);
       }
     } catch (error) {
       message.destroy();
       setIsSimulationRunning(false);
       setIsStartingNewRound(false);
+      // 如果失败，回退到上一轮
+      setCurrentRound(currentRound);
       console.error('Failed to start next round:', error);
       message.error('Failed to start next round');
     }
