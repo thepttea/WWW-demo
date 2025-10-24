@@ -47,7 +47,20 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
           });
           return null;
         })()}
-        {isSimulationRunning ? (
+        {/* 始终渲染NetworkVisualization以保持状态，只是在运行时隐藏它 */}
+        {networkData && (
+          <div className="network-visualization" style={{ display: isSimulationRunning ? 'none' : 'block' }}>
+            <NetworkVisualization 
+              users={networkData.users}
+              platforms={networkData.platforms}
+              isLoading={false}
+              hasCompletedSimulation={hasCompletedSimulation}
+              onAnimationCompleted={onAnimationCompleted}
+            />
+          </div>
+        )}
+        
+        {isSimulationRunning && (
           <div className="simulation-running-state">
             <div className="simulation-loading-icon">
               <div className="loading-spinner"></div>
@@ -63,17 +76,9 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
               </div>
             </div>
           </div>
-        ) : networkData ? (
-          <div className="network-visualization">
-            <NetworkVisualization 
-              users={networkData.users}
-              platforms={networkData.platforms}
-              isLoading={false}
-              hasCompletedSimulation={hasCompletedSimulation}
-              onAnimationCompleted={onAnimationCompleted}
-            />
-          </div>
-        ) : (
+        )}
+        
+        {!isSimulationRunning && !networkData && (
           <div className="empty-state">
             <div className="empty-icon">
               <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">

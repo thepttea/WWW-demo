@@ -57,6 +57,14 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   networkData,
   simulationResult: _simulationResult
 }) => {
+  // 组件挂载时记录日志
+  useEffect(() => {
+    console.log('====== [MOUNT DEBUG] NetworkVisualization component MOUNTED ======');
+    return () => {
+      console.log('====== [MOUNT DEBUG] NetworkVisualization component UNMOUNTED ======');
+    };
+  }, []);
+  
   // 优先使用networkData，如果没有则使用传入的users和platforms
   const users = networkData?.users || _users;
   const platforms = networkData?.platforms || _platforms;
@@ -323,6 +331,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       
       // 确保节点显示最终颜色状态
       if (users.length > 0) {
+        console.log('====== [COLOR DEBUG] Setting final colors for animation ======');
         const finalColors: { [username: string]: { r: number; g: number; b: number } } = {};
         users.forEach(user => {
           const usernameMapping: { [key: string]: string } = {
@@ -355,7 +364,9 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
             finalColors[shortUsername] = { r: 107, g: 114, b: 128 };
           }
         });
+        console.log('[COLOR DEBUG] Final colors to be set:', finalColors);
         setUserColorStates(finalColors);
+        console.log('[COLOR DEBUG] Final colors have been set');
       }
       return;
     }
@@ -388,8 +399,13 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         };
         const shortUsername = usernameMapping[user.username] || user.username;
         // 使用当前保存的颜色作为初始颜色，如果没有则使用默认灰色
-        initialColors[shortUsername] = userColorStates[shortUsername] || { r: 107, g: 114, b: 128 };
+        const savedColor = userColorStates[shortUsername];
+        const initialColor = savedColor || { r: 107, g: 114, b: 128 };
+        initialColors[shortUsername] = initialColor;
+        console.log(`[COLOR DEBUG] ${shortUsername} initial color:`, savedColor ? 'from previous round' : 'default gray', initialColor);
       });
+      console.log('[COLOR DEBUG] All initial colors for animation:', initialColors);
+      console.log('[COLOR DEBUG] Current userColorStates:', userColorStates);
       setAnimationInitialColors(initialColors);
       
       // 使用 setTimeout 来精确控制每个消息的显示时机
@@ -433,6 +449,45 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         const animationEndTime = lastMessage.delay + lastMessage.duration;
         
         const endTimer = setTimeout(() => {
+          console.log('[COLOR DEBUG] ====== Animation completed, setting final colors ======');
+          
+          // 在动画结束时，确保所有节点的颜色都更新到最终值
+          const finalColors: { [username: string]: { r: number; g: number; b: number } } = {};
+          users.forEach(user => {
+            const usernameMapping: { [key: string]: string } = {
+              'MarketingPro_Serena': 'Serena',
+              'Skeptical_Journalist': 'Journalist',
+              'TechBro_Elon': 'Elon',
+              'TechEnthusiast_Alex': 'Alex',
+              'ValueInvestor_Graham': 'Graham',
+              'Regulator_Tom': 'Tom',
+              'ArtStudent_Vivian': 'Vivian',
+              'SocialMedia_Intern': 'Intern',
+              'Cynical_Dev': 'Dev',
+              'Ethical_Philosopher': 'Philosopher'
+            };
+            const shortUsername = usernameMapping[user.username] || user.username;
+            
+            // 使用用户的最终立场颜色
+            const stance = user.objective_stance_score || 0;
+            const finalColorStr = getStanceColor(stance);
+            const finalColorMatch = finalColorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
+            
+            if (finalColorMatch) {
+              finalColors[shortUsername] = {
+                r: parseInt(finalColorMatch[1]),
+                g: parseInt(finalColorMatch[2]),
+                b: parseInt(finalColorMatch[3])
+              };
+            } else {
+              // 如果解析失败，使用默认灰色
+              finalColors[shortUsername] = { r: 107, g: 114, b: 128 };
+            }
+          });
+          
+          console.log('[COLOR DEBUG] Setting final colors on animation end:', finalColors);
+          setUserColorStates(finalColors);
+          
           setIsAnimating(false);
           setCurrentStep(-1); // 重置为-1表示没有当前消息
           setCurrentPhase(0);
@@ -893,13 +948,43 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     }
   }, [users.length, platforms?.length, messageSteps.length, hasCompletedSimulation]);
 
-  // 监听数据变化，当有新数据时重置颜色状态
+  // 使用ref来跟踪是否已经初始化过颜色状态
+  const hasInitializedColors = useRef(false);
+  
+  // 监听数据变化，当有新数据时更新颜色状态（保留上一轮的颜色）
   useEffect(() => {
-    if (users.length > 0) {
-      console.log('NetworkVisualization - Users data updated, resetting color states');
-      // 重置颜色状态，让新数据能够正确显示
-      setUserColorStates({});
-      setAnimationInitialColors({});
+    if (users.length > 0 && !hasInitializedColors.current) {
+      console.log('====== [COLOR DEBUG] First time initialization ======');
+      console.log('[COLOR DEBUG] users.length:', users.length);
+      console.log('[COLOR DEBUG] users data:', users.map(u => ({
+        username: u.username,
+        stance: u.objective_stance_score
+      })));
+      
+      // 用户名映射
+      const usernameMapping: { [key: string]: string } = {
+        'MarketingPro_Serena': 'Serena',
+        'Skeptical_Journalist': 'Journalist',
+        'TechBro_Elon': 'Elon',
+        'TechEnthusiast_Alex': 'Alex',
+        'ValueInvestor_Graham': 'Graham',
+        'Regulator_Tom': 'Tom',
+        'ArtStudent_Vivian': 'Vivian',
+        'SocialMedia_Intern': 'Intern',
+        'Cynical_Dev': 'Dev',
+        'Ethical_Philosopher': 'Philosopher'
+      };
+      
+      // 初始化为默认灰色（只在第一次时）
+      console.log('[COLOR DEBUG] ✗ First initialization, setting to default gray');
+      const newStates: { [username: string]: { r: number; g: number; b: number } } = {};
+      users.forEach(user => {
+        const shortUsername = usernameMapping[user.username] || user.username;
+        newStates[shortUsername] = { r: 107, g: 114, b: 128 };
+      });
+      console.log('[COLOR DEBUG] New states initialized:', newStates);
+      setUserColorStates(newStates);
+      hasInitializedColors.current = true;
     }
   }, [users.length]);
 

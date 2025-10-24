@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Card, Typography, Button, Divider, message } from 'antd';
 import {
   ReloadOutlined,
@@ -90,15 +90,29 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     }
   }, [simulationStatusData, simulationResultData, networkData]);
 
+  // 使用ref保存上一次的网络数据
+  const previousNetworkDataRef = useRef<any>(null);
+  
   // 处理网络数据转换 - 使用与Scenario1相同的方式
   const memoizedNetworkData = useMemo(() => {
-    // 如果正在开始新轮次，不返回数据，让界面显示"Running Simulation..."
+    console.log('====== [DATA DEBUG] Scenario2 - memoizedNetworkData computing ======');
+    console.log('[DATA DEBUG] isStartingNewRound:', isStartingNewRound);
+    console.log('[DATA DEBUG] simulationResultData:', simulationResultData?.success ? 'has data' : 'no data');
+    
+    // 如果正在开始新轮次，返回上一轮的数据以保持组件挂载状态
     if (isStartingNewRound) {
-      return undefined;
+      console.log('[DATA DEBUG] Returning previous networkData because isStartingNewRound=true');
+      return previousNetworkDataRef.current;
     }
     
     // 数据转换：将后端格式转换为前端期望的格式
     if (simulationResultData?.success && simulationResultData.data) {
+      console.log('[DATA DEBUG] Processing simulation result data');
+      console.log('[DATA DEBUG] Agents data:', simulationResultData.data.agents?.map(a => ({
+        username: a.username,
+        stance: a.stanceScore || a.objective_stance_score
+      })));
+      
       try {
         // 转换数据格式以匹配期望的接口
         const transformedData = {
@@ -120,10 +134,20 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
           edges: networkData.data.edges || []
         } : undefined;
 
-        return transformSimulationResultToNetworkData(
+        const result = transformSimulationResultToNetworkData(
           transformedData,
           backendNetworkData
         );
+        
+        console.log('[DATA DEBUG] Transformed network data users:', result?.users?.map(u => ({
+          username: u.username,
+          stance: u.objective_stance_score
+        })));
+        
+        // 保存当前数据以供下一轮使用
+        previousNetworkDataRef.current = result;
+        
+        return result;
       } catch (error) {
         console.error('Error transforming simulation data:', error);
         // 如果转换失败，尝试简化版转换
@@ -134,14 +158,17 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
             // 后端返回的字段名是 influence_score，需要转换
             influenceScore: agent.influence_score || 0
           }));
-          return transformSimulationResultToNetworkData({
+          const result = transformSimulationResultToNetworkData({
             ...simulationResultData.data,
             agents: transformedAgents
           });
+          previousNetworkDataRef.current = result;
+          return result;
         }
       }
     }
-    return undefined;
+    console.log('[DATA DEBUG] Returning undefined because no valid data');
+    return previousNetworkDataRef.current || undefined;
   }, [simulationResultData, networkData, isStartingNewRound]);
 
   // 调试日志
