@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Typography, Spin } from 'antd';
+import { Card, Typography } from 'antd';
 import NetworkVisualization from '../../components/NetworkVisualization';
 import './VisualizationArea.css';
 
@@ -12,9 +12,9 @@ interface VisualizationAreaProps {
 }
 
 const VisualizationArea: React.FC<VisualizationAreaProps> = ({
-  isLoading = false,
+  isLoading: _isLoading = false,
   networkData,
-  simulationResult,
+  simulationResult: _simulationResult,
 }) => {
   return (
     <Card className="visualization-area glassmorphism">

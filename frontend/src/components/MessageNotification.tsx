@@ -30,13 +30,14 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoHideTimerRef = useRef<NodeJS.Timeout | null>(null);
   const lastProcessedStepRef = useRef<number>(-1);
+  const isProcessingRef = useRef<boolean>(false);
 
   useEffect(() => {
-    console.log('MessageNotification - currentStep:', currentStep, 'lastProcessedStep:', lastProcessedStepRef.current);
+    console.log('MessageNotification - currentStep:', currentStep, 'lastProcessedStep:', lastProcessedStepRef.current, 'isProcessing:', isProcessingRef.current);
     
-    // 如果已经处理过这个步骤，跳过
-    if (currentStep === lastProcessedStepRef.current) {
-      console.log('Skipping already processed step:', currentStep);
+    // 如果已经处理过这个步骤或正在处理中，跳过
+    if (currentStep === lastProcessedStepRef.current || isProcessingRef.current) {
+      console.log('Skipping already processed step or currently processing:', currentStep);
       return;
     }
     
@@ -51,22 +52,23 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
       console.log('MessageNotification - showing notification for step:', step);
       
       const receiverList = step.receivers.length > 0 
-        ? step.receivers.join('、') 
-        : '无接收者';
+        ? step.receivers.join(', ') 
+        : 'No receivers';
       
       const newNotification = {
-        title: `📢 消息传播 - 第${currentStep + 1}轮`,
-        description: `${step.sender} 通过 ${step.platform} 向 ${step.receivers.length} 位用户发送消息`,
+        title: `📢 Message Propagation - Round ${currentStep + 1}`,
+        description: `${step.sender} sent message to ${step.receivers.length} users via ${step.platform}`,
         visible: true,
         content: step.content,
         receivers: receiverList
       };
       
-      // 标记当前步骤已处理
+      // 标记当前步骤已处理并设置处理中状态
       lastProcessedStepRef.current = currentStep;
+      isProcessingRef.current = true;
       
       // 如果有当前通知，先渐出再显示新通知
-      if (notificationData) {
+      if (notificationData && notificationData.visible) {
         console.log('Fading out current notification and showing new one');
         setIsTransitioning(true);
         
@@ -74,17 +76,13 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
         setTimeout(() => {
           console.log('Setting new notification after fade out');
           setNotificationData(newNotification);
-          
-          // 渐入动画
-          setTimeout(() => {
-            console.log('Fade in animation completed');
-            setIsTransitioning(false);
-          }, 50);
+          setIsTransitioning(false);
+          isProcessingRef.current = false;
           
           // 设置自动隐藏定时器
           autoHideTimerRef.current = setTimeout(() => {
             console.log('Auto-hiding notification after 3 seconds');
-            setNotificationData(prev => prev ? { ...prev, visible: false } : null);
+            handleHideNotification();
           }, 3000);
         }, 300);
       } else {
@@ -92,23 +90,19 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
         console.log('Showing first notification');
         setNotificationData(newNotification);
         setIsTransitioning(false);
+        isProcessingRef.current = false;
         
         // 设置自动隐藏定时器
         autoHideTimerRef.current = setTimeout(() => {
           console.log('Auto-hiding notification after 3 seconds (first message)');
-          setNotificationData(prev => prev ? { ...prev, visible: false } : null);
+          handleHideNotification();
         }, 3000);
       }
     } else if (currentStep === -1) {
       // 动画结束，渐出隐藏通知
       console.log('MessageNotification - animation ended, fading out notification');
       lastProcessedStepRef.current = -1;
-      setIsTransitioning(true);
-      
-      setTimeout(() => {
-        setNotificationData(null);
-        setIsTransitioning(false);
-      }, 300);
+      handleHideNotification();
     }
     
     // 清理函数
@@ -119,6 +113,19 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
       }
     };
   }, [currentStep, messageSteps]);
+
+  // 处理隐藏通知的函数
+  const handleHideNotification = () => {
+    if (notificationData) {
+      setIsTransitioning(true);
+      isProcessingRef.current = true;
+      setTimeout(() => {
+        setNotificationData(null);
+        setIsTransitioning(false);
+        isProcessingRef.current = false;
+      }, 300);
+    }
+  };
 
   if (!notificationData || !notificationData.visible) {
     return null;
@@ -138,10 +145,10 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
             {notificationData.description}
           </div>
           <div className="message-notification-receivers">
-            <strong>接收者：</strong>{notificationData.receivers}
+            <strong>Receivers: </strong>{notificationData.receivers}
           </div>
           <div className="message-notification-content-text">
-            <strong>消息内容：</strong>
+            <strong>Message Content: </strong>
             <div className="message-content-preview">
               {notificationData.content.length > 100 
                 ? `${notificationData.content.substring(0, 100)}...` 
@@ -151,7 +158,7 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
         </div>
         <div 
           className="message-notification-close"
-          onClick={() => setNotificationData(prev => prev ? { ...prev, visible: false } : null)}
+          onClick={handleHideNotification}
         >
           ×
         </div>

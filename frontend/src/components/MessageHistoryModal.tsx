@@ -1,9 +1,9 @@
 import React from 'react';
-import { Drawer, Typography, Card, Tag, Space, Divider } from 'antd';
-import { MessageOutlined, UserOutlined, ClockCircleOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { Drawer, Typography, Card, Tag, Space } from 'antd';
+import { MessageOutlined, UserOutlined, ShareAltOutlined } from '@ant-design/icons';
 import './MessageHistoryModal.css';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 interface MessageStep {
   id: string;
@@ -21,13 +21,15 @@ interface MessageHistoryModalProps {
   onClose: () => void;
   messageSteps: MessageStep[];
   currentStep: number;
+  onMessageClick?: (messageIndex: number) => void;
 }
 
 const MessageHistoryModal: React.FC<MessageHistoryModalProps> = ({
   visible,
   onClose,
   messageSteps,
-  currentStep
+  currentStep,
+  onMessageClick
 }) => {
   // 获取平台颜色
   const getPlatformColor = (platformName: string) => {
@@ -86,9 +88,13 @@ const MessageHistoryModal: React.FC<MessageHistoryModalProps> = ({
             return (
               <Card
                 key={step.id}
-                className={`message-card ${messageStatus.status}`}
+                className={`message-card ${messageStatus.status} ${onMessageClick ? 'clickable-message' : ''}`}
                 size="small"
-                style={{ marginBottom: 12 }}
+                style={{ 
+                  marginBottom: 12,
+                  cursor: onMessageClick ? 'pointer' : 'default'
+                }}
+                onClick={() => onMessageClick?.(index)}
               >
                 <div className="message-card-header">
                   <div className="message-meta">
@@ -132,12 +138,6 @@ const MessageHistoryModal: React.FC<MessageHistoryModalProps> = ({
                   </Text>
                 </div>
 
-                <div className="message-timing">
-                  <ClockCircleOutlined style={{ marginRight: 6, color: '#8c8c8c' }} />
-                  <Text type="secondary">
-                    Delay: {(step.delay / 1000).toFixed(1)}s | Duration: {(step.duration / 1000).toFixed(1)}s
-                  </Text>
-                </div>
               </Card>
             );
           })}

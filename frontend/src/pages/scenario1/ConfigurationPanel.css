@@ -191,3 +191,60 @@
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(19, 127, 236, 0.2);
 }
+
+/* 轮询状态样式 */
+.polling-status {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 8px;
+}
+
+.status-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.status-text {
+  font-weight: 600;
+  color: #137fec;
+  font-size: 14px;
+}
+
+.round-info {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.polling-progress {
+  margin-top: 8px;
+}
+
+.polling-progress .ant-progress-bg {
+  background: #137fec !important;
+}
+
+.polling-progress .ant-progress-text {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 12px !important;
+}
+
+/* 错误状态样式 */
+.error-status {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.error-text {
+  color: #ef4444;
+  font-weight: 500;
+  font-size: 14px;
+}

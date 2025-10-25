@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'antd';
 import { HistoryOutlined } from '@ant-design/icons';
 import NodeDetailModal from './NodeDetailModal';
@@ -7,6 +7,7 @@ import MessageHistoryModal from './MessageHistoryModal';
 import './NetworkVisualization.css';
 
 interface User {
+  agentId?: string;
   username: string;
   influence_score: number;
   primary_platform: string;
@@ -26,9 +27,6 @@ interface Platform {
     content: string;
     sentiment: string;
     timestamp: string;
-    likes: number;
-    shares: number;
-    comments: number;
   }>;
   message_flow?: Array<{
     from: string;
@@ -41,18 +39,34 @@ interface NetworkVisualizationProps {
   users?: User[];
   platforms?: Platform[];
   isLoading?: boolean;
+  networkData?: {
+    users: User[];
+    platforms: Platform[];
+  };
+  simulationResult?: any;
 }
 
 const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   users: _users = [],
   platforms: _platforms = [],
-  isLoading: _isLoading = false
+  isLoading: _isLoading = false,
+  networkData,
+  simulationResult: _simulationResult
 }) => {
+  // 优先使用networkData，如果没有则使用传入的users和platforms
+  const users = networkData?.users || _users;
+  const platforms = networkData?.platforms || _platforms;
   const [currentStep, setCurrentStep] = useState(0);
   const [_isAnimating, setIsAnimating] = useState(false);
   const [currentPhase, setCurrentPhase] = useState(0); // 0: 发送者, 1: 发送者+平台, 2: 发送者+平台+接收者, 3: 流动边
   const [animationStartTime, setAnimationStartTime] = useState<number | null>(null);
+  const animationStartTimeRef = useRef<number | null>(null);
   const [forceUpdate, setForceUpdate] = useState(0); // 用于强制重新渲染
+  
+  // 颜色状态持久化 - 记录每个用户的上一次颜色状态
+  const [userColorStates, setUserColorStates] = useState<{ [username: string]: { r: number; g: number; b: number } }>({});
+  // 动画开始时的初始颜色 - 用于颜色渐变计算
+  const [animationInitialColors, setAnimationInitialColors] = useState<{ [username: string]: { r: number; g: number; b: number } }>({});
   
   // 节点详情弹窗状态
   const [modalVisible, setModalVisible] = useState(false);
@@ -62,6 +76,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   // 消息历史弹窗状态
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
   const [animationCompleted, setAnimationCompleted] = useState(false);
+  
+  // 单条消息循环播放状态
+  const [singleMessageMode, setSingleMessageMode] = useState(false);
+  const [selectedMessageIndex, setSelectedMessageIndex] = useState<number | null>(null);
+  const [singleMessageTimer, setSingleMessageTimer] = useState<NodeJS.Timeout | null>(null);
   
   // 边过渡动画状态
   const [edgeTransitionStep, setEdgeTransitionStep] = useState(-1);
@@ -74,119 +93,105 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     platformToReceivers: false
   });
 
-  // 消息传播步骤定义 - 以消息为主体，每个消息6秒，包含具体内容
-  const messageSteps = React.useMemo(() => [
-    // 消息1: Serena 发表消息到 Weibo，传播到其他用户
-    { 
-      id: 'message1',
-      type: 'message_flow', 
-      sender: 'Serena', 
-      platform: 'Weibo', 
-      receivers: ['Journalist', 'Elon', 'Graham', 'Vivian'],
-      content: '这个AI产品代表了技术发展的未来方向，我们应该拥抱变化，而不是恐惧。任何新技术都会面临质疑，这是正常的。',
-      delay: 0,
-      duration: 6000
-    },
-    // 消息2: Journalist 发表消息到 Weibo，传播到其他用户
-    { 
-      id: 'message2',
-      type: 'message_flow', 
-      sender: 'Journalist', 
-      platform: 'Weibo', 
-      receivers: ['Serena', 'Elon', 'Tom', 'Dev'],
-      content: '科技公司必须对用户数据负责，我们需要更多的透明度和监管。不能以创新为名忽视用户权益，这个AI产品的隐私问题需要深入调查。',
-      delay: 6000,
-      duration: 6000
-    },
-    // 消息3: Elon 发表消息到 Weibo，传播到其他用户
-    { 
-      id: 'message3',
-      type: 'message_flow', 
-      sender: 'Elon', 
-      platform: 'Weibo', 
-      receivers: ['Serena', 'Graham', 'Philosopher'],
-      content: 'AI技术是人类的未来，我们应该支持技术创新。任何技术都有风险，但收益更大，这个AI产品虽然存在争议，但技术本身是先进的。',
-      delay: 12000,
-      duration: 6000
-    },
-    // 消息4: Alex 发表消息到 Weibo，传播到其他用户
-    { 
-      id: 'message4',
-      type: 'message_flow', 
-      sender: 'Alex', 
-      platform: 'Weibo', 
-      receivers: [],
-      content: '这个AI产品虽然存在争议，但技术本身是先进的。我们应该支持技术创新，而不是因为争议就否定它。',
-      delay: 18000,
-      duration: 6000
-    },
-    // 消息5: Graham 发表消息到 WeChat，传播到其他用户
-    { 
-      id: 'message5',
-      type: 'message_flow', 
-      sender: 'Graham', 
-      platform: 'WeChat', 
-      receivers: ['Tom', 'Serena', 'Elon'],
-      content: '需要看这个产品的商业模式是否可持续，监管风险可能影响投资回报。技术本身不是问题，问题在于应用，我需要评估这个产品是否具有长期投资价值。',
-      delay: 24000,
-      duration: 6000
-    },
-    // 消息6: Tom 发表消息到 WeChat，传播到其他用户
-    { 
-      id: 'message6',
-      type: 'message_flow', 
-      sender: 'Tom', 
-      platform: 'WeChat', 
-      receivers: ['Graham', 'Journalist'],
-      content: '需要确保产品符合现有法规，监管框架需要跟上技术发展。平衡创新和风险很重要，我需要客观评估这个AI产品的合规性。',
-      delay: 30000,
-      duration: 6000
-    },
-    // 消息7: Vivian 发表消息到 TikTok，传播到其他用户
-    { 
-      id: 'message7',
-      type: 'message_flow', 
-      sender: 'Vivian', 
-      platform: 'TikTok', 
-      receivers: ['Intern', 'Serena', 'Elon'],
-      content: 'AI可能会改变艺术创作方式，但也要考虑艺术的人文价值。技术应该服务于创意，而不是替代，AI可以辅助艺术创作，但不能替代人文精神。',
-      delay: 36000,
-      duration: 6000
-    },
-    // 消息8: Intern 发表消息到 TikTok，传播到其他用户
-    { 
-      id: 'message8',
-      type: 'message_flow', 
-      sender: 'Intern', 
-      platform: 'TikTok', 
-      receivers: [],
-      content: '这个话题肯定会火，可以做成很多有趣的梗。AI产品争议性很强，适合传播，争议性话题总是更容易传播。',
-      delay: 42000,
-      duration: 6000
-    },
-    // 消息9: Dev 发表消息到 Forum，传播到其他用户
-    { 
-      id: 'message9',
-      type: 'message_flow', 
-      sender: 'Dev', 
-      platform: 'Forum', 
-      receivers: ['Philosopher', 'Serena', 'Journalist', 'Graham'],
-      content: '又是一个被过度炒作的AI产品，技术本身没问题，但营销太过了。用户隐私问题确实需要重视，但很多公司为了商业利益而忽视这些问题。',
-      delay: 48000,
-      duration: 6000
-    },
-    // 消息10: Philosopher 发表消息到 Forum，传播到其他用户
-    { 
-      id: 'message10',
-      type: 'message_flow', 
-      sender: 'Philosopher', 
-      platform: 'Forum', 
-      receivers: ['Dev', 'Elon', 'Graham', 'Tom'],
-      content: '这涉及到AI伦理的根本问题，我们需要建立更完善的伦理框架。技术发展必须考虑道德责任，AI发展需要建立完善的伦理框架和道德边界。',
-      delay: 54000,
-      duration: 6000
+
+  // 从实际数据生成消息传播步骤 - 使用后端提供的实际数据
+  const messageSteps = React.useMemo(() => {
+    console.log('NetworkVisualization - platforms:', platforms);
+    console.log('NetworkVisualization - users:', users);
+    
+    if (!platforms || platforms.length === 0) {
+      console.log('NetworkVisualization - No platforms data available');
+      return [];
     }
-  ], []);
+
+    const steps: Array<{
+      id: string;
+      type: string;
+      sender: string;
+      platform: string;
+      receivers: string[];
+      content: string;
+      delay: number;
+      duration: number;
+    }> = [];
+
+    // 用户名映射
+    const usernameMapping: { [key: string]: string } = {
+      'MarketingPro_Serena': 'Serena',
+      'Skeptical_Journalist': 'Journalist',
+      'TechBro_Elon': 'Elon',
+      'TechEnthusiast_Alex': 'Alex',
+      'ValueInvestor_Graham': 'Graham',
+      'Regulator_Tom': 'Tom',
+      'ArtStudent_Vivian': 'Vivian',
+      'SocialMedia_Intern': 'Intern',
+      'Cynical_Dev': 'Dev',
+      'Ethical_Philosopher': 'Philosopher'
+    };
+
+    // 平台名映射
+    const platformMapping: { [key: string]: string } = {
+      'Weibo/Twitter-like': 'Weibo',
+      'WeChat Moments-like': 'WeChat',
+      'TikTok-like': 'TikTok',
+      'Forum-like': 'Forum'
+    };
+
+    // 收集所有消息 - 保持后端提供的顺序
+    const allMessages: Array<{
+      platform: string;
+      message: any;
+      platformName: string;
+    }> = [];
+
+    platforms.forEach(platform => {
+      console.log('NetworkVisualization - Processing platform:', platform.name);
+      console.log('NetworkVisualization - Platform message_propagation:', platform.message_propagation);
+      
+      if (platform.message_propagation && Array.isArray(platform.message_propagation)) {
+        console.log('NetworkVisualization - Found', platform.message_propagation.length, 'messages for platform', platform.name);
+        platform.message_propagation.forEach(message => {
+          allMessages.push({
+            platform: platform.name,
+            message,
+            platformName: platformMapping[platform.name] || platform.name
+          });
+        });
+      } else {
+        console.log('NetworkVisualization - No message_propagation data for platform', platform.name);
+      }
+    });
+
+    // 使用后端提供的实际数据，不进行随机排序
+    // 分配相对时间戳
+    let currentDelay = 0;
+    let messageIndex = 1;
+
+    allMessages.forEach(({ message, platformName }) => {
+      const shortSender = usernameMapping[message.sender] || message.sender;
+      const shortReceivers = message.receivers.map((receiver: string) => 
+        usernameMapping[receiver] || receiver
+      );
+
+      steps.push({
+        id: `message${messageIndex}`,
+        type: 'message_flow',
+        sender: shortSender,
+        platform: platformName,
+        receivers: shortReceivers,
+        content: message.content,
+        delay: currentDelay,  // 使用实际的时间间隔
+        duration: 6000
+      });
+
+      currentDelay += 6000;  // 每条消息间隔6秒
+      messageIndex++;
+    });
+
+    console.log('NetworkVisualization - Generated', steps.length, 'message steps');
+    console.log('NetworkVisualization - Message steps:', steps);
+    return steps;
+  }, [platforms]);
 
   // 获取用户坐标 - 优化为现代美学的不规则圆形分布
   const getUserCoordinates = (username: string) => {
@@ -231,126 +236,45 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     return coordinates[platformName];
   };
 
-  // 根据objective_stance_score计算最终颜色 (-3到3，蓝红渐变)
+  // 根据objective_stance_score计算最终颜色 (-3到3，红蓝渐变)
   const getStanceColor = (stanceScore: number) => {
     // 将-3到3的范围映射到0到1
     const normalizedScore = (stanceScore + 3) / 6;
     
-    // 蓝色(反对)到红色(支持)的渐变
-    // 反对(-3): 蓝色 #3B82F6
+    // 红色(反对)到蓝色(支持)的渐变
+    // 反对(-3): 红色 #EF4444
     // 中性(0): 灰色 #6B7280  
-    // 支持(3): 红色 #EF4444
+    // 支持(3): 蓝色 #3B82F6
     
     if (normalizedScore <= 0.5) {
-      // 从蓝色到灰色的渐变
+      // 从红色到灰色的渐变
       const t = normalizedScore * 2; // 0到1
-      const r = Math.round(59 + (107 - 59) * t);
-      const g = Math.round(130 + (114 - 130) * t);
-      const b = Math.round(246 + (128 - 246) * t);
+      const r = Math.round(239 + (107 - 239) * t);
+      const g = Math.round(68 + (114 - 68) * t);
+      const b = Math.round(68 + (128 - 68) * t);
       return `rgb(${r}, ${g}, ${b})`;
     } else {
-      // 从灰色到红色的渐变
+      // 从灰色到蓝色的渐变
       const t = (normalizedScore - 0.5) * 2; // 0到1
-      const r = Math.round(107 + (239 - 107) * t);
-      const g = Math.round(114 + (68 - 114) * t);
-      const b = Math.round(128 + (68 - 128) * t);
+      const r = Math.round(107 + (59 - 107) * t);
+      const g = Math.round(114 + (130 - 114) * t);
+      const b = Math.round(128 + (246 - 128) * t);
       return `rgb(${r}, ${g}, ${b})`;
     }
   };
 
-  // 计算总动画时长 - 根据消息数量动态计算
-  const getTotalAnimationDuration = () => {
-    // 优先使用实际的后端数据计算时长
-    if (_users.length > 0 && _platforms.length > 0) {
-      // 从平台数据中提取所有消息传播信息
-      let maxEndTime = 0;
-      let hasMessages = false;
-      
-      _platforms.forEach(platform => {
-        // 检查不同的消息字段名
-        const messages = platform.message_propagation || platform.message_flow || [];
-        
-        if (Array.isArray(messages) && messages.length > 0) {
-          hasMessages = true;
-          messages.forEach(message => {
-            if (message.timestamp) {
-              // 假设每条消息持续6秒
-              const messageEndTime = new Date(message.timestamp).getTime() + 6000;
-              maxEndTime = Math.max(maxEndTime, messageEndTime);
-            }
-          });
-        }
-      });
-      
-      if (hasMessages && maxEndTime > 0 && animationStartTime) {
-        // 返回相对于动画开始时间的时长
-        return maxEndTime - animationStartTime;
-      }
-    }
-    
-    // 如果没有后端数据，使用静态消息步骤
-    if (messageSteps.length === 0) return 0;
-    
-    // 找到最后一条消息的结束时间
-    const lastMessage = messageSteps[messageSteps.length - 1];
-    const lastMessageEndTime = lastMessage.delay + lastMessage.duration;
-    
-    return lastMessageEndTime;
-  };
 
-  // 获取动态颜色 - 根据动画进度从初始颜色渐变到最终颜色
+  // 获取动态颜色 - 根据动画进度从上一轮颜色渐变到最终颜色
   const getDynamicColor = (username: string) => {
-    const user = _users.find(u => {
-      const usernameMapping: { [key: string]: string } = {
-        'Serena': 'MarketingPro_Serena',
-        'Journalist': 'Skeptical_Journalist',
-        'Elon': 'TechBro_Elon',
-        'Alex': 'TechEnthusiast_Alex',
-        'Graham': 'ValueInvestor_Graham',
-        'Tom': 'Regulator_Tom',
-        'Vivian': 'ArtStudent_Vivian',
-        'Intern': 'SocialMedia_Intern',
-        'Dev': 'Cynical_Dev',
-        'Philosopher': 'Ethical_Philosopher'
-      };
-      const fullUsername = usernameMapping[username] || username;
-      return u.username === fullUsername;
-    });
-
-    if (!user || user.objective_stance_score === undefined || !animationStartTime) {
-      return '#6B7280'; // 默认灰色
+    // 优先返回当前保存的颜色状态
+    const savedColor = userColorStates[username];
+    
+    if (savedColor) {
+      return `rgb(${savedColor.r}, ${savedColor.g}, ${savedColor.b})`;
     }
 
-    // 动态计算总动画时长
-    const totalDuration = getTotalAnimationDuration();
-    if (totalDuration === 0) return '#6B7280';
-
-    // 计算动画进度 (0到1)
-    const elapsed = Date.now() - animationStartTime;
-    const progress = Math.min(elapsed / totalDuration, 1);
-
-    // 初始颜色 (中性灰色)
-    const initialColor = { r: 107, g: 114, b: 128 }; // #6B7280
-    
-    // 最终颜色
-    const finalColorStr = getStanceColor(user.objective_stance_score);
-    const finalColorMatch = finalColorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
-    if (!finalColorMatch) return '#6B7280';
-    
-    const finalColor = {
-      r: parseInt(finalColorMatch[1]),
-      g: parseInt(finalColorMatch[2]),
-      b: parseInt(finalColorMatch[3])
-    };
-
-    // 插值计算当前颜色
-    const currentColor = {
-      r: Math.round(initialColor.r + (finalColor.r - initialColor.r) * progress),
-      g: Math.round(initialColor.g + (finalColor.g - initialColor.g) * progress),
-      b: Math.round(initialColor.b + (finalColor.b - initialColor.b) * progress)
-    };
-
-    return `rgb(${currentColor.r}, ${currentColor.g}, ${currentColor.b})`;
+    // 如果没有保存的颜色状态，返回默认灰色
+    return '#6B7280';
   };
 
   // 获取用户颜色 - 使用动态颜色变化
@@ -371,13 +295,49 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 开始动画序列 - 当有网络数据时自动开始
   useEffect(() => {
-    console.log('NetworkVisualization - has network data:', !!_users.length);
-    if (_users.length > 0) {
-      console.log('Starting animation sequence');
+    console.log('NetworkVisualization - Animation trigger check:');
+    console.log('  - users.length:', users.length);
+    console.log('  - messageSteps.length:', messageSteps.length);
+    console.log('  - platforms?.length:', platforms?.length);
+    console.log('  - singleMessageMode:', singleMessageMode);
+    
+    // 如果处于单条消息模式，不启动正常的动画序列
+    if (singleMessageMode) {
+      console.log('NetworkVisualization - Skipping normal animation due to single message mode');
+      return;
+    }
+    
+    if (users.length > 0 && messageSteps.length > 0) {
+      console.log('NetworkVisualization - Starting animation with', messageSteps.length, 'steps');
       setIsAnimating(true);
       setCurrentStep(0);
       setCurrentPhase(0);
-      setAnimationStartTime(Date.now()); // 设置动画开始时间
+      // 重置动画开始时间，确保每次都能重新开始
+      const newStartTime = Date.now();
+      animationStartTimeRef.current = newStartTime;
+      setAnimationStartTime(newStartTime);
+      setAnimationCompleted(false); // 重置动画完成状态
+      
+      // 保存动画开始时的初始颜色
+      const initialColors: { [username: string]: { r: number; g: number; b: number } } = {};
+      users.forEach(user => {
+        const usernameMapping: { [key: string]: string } = {
+          'MarketingPro_Serena': 'Serena',
+          'Skeptical_Journalist': 'Journalist',
+          'TechBro_Elon': 'Elon',
+          'TechEnthusiast_Alex': 'Alex',
+          'ValueInvestor_Graham': 'Graham',
+          'Regulator_Tom': 'Tom',
+          'ArtStudent_Vivian': 'Vivian',
+          'SocialMedia_Intern': 'Intern',
+          'Cynical_Dev': 'Dev',
+          'Ethical_Philosopher': 'Philosopher'
+        };
+        const shortUsername = usernameMapping[user.username] || user.username;
+        // 使用当前保存的颜色作为初始颜色，如果没有则使用默认灰色
+        initialColors[shortUsername] = userColorStates[shortUsername] || { r: 107, g: 114, b: 128 };
+      });
+      setAnimationInitialColors(initialColors);
       
       // 使用 setTimeout 来精确控制每个消息的显示时机
       const timers: NodeJS.Timeout[] = [];
@@ -391,28 +351,24 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           setCurrentPhase(0);
           setEdgeTransitionStep(index);
           setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
-          console.log(`Phase 1 - Message ${index + 1}: Flashing sender ${step.sender}, edges inactive`);
         }, messageStartTime);
         
         // 阶段2: 闪烁发送者和平台 (1s) - 激活发送者到平台的边
         const phase2Timer = setTimeout(() => {
           setCurrentPhase(1);
           setActiveEdges({ senderToPlatform: true, platformToReceivers: false });
-          console.log(`Phase 2 - Message ${index + 1}: Flashing sender and platform, activating sender-to-platform edge`);
         }, messageStartTime + 1000);
         
         // 阶段3: 闪烁发送者、平台和接收者 (1s) - 激活平台到接收者的边
         const phase3Timer = setTimeout(() => {
           setCurrentPhase(2);
           setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
-          console.log(`Phase 3 - Message ${index + 1}: Flashing sender, platform and receivers, activating platform-to-receivers edges`);
         }, messageStartTime + 2000);
         
         // 阶段4: 开始流动边 (3s) - 保持所有边激活
         const phase4Timer = setTimeout(() => {
           setCurrentPhase(3);
           setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
-          console.log(`Phase 4 - Message ${index + 1}: Starting flow animation`);
         }, messageStartTime + 3000);
         
         timers.push(phase1Timer, phase2Timer, phase3Timer, phase4Timer);
@@ -424,13 +380,14 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         const animationEndTime = lastMessage.delay + lastMessage.duration;
         
         const endTimer = setTimeout(() => {
-          console.log('Animation sequence completed - stopping animation');
           setIsAnimating(false);
           setCurrentStep(-1); // 重置为-1表示没有当前消息
           setCurrentPhase(0);
           setEdgeTransitionStep(-1); // 重置边过渡步骤
           setActiveEdges({ senderToPlatform: false, platformToReceivers: false }); // 重置边激活状态
           setAnimationCompleted(true); // 标记动画完成
+          // 强制重新渲染以重置所有路径状态
+          setForceUpdate(prev => prev + 1);
         }, animationEndTime);
         
         timers.push(endTimer);
@@ -445,24 +402,125 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setCurrentStep(0);
       setCurrentPhase(0);
       setIsAnimating(false);
+      animationStartTimeRef.current = null;
       setAnimationStartTime(null);
       setAnimationCompleted(false);
       setEdgeTransitionStep(-1);
       setIsTransitioning(false);
       setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
     }
-  }, [_users.length]);
+  }, [users.length, platforms?.length, messageSteps.length, singleMessageMode]);
 
-  // 颜色动画定时器 - 每100ms更新一次颜色
+  // 颜色动画定时器 - 每100ms更新一次颜色和颜色状态
   useEffect(() => {
     if (!animationStartTime) return;
 
     const interval = setInterval(() => {
+      // 使用 ref 中的开始时间，确保是最新的
+      const startTime = animationStartTimeRef.current;
+      if (!startTime) return;
+      
+      setUserColorStates(prev => {
+        const newStates = { ...prev };
+        let hasChanges = false;
+        
+        // 在useEffect内部计算动画时长，与消息动画保持一致
+        const calculateAnimationDuration = () => {
+          // 使用实际的后端数据计算时长，与消息动画保持一致
+          if (users.length > 0 && platforms.length > 0) {
+            let totalMessages = 0;
+            
+            platforms.forEach((platform) => {
+              const messages = platform.message_propagation || platform.message_flow || [];
+              
+              if (Array.isArray(messages) && messages.length > 0) {
+                totalMessages += messages.length;
+              }
+            });
+            
+            if (totalMessages > 0) {
+              // 与消息动画保持一致：总时长 = 消息数量 * 6000ms
+              const duration = totalMessages * 6000;
+              return duration;
+            } else {
+              return 0;
+            }
+          }
+          
+          // 如果没有后端数据，返回默认时长
+          return 0;
+        };
+        
+        // 更新所有用户的颜色状态
+        users.forEach(user => {
+          const usernameMapping: { [key: string]: string } = {
+            'MarketingPro_Serena': 'Serena',
+            'Skeptical_Journalist': 'Journalist',
+            'TechBro_Elon': 'Elon',
+            'TechEnthusiast_Alex': 'Alex',
+            'ValueInvestor_Graham': 'Graham',
+            'Regulator_Tom': 'Tom',
+            'ArtStudent_Vivian': 'Vivian',
+            'SocialMedia_Intern': 'Intern',
+            'Cynical_Dev': 'Dev',
+            'Ethical_Philosopher': 'Philosopher'
+          };
+          const shortUsername = usernameMapping[user.username] || user.username;
+          
+          if (user.objective_stance_score !== undefined) {
+            const totalDuration = calculateAnimationDuration();
+            
+            if (totalDuration > 0) {
+              const elapsed = Date.now() - startTime;
+              const progress = Math.min(elapsed / totalDuration, 1);
+              
+              
+              // 使用动画开始时的初始颜色
+              const initialColor = animationInitialColors[shortUsername] || { r: 107, g: 114, b: 128 };
+              
+              // 计算最终颜色
+              const finalColorStr = getStanceColor(user.objective_stance_score);
+              const finalColorMatch = finalColorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
+              
+              if (finalColorMatch) {
+                const finalColor = {
+                  r: parseInt(finalColorMatch[1]),
+                  g: parseInt(finalColorMatch[2]),
+                  b: parseInt(finalColorMatch[3])
+                };
+                
+                // 计算当前颜色 - 从初始颜色渐变到最终颜色
+                const currentColor = {
+                  r: Math.round(initialColor.r + (finalColor.r - initialColor.r) * progress),
+                  g: Math.round(initialColor.g + (finalColor.g - initialColor.g) * progress),
+                  b: Math.round(initialColor.b + (finalColor.b - initialColor.b) * progress)
+                };
+                
+                
+                // 检查是否有变化
+                const savedColor = prev[shortUsername];
+                if (!savedColor || 
+                    savedColor.r !== currentColor.r || 
+                    savedColor.g !== currentColor.g || 
+                    savedColor.b !== currentColor.b) {
+                  newStates[shortUsername] = currentColor;
+                  hasChanges = true;
+                }
+              }
+            }
+          }
+        });
+        
+        return hasChanges ? newStates : prev;
+      });
+      
       setForceUpdate(prev => prev + 1);
-    }, 100); // 每100ms更新一次
+    }, 100); // 恢复为100ms更新一次
 
-    return () => clearInterval(interval);
-  }, [animationStartTime]);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [animationStartTime, users.length, platforms?.length]);
 
   // 获取所有静态路径（一开始就显示）
   const getAllStaticPaths = () => {
@@ -553,6 +611,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           }
         }
       }
+    } else {
+      // 如果没有活跃的步骤，确保所有路径都是不激活的
+      allPaths.forEach(path => {
+        path.isActive = false;
+      });
     }
 
     return allPaths;
@@ -610,21 +673,15 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 处理节点点击事件
   const handleNodeClick = (nodeType: 'user' | 'platform', nodeName: string) => {
-    console.log('Node clicked:', nodeType, nodeName);
-    console.log('Available users:', _users.map(u => u.username));
-    console.log('Available platforms:', _platforms.map(p => p.name));
-    
     if (nodeType === 'user') {
-      const user = _users.find(u => u.username === nodeName);
-      console.log('Found user:', user);
+      const user = users.find(u => u.username === nodeName);
       if (user) {
         setSelectedNode(user);
         setSelectedNodeType('user');
         setModalVisible(true);
       }
     } else if (nodeType === 'platform') {
-      const platform = _platforms.find(p => p.name === nodeName);
-      console.log('Found platform:', platform);
+      const platform = platforms.find(p => p.name === nodeName);
       if (platform) {
         setSelectedNode(platform);
         setSelectedNodeType('platform');
@@ -649,6 +706,100 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     setHistoryModalVisible(false);
   };
 
+  // 处理单条消息点击
+  const handleMessageClick = (messageIndex: number) => {
+    console.log('NetworkVisualization - Starting single message animation for index:', messageIndex);
+    
+    // 自动关闭消息历史弹窗
+    setHistoryModalVisible(false);
+    
+    // 停止当前的单条消息循环
+    if (singleMessageTimer) {
+      clearTimeout(singleMessageTimer);
+      setSingleMessageTimer(null);
+    }
+    
+    // 设置单条消息模式
+    setSingleMessageMode(true);
+    setSelectedMessageIndex(messageIndex);
+    setCurrentStep(messageIndex);
+    setCurrentPhase(0);
+    setEdgeTransitionStep(messageIndex);
+    setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+    
+    // 开始单条消息的循环播放
+    startSingleMessageLoop(messageIndex);
+  };
+
+  // 单条消息循环播放函数
+  const startSingleMessageLoop = (messageIndex: number) => {
+    const step = messageSteps[messageIndex];
+    if (!step) return;
+
+    const playMessage = () => {
+      console.log('NetworkVisualization - Playing single message:', messageIndex);
+      
+      // 阶段1: 闪烁发送者 (1s)
+      setCurrentPhase(0);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+      
+      setTimeout(() => {
+        // 阶段2: 闪烁发送者和平台 (1s)
+        setCurrentPhase(1);
+        setActiveEdges({ senderToPlatform: true, platformToReceivers: false });
+        
+        setTimeout(() => {
+          // 阶段3: 闪烁发送者、平台和接收者 (1s)
+          setCurrentPhase(2);
+          setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
+          
+          setTimeout(() => {
+            // 阶段4: 开始流动边 (3s)
+            setCurrentPhase(3);
+            setActiveEdges({ senderToPlatform: true, platformToReceivers: true });
+            
+            // 3秒后重新开始循环
+            const timer = setTimeout(() => {
+              if (singleMessageMode && selectedMessageIndex === messageIndex) {
+                playMessage(); // 递归调用，实现循环
+              }
+            }, 3000);
+            
+            setSingleMessageTimer(timer);
+          }, 1000);
+        }, 1000);
+      }, 1000);
+    };
+
+    playMessage();
+  };
+
+  // 停止单条消息循环
+  const stopSingleMessageLoop = () => {
+    if (singleMessageTimer) {
+      clearTimeout(singleMessageTimer);
+      setSingleMessageTimer(null);
+    }
+    setSingleMessageMode(false);
+    setSelectedMessageIndex(null);
+    setCurrentStep(-1);
+    setCurrentPhase(0);
+    setEdgeTransitionStep(-1);
+    setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+  };
+
+  // 重置动画状态 - 当数据更新时调用
+  const resetAnimationState = () => {
+    console.log('NetworkVisualization - Resetting animation state for new data');
+    stopSingleMessageLoop();
+    setAnimationCompleted(false);
+    setIsAnimating(false);
+    setCurrentStep(0);
+    setCurrentPhase(0);
+    setEdgeTransitionStep(-1);
+    setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+  };
+
   // 获取所有路径和当前闪烁节点
   const allPaths = getAllStaticPaths();
   const flashingNodes = getCurrentFlashingNodes();
@@ -660,6 +811,23 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
 
   // 使用forceUpdate来触发重新渲染
   void forceUpdate;
+
+  // 清理函数 - 组件卸载时清理定时器
+  useEffect(() => {
+    return () => {
+      if (singleMessageTimer) {
+        clearTimeout(singleMessageTimer);
+      }
+    };
+  }, [singleMessageTimer]);
+
+  // 监听数据变化，重置动画状态
+  useEffect(() => {
+    if (users.length > 0 && platforms?.length > 0 && messageSteps.length > 0) {
+      console.log('NetworkVisualization - Data changed, resetting animation state');
+      resetAnimationState();
+    }
+  }, [users.length, platforms?.length, messageSteps.length]);
 
 
 
@@ -961,11 +1129,13 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         nodeType={selectedNodeType}
       />
       
-      {/* 消息通知 */}
-      <MessageNotification
-        currentStep={currentStep}
-        messageSteps={messageSteps}
-      />
+       {/* 消息通知 - 只在非单条消息模式下显示 */}
+       {!singleMessageMode && (
+         <MessageNotification
+           currentStep={currentStep}
+           messageSteps={messageSteps}
+         />
+       )}
 
       {/* 消息历史按钮 - 只在动画完成后显示 */}
       {animationCompleted && (
@@ -988,6 +1158,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         onClose={handleCloseHistoryModal}
         messageSteps={messageSteps}
         currentStep={currentStep}
+        onMessageClick={handleMessageClick}
       />
     </div>
   );

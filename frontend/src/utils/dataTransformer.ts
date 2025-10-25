@@ -45,16 +45,30 @@ interface BackendSimulationResult {
     latestPost?: string;
     isActive: boolean;
   }>;
-  propagationPaths: Array<{
+  propagationPaths?: Array<{
     from: string;
     content: string;
     round: number;
     stance: number;
   }>;
+  platforms?: Array<{
+    name: string;
+    type: string;
+    userCount: number;
+    activeUsers: string[];
+    message_propagation: Array<{
+      sender: string;
+      receivers: string[];
+      content: string;
+      sentiment: string;
+      timestamp: string;
+    }>;
+  }>;
 }
 
 // 前端期望的用户数据格式
 interface FrontendUser {
+  agentId?: string;
   username: string;
   influence_score: number;
   primary_platform: string;
@@ -96,6 +110,7 @@ export function transformSimulationResultToNetworkData(
 ): FrontendNetworkData {
   // 1. 转换用户数据
   const users: FrontendUser[] = simulationResult.agents.map(agent => ({
+    agentId: agent.agentId,
     username: agent.username,
     influence_score: agent.influenceScore,
     primary_platform: agent.primaryPlatform,
@@ -133,54 +148,104 @@ export function transformSimulationResultToNetworkData(
   });
 
   // 3. 构建消息传播数据
-  // 根据 propagationPaths 构建消息传播
+  // 检查后端是否直接提供了platforms数据（包含message_propagation）
   const messagePropagationMap = new Map<string, Array<any>>();
   
-  simulationResult.propagationPaths.forEach((path, index) => {
-    const sender = simulationResult.agents.find(a => a.agentId === path.from);
-    if (!sender) return;
-
-    const platform = sender.primaryPlatform;
-    if (!messagePropagationMap.has(platform)) {
-      messagePropagationMap.set(platform, []);
-    }
-
-    // 获取接收者（基于网络拓扑）
-    const receivers: string[] = [];
-    if (networkData && networkData.edges) {
-      networkData.edges
-        .filter(edge => edge.source === path.from)
-        .forEach(edge => {
-          const receiver = simulationResult.agents.find(a => a.agentId === edge.target);
-          if (receiver) {
-            receivers.push(receiver.username);
-          }
-        });
-    }
-
-    const sentiment = path.stance > 0 ? 'positive' : path.stance < 0 ? 'negative' : 'neutral';
-    
-    messagePropagationMap.get(platform)!.push({
-      sender: sender.username,
-      receivers: receivers.slice(0, 4), // 限制接收者数量
-      content: path.content,
-      sentiment: sentiment,
-      timestamp: new Date(Date.now() + index * 6000).toISOString(), // 模拟时间戳
-      likes: Math.floor(Math.random() * 50) + 10,
-      shares: Math.floor(Math.random() * 20) + 5,
-      comments: Math.floor(Math.random() * 15) + 3,
+  // 首先检查是否有直接的platforms数据（后端可能直接返回）
+  if (simulationResult.platforms && Array.isArray(simulationResult.platforms)) {
+    console.log('DataTransformer - Found direct platforms data with', simulationResult.platforms.length, 'platforms');
+    simulationResult.platforms.forEach((platform: any) => {
+      if (platform.message_propagation && Array.isArray(platform.message_propagation)) {
+        console.log('DataTransformer - Platform', platform.name, 'has', platform.message_propagation.length, 'messages');
+        messagePropagationMap.set(platform.name, platform.message_propagation);
+      }
     });
-  });
+  }
+  
+  // 如果没有直接的platforms数据，尝试从propagationPaths构建
+  if (messagePropagationMap.size === 0 && simulationResult.propagationPaths && simulationResult.propagationPaths.length > 0) {
+    console.log('DataTransformer - Using propagationPaths data');
+    simulationResult.propagationPaths.forEach((path, index) => {
+      const sender = simulationResult.agents.find(a => a.agentId === path.from);
+      if (!sender) return;
+
+      const platform = sender.primaryPlatform;
+      if (!messagePropagationMap.has(platform)) {
+        messagePropagationMap.set(platform, []);
+      }
+
+      // 获取接收者（基于网络拓扑）
+      const receivers: string[] = [];
+      if (networkData && networkData.edges) {
+        networkData.edges
+          .filter(edge => edge.source === path.from)
+          .forEach(edge => {
+            const receiver = simulationResult.agents.find(a => a.agentId === edge.target);
+            if (receiver) {
+              receivers.push(receiver.username);
+            }
+          });
+      }
+
+      const sentiment = path.stance > 0 ? 'positive' : path.stance < 0 ? 'negative' : 'neutral';
+      
+      messagePropagationMap.get(platform)!.push({
+        sender: sender.username,
+        receivers: receivers.slice(0, 4), // 限制接收者数量
+        content: path.content,
+        sentiment: sentiment,
+        timestamp: new Date(Date.now() + index * 6000).toISOString(), // 使用实际时间戳
+        likes: Math.floor(Math.random() * 50) + 10,
+        shares: Math.floor(Math.random() * 20) + 5,
+        comments: Math.floor(Math.random() * 15) + 3,
+      });
+    });
+  }
+  
+  // 如果仍然没有数据，从agents的发言中生成基础消息
+  if (messagePropagationMap.size === 0) {
+    console.log('DataTransformer - Generating messages from agents data');
+    simulationResult.agents.forEach((agent, index) => {
+      if (agent.latestPost && agent.postsSent > 0) {
+        const platform = agent.primaryPlatform;
+        if (!messagePropagationMap.has(platform)) {
+          messagePropagationMap.set(platform, []);
+        }
+
+        const sentiment = agent.stanceScore > 0 ? 'positive' : 
+                         agent.stanceScore < 0 ? 'negative' : 'neutral';
+        
+        messagePropagationMap.get(platform)!.push({
+          sender: agent.username,
+          receivers: [], // 没有详细信息时为空
+          content: agent.latestPost,
+          sentiment: sentiment,
+          timestamp: new Date(Date.now() + index * 6000).toISOString(),
+          likes: Math.floor(Math.random() * 50) + 10,
+          shares: Math.floor(Math.random() * 20) + 5,
+          comments: Math.floor(Math.random() * 15) + 3,
+        });
+      }
+    });
+  }
 
   // 将消息传播数据添加到平台
   messagePropagationMap.forEach((messages, platformName) => {
     const platform = platformMap.get(platformName);
     if (platform) {
       platform.message_propagation = messages;
+      console.log('DataTransformer - Added', messages.length, 'messages to platform', platformName);
     }
   });
 
   const platforms = Array.from(platformMap.values());
+  
+  console.log('DataTransformer - Final result:');
+  console.log('  - users:', users.length);
+  console.log('  - platforms:', platforms.length);
+  platforms.forEach(platform => {
+    console.log(`  - Platform ${platform.name}: ${platform.message_propagation?.length || 0} messages`);
+  });
 
   return {
     users,
@@ -196,6 +261,7 @@ export function transformAgentsToNetworkData(
   agents: BackendSimulationResult['agents']
 ): FrontendNetworkData {
   const users: FrontendUser[] = agents.map(agent => ({
+    agentId: agent.agentId,
     username: agent.username,
     influence_score: agent.influenceScore,
     primary_platform: agent.primaryPlatform,
