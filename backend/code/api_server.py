@@ -409,6 +409,29 @@ def get_scenario2_sim_result(simulation_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/scenario2/reports/generate", response_model=ApiResponse, tags=["Scenario 2 - Reports"])
+def generate_scenario2_report(request: GenerateReportRequest):
+    """
+    生成 Scenario 2 对比分析报告（模拟 vs 真实案例）
+    """
+    try:
+        report_data = simulation_manager.generate_scenario2_report(
+            simulation_id=request.simulationId,
+            report_type=request.reportType
+        )
+        return ApiResponse(success=True, data=report_data)
+    except ValueError as e:
+        error_payload = {"code": "SIMULATION_NOT_FOUND", "message": str(e)}
+        return JSONResponse(
+            status_code=404,
+            content={"success": False, "error": error_payload}
+        )
+    except Exception as e:
+        import traceback
+        print(f"❌ Error generating scenario2 report: {str(e)}")
+        print(traceback.format_exc())
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 if __name__ == "__main__":
     # 启动API服务器
