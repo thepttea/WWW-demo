@@ -33,6 +33,9 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   const [currentRound, setCurrentRound] = useState(1);
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
   const [reportData, setReportData] = useState<any>(null);
+  const [animationKey, setAnimationKey] = useState(0); // 用于强制重置动画
+  const [isReportJustClosed, setIsReportJustClosed] = useState(false); // 跟踪是否刚刚关闭报告
+  const [shouldKeepFinalState, setShouldKeepFinalState] = useState<boolean>(false); // 标记是否应该保持最终状态
 
   // API hooks
   const startSimulationMutation = useStartScenario2Simulation();
@@ -120,7 +123,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
           agents: simulationResultData.data.agents.map(agent => ({
             ...agent,
             // 后端返回的字段名是 influence_score，需要转换
-            influenceScore: agent.influence_score || 0
+            influenceScore: agent.influence_score !== undefined ? agent.influence_score : (agent.influenceScore || 0)
           }))
         };
         
@@ -238,13 +241,26 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     console.log('handleContinueNextRound - Setting states:', {
       before: { isSimulationRunning, hasCompletedSimulation, isStartingNewRound }
     });
+    
+    // 先重置完成状态，确保新组件能正确接收状态
+    setHasCompletedSimulation(false);
     setIsSimulationRunning(true);
-    setHasCompletedSimulation(false); // 重置完成状态，准备新的动画
     setIsStartingNewRound(true); // 标记正在开始新轮次，清除旧数据
     
     // 立即更新到下一轮，让用户看到下一轮的策略
     const nextRound = currentRound + 1;
     setCurrentRound(nextRound);
+    
+    // 使用setTimeout确保状态更新后再更新animationKey
+    setTimeout(() => {
+      setAnimationKey(prev => prev + 1); // 强制重置动画
+      // 再次确保hasCompletedSimulation被重置
+      setHasCompletedSimulation(false);
+    }, 0);
+    
+    // 新轮次开始，重置报告关闭状态
+    setIsReportJustClosed(false);
+    setShouldKeepFinalState(false);
     
     console.log('handleContinueNextRound - States set, should show running simulation');
     
@@ -374,12 +390,16 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   const renderMapVisualization = () => {
     return (
       <VisualizationArea
+        key={`scenario2-${currentRound}-${simulationId}-${animationKey}`} // 添加animationKey来强制重新渲染
         isLoading={startSimulationMutation.isPending || addPRStrategyMutation.isPending || isSimulationRunning || isStartingNewRound}
         isSimulationRunning={isSimulationRunning || isStartingNewRound}
         hasCompletedSimulation={hasCompletedSimulation}
         onAnimationCompleted={() => setHasCompletedSimulation(true)}
         networkData={memoizedNetworkData}
         simulationResult={simulationResultData?.success ? simulationResultData.data : undefined}
+        animationKey={animationKey} // 传递animationKey给NetworkVisualization
+        isReportJustClosed={isReportJustClosed} // 传递报告关闭状态
+        shouldKeepFinalState={shouldKeepFinalState} // 传递是否应该保持最终状态
       />
     );
   };
@@ -481,8 +501,18 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         simulationResults={simulationResultData?.data}
         realWorldResults={selectedCase?.realWorldOutcome}
         reportData={reportData}
-        onBack={() => setShowResults(false)}
-        onClose={() => setShowResults(false)}
+        onBack={() => {
+          setShowResults(false);
+          setIsReportJustClosed(true);
+          setShouldKeepFinalState(true);
+          // 不要重置动画状态，保持当前的动画状态
+        }}
+        onClose={() => {
+          setShowResults(false);
+          setIsReportJustClosed(true);
+          setShouldKeepFinalState(true);
+          // 不要重置动画状态，保持当前的动画状态
+        }}
       />
     );
   }

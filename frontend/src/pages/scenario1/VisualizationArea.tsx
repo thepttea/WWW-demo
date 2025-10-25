@@ -12,6 +12,11 @@ interface VisualizationAreaProps {
   onAnimationCompleted?: () => void;
   networkData?: any;
   simulationResult?: any;
+  animationKey?: number;
+  isReportJustClosed?: boolean;
+  shouldKeepFinalState?: boolean;
+  preservedUserColorStates?: { [username: string]: { r: number; g: number; b: number } };
+  onColorStatesChange?: (colorStates: { [username: string]: { r: number; g: number; b: number } }) => void;
 }
 
 const VisualizationArea: React.FC<VisualizationAreaProps> = ({
@@ -21,6 +26,11 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
   onAnimationCompleted,
   networkData,
   simulationResult: _simulationResult,
+  animationKey = 0,
+  isReportJustClosed = false,
+  shouldKeepFinalState = false,
+  preservedUserColorStates = {},
+  onColorStatesChange,
 }) => {
   console.log('VisualizationArea - Props:', { 
     isLoading: _isLoading, 
@@ -56,6 +66,11 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
               isLoading={false}
               hasCompletedSimulation={hasCompletedSimulation}
               onAnimationCompleted={onAnimationCompleted}
+              animationKey={animationKey}
+              isReportJustClosed={isReportJustClosed}
+              shouldKeepFinalState={shouldKeepFinalState}
+              preservedUserColorStates={preservedUserColorStates}
+              onColorStatesChange={onColorStatesChange}
             />
           </div>
         )}

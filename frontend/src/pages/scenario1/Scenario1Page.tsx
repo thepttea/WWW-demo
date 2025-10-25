@@ -22,6 +22,10 @@ const Scenario1Page: React.FC = () => {
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
   const [hasCompletedSimulation, setHasCompletedSimulation] = useState<boolean>(false);
   const [isStartingNewRound, setIsStartingNewRound] = useState<boolean>(false);
+  const [animationKey, setAnimationKey] = useState(0); // 用于强制重置动画
+  const [isReportJustClosed, setIsReportJustClosed] = useState(false); // 跟踪是否刚刚关闭报告
+  const [shouldKeepFinalState, setShouldKeepFinalState] = useState<boolean>(false); // 标记是否应该保持最终状态
+  const [preservedUserColorStates, setPreservedUserColorStates] = useState<{ [username: string]: { r: number; g: number; b: number } }>({}); // 保存用户颜色状态
 
   // API hooks
   const startSimulationMutation = useStartSimulation();
@@ -107,7 +111,7 @@ const Scenario1Page: React.FC = () => {
           agents: simulationResultData.data.agents.map(agent => ({
             ...agent,
             // 后端返回的字段名是 influence_score，需要转换
-            influenceScore: agent.influence_score || 0
+            influenceScore: agent.influence_score !== undefined ? agent.influence_score : (agent.influenceScore || 0)
           }))
         };
         
@@ -251,9 +255,20 @@ const Scenario1Page: React.FC = () => {
     console.log('handleStartNextRound - Setting states:', {
       before: { isSimulationRunning, hasCompletedSimulation, isStartingNewRound }
     });
+    
+    // 先重置完成状态，确保新组件能正确接收状态
+    setHasCompletedSimulation(false);
     setIsSimulationRunning(true);
-    setHasCompletedSimulation(false); // 重置完成状态，准备新的动画
     setIsStartingNewRound(true); // 标记正在开始新轮次，清除旧数据
+    setIsReportJustClosed(false); // 新轮次开始，重置报告关闭状态
+    setShouldKeepFinalState(false); // 新轮次开始，不保持最终状态
+    
+    // 使用setTimeout确保状态更新后再更新animationKey
+    setTimeout(() => {
+      setAnimationKey(prev => prev + 1); // 强制重置动画
+      // 再次确保hasCompletedSimulation被重置
+      setHasCompletedSimulation(false);
+    }, 0);
     console.log('handleStartNextRound - States set, should show running simulation');
     
     try {
@@ -377,10 +392,16 @@ const Scenario1Page: React.FC = () => {
 
   const handleCloseResults = () => {
     setShowResults(false);
+    setIsReportJustClosed(true);
+    setShouldKeepFinalState(true);
+    // 不要重置动画状态，保持当前的动画状态
   };
 
   const handleBackToSimulation = () => {
     setShowResults(false);
+    setIsReportJustClosed(true);
+    setShouldKeepFinalState(true);
+    // 不要重置动画状态，保持当前的动画状态
   };
 
   const handleCloseDrawer = () => {
@@ -434,12 +455,18 @@ const Scenario1Page: React.FC = () => {
           </div>
           <div className="visualization-column">
             <VisualizationArea
+              key={`scenario1-${simulationState?.currentRound || 1}-${simulationId}-${animationKey}`} // 添加key来强制重新渲染
               isLoading={startSimulationMutation.isPending || addPRStrategyMutation.isPending}
               isSimulationRunning={isSimulationRunning}
               hasCompletedSimulation={hasCompletedSimulation}
               onAnimationCompleted={() => setHasCompletedSimulation(true)}
               networkData={memoizedNetworkData}
               simulationResult={simulationResultData?.success ? simulationResultData.data : undefined}
+              animationKey={animationKey} // 传递animationKey给NetworkVisualization
+              isReportJustClosed={isReportJustClosed} // 传递报告关闭状态
+              shouldKeepFinalState={shouldKeepFinalState} // 传递是否应该保持最终状态
+              preservedUserColorStates={preservedUserColorStates} // 传递保存的颜色状态
+              onColorStatesChange={setPreservedUserColorStates} // 颜色状态变化回调
             />
           </div>
         </div>

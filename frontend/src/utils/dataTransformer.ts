@@ -112,7 +112,7 @@ export function transformSimulationResultToNetworkData(
   const users: FrontendUser[] = simulationResult.agents.map(agent => ({
     agentId: agent.agentId,
     username: agent.username,
-    influence_score: agent.influenceScore,
+    influence_score: agent.influenceScore !== undefined ? agent.influenceScore : (agent.influence_score || 0),
     primary_platform: agent.primaryPlatform,
     emotional_style: agent.emotionalStyle,
     final_decision: agent.latestPost || "尚未发言",
@@ -282,7 +282,7 @@ export function transformAgentsToNetworkData(
   const users: FrontendUser[] = agents.map(agent => ({
     agentId: agent.agentId,
     username: agent.username,
-    influence_score: agent.influenceScore,
+    influence_score: agent.influenceScore !== undefined ? agent.influenceScore : (agent.influence_score || 0),
     primary_platform: agent.primaryPlatform,
     emotional_style: agent.emotionalStyle,
     final_decision: agent.latestPost || "尚未发言",

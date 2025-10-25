@@ -46,6 +46,11 @@ interface NetworkVisualizationProps {
     platforms: Platform[];
   };
   simulationResult?: any;
+  animationKey?: number; // 用于强制重置动画
+  isReportJustClosed?: boolean; // 是否刚刚关闭报告
+  shouldKeepFinalState?: boolean; // 是否应该保持最终状态
+  preservedUserColorStates?: { [username: string]: { r: number; g: number; b: number } }; // 外部保存的颜色状态
+  onColorStatesChange?: (colorStates: { [username: string]: { r: number; g: number; b: number } }) => void; // 颜色状态变化回调
 }
 
 const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
@@ -55,7 +60,12 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   hasCompletedSimulation = false,
   onAnimationCompleted,
   networkData,
-  simulationResult: _simulationResult
+  simulationResult: _simulationResult,
+  animationKey = 0,
+  isReportJustClosed = false,
+  shouldKeepFinalState = false,
+  preservedUserColorStates = {},
+  onColorStatesChange
 }) => {
   // 组件挂载时记录日志
   useEffect(() => {
@@ -64,6 +74,15 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       console.log('====== [MOUNT DEBUG] NetworkVisualization component UNMOUNTED ======');
     };
   }, []);
+
+  // 同步外部保存的颜色状态
+  useEffect(() => {
+    if (Object.keys(preservedUserColorStates).length > 0) {
+      console.log('[COLOR SYNC DEBUG] Syncing external color states:', preservedUserColorStates);
+      setUserColorStates(preservedUserColorStates);
+      setAnimationInitialColors(preservedUserColorStates);
+    }
+  }, [preservedUserColorStates]);
   
   // 优先使用networkData，如果没有则使用传入的users和platforms
   const users = networkData?.users || _users;
@@ -75,10 +94,10 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
   const animationStartTimeRef = useRef<number | null>(null);
   const [forceUpdate, setForceUpdate] = useState(0); // 用于强制重新渲染
   
-  // 颜色状态持久化 - 记录每个用户的上一次颜色状态
-  const [userColorStates, setUserColorStates] = useState<{ [username: string]: { r: number; g: number; b: number } }>({});
+  // 颜色状态持久化 - 使用外部保存的颜色状态，如果没有则使用内部状态
+  const [userColorStates, setUserColorStates] = useState<{ [username: string]: { r: number; g: number; b: number } }>(preservedUserColorStates);
   // 动画开始时的初始颜色 - 用于颜色渐变计算
-  const [animationInitialColors, setAnimationInitialColors] = useState<{ [username: string]: { r: number; g: number; b: number } }>({});
+  const [animationInitialColors, setAnimationInitialColors] = useState<{ [username: string]: { r: number; g: number; b: number } }>(preservedUserColorStates);
   
   // 节点详情弹窗状态
   const [modalVisible, setModalVisible] = useState(false);
@@ -313,6 +332,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     console.log('  - platforms?.length:', platforms?.length);
     console.log('  - singleMessageMode:', singleMessageMode);
     console.log('  - hasCompletedSimulation:', hasCompletedSimulation);
+    console.log('  - animationKey:', animationKey);
     
     // 如果处于单条消息模式，不启动正常的动画序列
     if (singleMessageMode) {
@@ -320,8 +340,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       return;
     }
     
-    // 如果模拟已经完成，直接显示最终状态
-    if (hasCompletedSimulation) {
+    // 如果模拟已经完成且没有animationKey变化，直接显示最终状态
+    if (hasCompletedSimulation && animationKey === 0) {
       console.log('NetworkVisualization - Simulation already completed, showing final state');
       setAnimationCompleted(true);
       setCurrentStep(-1); // 设置为-1表示没有当前消息
@@ -371,8 +391,173 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       return;
     }
     
+    // 如果应该保持最终状态（关闭报告窗口），直接显示最终状态
+    if (shouldKeepFinalState && hasCompletedSimulation) {
+      console.log('NetworkVisualization - Should keep final state (report closed), showing final state');
+      setAnimationCompleted(true);
+      setCurrentStep(-1); // 设置为-1表示没有当前消息
+      setCurrentPhase(0);
+      setEdgeTransitionStep(-1);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+      
+      // 确保节点显示最终颜色状态
+      if (users.length > 0) {
+        console.log('====== [COLOR DEBUG] Setting final colors for completed simulation ======');
+        const finalColors: { [username: string]: { r: number; g: number; b: number } } = {};
+        users.forEach(user => {
+          const usernameMapping: { [key: string]: string } = {
+            'MarketingPro_Serena': 'Serena',
+            'Skeptical_Journalist': 'Journalist',
+            'TechBro_Elon': 'Elon',
+            'TechEnthusiast_Alex': 'Alex',
+            'ValueInvestor_Graham': 'Graham',
+            'Regulator_Tom': 'Tom',
+            'ArtStudent_Vivian': 'Vivian',
+            'SocialMedia_Intern': 'Intern',
+            'Cynical_Dev': 'Dev',
+            'Philosopher_Philosopher': 'Philosopher'
+          };
+          const shortUsername = usernameMapping[user.username] || user.username;
+          
+          // 使用用户的最终立场颜色
+          const stance = user.objective_stance_score || 0;
+          const finalColorStr = getStanceColor(stance);
+          const finalColorMatch = finalColorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
+          
+          if (finalColorMatch) {
+            finalColors[shortUsername] = {
+              r: parseInt(finalColorMatch[1]),
+              g: parseInt(finalColorMatch[2]),
+              b: parseInt(finalColorMatch[3])
+            };
+          } else {
+            // 如果解析失败，使用默认灰色
+            finalColors[shortUsername] = { r: 107, g: 114, b: 128 };
+          }
+        });
+        console.log('[COLOR DEBUG] Final colors to be set:', finalColors);
+        setUserColorStates(finalColors);
+        console.log('[COLOR DEBUG] Final colors have been set');
+      }
+      return;
+    }
+    
+    // 如果模拟已经完成但animationKey > 0，说明是新轮次，需要重新开始动画
+    if (hasCompletedSimulation && animationKey > 0) {
+      console.log('====== [NEW ROUND DEBUG] New round detected, resetting animation state ======');
+      console.log('[NEW ROUND DEBUG] Current userColorStates:', userColorStates);
+      console.log('[NEW ROUND DEBUG] Current animationInitialColors:', animationInitialColors);
+      console.log('[NEW ROUND DEBUG] Users data:', users.map(u => ({ username: u.username, stance: u.objective_stance_score })));
+      
+      setAnimationCompleted(false);
+      setCurrentStep(0);
+      setCurrentPhase(0);
+      setEdgeTransitionStep(-1);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+      setIsAnimating(false);
+      setAnimationStartTime(null);
+      animationStartTimeRef.current = null;
+      
+      // 新轮次开始时，保持上一轮的最终颜色状态作为起始颜色
+      console.log('[NEW ROUND DEBUG] Preserving previous round final colors as starting colors');
+      if (users.length > 0) {
+        // 优先使用当前已保存的颜色状态（上一轮的最终状态）
+        const currentColorStates = userColorStates;
+        console.log('[NEW ROUND DEBUG] Current color states keys:', Object.keys(currentColorStates));
+        console.log('[NEW ROUND DEBUG] Current color states values:', currentColorStates);
+        
+        if (Object.keys(currentColorStates).length > 0) {
+          console.log('[COLOR DEBUG] Using existing color states as starting colors:', currentColorStates);
+          setUserColorStates(currentColorStates);
+          setAnimationInitialColors(currentColorStates);
+        } else {
+          console.log('[NEW ROUND DEBUG] No existing color states, calculating from user data');
+          // 如果没有保存的颜色状态，则基于当前用户数据计算
+          const preservedColors: { [username: string]: { r: number; g: number; b: number } } = {};
+          users.forEach(user => {
+            const usernameMapping: { [key: string]: string } = {
+              'MarketingPro_Serena': 'Serena',
+              'Skeptical_Journalist': 'Journalist',
+              'TechBro_Elon': 'Elon',
+              'TechEnthusiast_Alex': 'Alex',
+              'ValueInvestor_Graham': 'Graham',
+              'Regulator_Tom': 'Tom',
+              'ArtStudent_Vivian': 'Vivian',
+              'SocialMedia_Intern': 'Intern',
+              'Cynical_Dev': 'Dev',
+              'Philosopher_Philosopher': 'Philosopher'
+            };
+            const shortUsername = usernameMapping[user.username] || user.username;
+            
+            // 使用用户的当前立场颜色作为新轮次的起始颜色
+            const stance = user.objective_stance_score || 0;
+            const colorStr = getStanceColor(stance);
+            const colorMatch = colorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
+            
+            console.log(`[NEW ROUND DEBUG] User ${user.username} (${shortUsername}): stance=${stance}, colorStr=${colorStr}`);
+            
+            if (colorMatch) {
+              preservedColors[shortUsername] = {
+                r: parseInt(colorMatch[1]),
+                g: parseInt(colorMatch[2]),
+                b: parseInt(colorMatch[3])
+              };
+            } else {
+              // 如果解析失败，使用默认灰色
+              preservedColors[shortUsername] = { r: 107, g: 114, b: 128 };
+            }
+          });
+          
+          console.log('[COLOR DEBUG] Calculated colors for new round:', preservedColors);
+          setUserColorStates(preservedColors);
+          setAnimationInitialColors(preservedColors);
+        }
+      }
+      console.log('[NEW ROUND DEBUG] Color state setup completed, continuing with animation logic');
+      // 继续执行下面的动画逻辑
+    }
+    
+    // 如果动画已经完成且没有新的animationKey变化，不要重新启动动画
+    if (animationCompleted && animationKey === 0) {
+      console.log('NetworkVisualization - Animation already completed, not restarting');
+      return;
+    }
+    
+    // 如果动画已经完成但hasCompletedSimulation为false，说明需要重新开始动画
+    if (animationCompleted && !hasCompletedSimulation) {
+      console.log('NetworkVisualization - Resetting animation state for new round');
+      setAnimationCompleted(false);
+      setCurrentStep(0);
+      setCurrentPhase(0);
+      setEdgeTransitionStep(-1);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+      // 继续执行下面的动画逻辑
+    }
+    
+    // 如果animationKey变化，强制重置所有动画状态（但不重置颜色状态）
+    if (animationKey > 0) {
+      console.log('NetworkVisualization - Animation key changed, forcing animation reset (preserving colors)');
+      setAnimationCompleted(false);
+      setCurrentStep(0);
+      setCurrentPhase(0);
+      setEdgeTransitionStep(-1);
+      setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
+      setIsAnimating(false);
+      setAnimationStartTime(null);
+      animationStartTimeRef.current = null;
+      // 不要重置颜色状态，保持上一轮的最终颜色
+      console.log('[ANIMATION KEY DEBUG] Preserving color states during animation key change');
+      // 继续执行下面的动画逻辑
+    }
+    
     if (users.length > 0 && messageSteps.length > 0) {
-      console.log('NetworkVisualization - Starting animation with', messageSteps.length, 'steps');
+      console.log('====== [ANIMATION START DEBUG] Starting animation ======');
+      console.log('[ANIMATION START DEBUG] Message steps:', messageSteps.length);
+      console.log('[ANIMATION START DEBUG] Users:', users.map(u => ({ username: u.username, stance: u.objective_stance_score })));
+      console.log('[ANIMATION START DEBUG] Platforms:', platforms?.map(p => p.name));
+      console.log('[ANIMATION START DEBUG] Current userColorStates:', userColorStates);
+      console.log('[ANIMATION START DEBUG] Current animationInitialColors:', animationInitialColors);
+      
       setIsAnimating(true);
       setCurrentStep(0);
       setCurrentPhase(0);
@@ -407,6 +592,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       console.log('[COLOR DEBUG] All initial colors for animation:', initialColors);
       console.log('[COLOR DEBUG] Current userColorStates:', userColorStates);
       setAnimationInitialColors(initialColors);
+      // 立即设置用户颜色状态，确保节点显示正确的起始颜色
+      setUserColorStates(initialColors);
       
       // 使用 setTimeout 来精确控制每个消息的显示时机
       const timers: NodeJS.Timeout[] = [];
@@ -450,6 +637,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         
         const endTimer = setTimeout(() => {
           console.log('[COLOR DEBUG] ====== Animation completed, setting final colors ======');
+          console.log('[COLOR DEBUG] Users data at animation end:', users.map(u => ({ 
+            username: u.username, 
+            stance: u.objective_stance_score,
+            influence: u.influence_score 
+          })));
           
           // 在动画结束时，确保所有节点的颜色都更新到最终值
           const finalColors: { [username: string]: { r: number; g: number; b: number } } = {};
@@ -473,6 +665,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
             const finalColorStr = getStanceColor(stance);
             const finalColorMatch = finalColorStr.match(/rgb\((\d+), (\d+), (\d+)\)/);
             
+            console.log(`[COLOR DEBUG] ${user.username} (${shortUsername}): stance=${stance}, colorStr=${finalColorStr}`);
+            
             if (finalColorMatch) {
               finalColors[shortUsername] = {
                 r: parseInt(finalColorMatch[1]),
@@ -487,6 +681,11 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
           
           console.log('[COLOR DEBUG] Setting final colors on animation end:', finalColors);
           setUserColorStates(finalColors);
+          // 保存颜色状态到外部
+          if (onColorStatesChange) {
+            console.log('[COLOR DEBUG] Saving color states to parent component');
+            onColorStatesChange(finalColors);
+          }
           
           setIsAnimating(false);
           setCurrentStep(-1); // 重置为-1表示没有当前消息
@@ -518,7 +717,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setIsTransitioning(false);
       setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
     }
-  }, [users.length, platforms?.length, messageSteps.length, singleMessageMode, hasCompletedSimulation]);
+  }, [users.length, platforms?.length, messageSteps.length, singleMessageMode, hasCompletedSimulation, animationKey]);
 
   // 颜色动画定时器 - 每100ms更新一次颜色和颜色状态
   useEffect(() => {
@@ -532,6 +731,12 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setUserColorStates(prev => {
         const newStates = { ...prev };
         let hasChanges = false;
+        
+        // 添加调试信息
+        if (Math.random() < 0.01) { // 1%的概率输出调试信息，避免日志过多
+          console.log('[COLOR UPDATE DEBUG] Current userColorStates:', prev);
+          console.log('[COLOR UPDATE DEBUG] AnimationInitialColors:', animationInitialColors);
+        }
         
         // 在useEffect内部计算动画时长，与消息动画保持一致
         const calculateAnimationDuration = () => {
