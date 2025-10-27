@@ -116,12 +116,24 @@ export interface ReportRequest {
 
 export interface ReportResponse {
   reportId: string;
+  reportType: string;
   content: string;
-  summary: {
-    overallSentiment: number;
-    keyInsights: string[];
-    improvements: string[];
+  evaluation: {
+    evaluation_type: string;
+    overall_ideal_achievement_percentage?: number; // Scenario1
+    overall_similarity_percentage?: number; // Scenario2
+    rating?: string; // Scenario1
+    dimension_scores: {
+      [dimensionName: string]: {
+        weight: number;
+        details: any;
+      };
+    };
+    summary: string;
   };
+  caseId?: string; // Scenario2
+  caseTitle?: string; // Scenario2
+  overallSimilarityPercentage?: number; // Scenario2
   generatedAt: string;
 }
 
@@ -255,18 +267,6 @@ class ApiClient {
     });
   }
 
-  async getSimulationResultData(simulationId: string): Promise<ApiResponse<SimulationResultData>> {
-    return this.request<SimulationResultData>(`/scenario1/simulation/${simulationId}/analysis`, {
-      method: 'GET',
-    });
-  }
-
-  async getNetworkData(simulationId: string): Promise<ApiResponse<NetworkData>> {
-    return this.request<NetworkData>(`/scenario1/simulation/${simulationId}/network`, {
-      method: 'GET',
-    });
-  }
-
   async stopSimulation(simulationId: string): Promise<ApiResponse<{ simulationId: string; status: string; message: string }>> {
     return this.request(`/scenario1/simulation/${simulationId}/stop`, {
       method: 'POST',
@@ -345,9 +345,10 @@ class ApiClient {
     });
   }
 
-  async generateScenario2Report(simulationId: string): Promise<ApiResponse<ReportResponse>> {
-    return this.request<ReportResponse>(`/scenario2/simulation/${simulationId}/generate-report`, {
+  async generateScenario2Report(request: ReportRequest): Promise<ApiResponse<ReportResponse>> {
+    return this.request<ReportResponse>('/scenario2/reports/generate', {
       method: 'POST',
+      body: JSON.stringify(request),
     });
   }
 }

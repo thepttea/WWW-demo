@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { Card, Typography, Button, Divider, message } from 'antd';
+import { Card, Typography, Button, message } from 'antd';
 import {
   ReloadOutlined,
   BarChartOutlined,
   PlayCircleOutlined
 } from '@ant-design/icons';
 import { HistoricalCase } from '../../types';
-import Scenario2ResultsPage from './Scenario2ResultsPage';
+import Scenario2ReportPage from './Scenario2ReportPage';
 import VisualizationArea from '../scenario1/VisualizationArea';
-import { useStartScenario2Simulation, useScenario2SimulationStatus, useGenerateScenario2Report, useAddPRStrategy, useSimulationResult, useNetworkData, useResetSimulation } from '../../hooks/useApi';
+import { useStartScenario2Simulation, useScenario2SimulationStatus, useGenerateScenario2Report, useAddScenario2Strategy, useScenario2SimulationResult, useResetSimulation } from '../../hooks/useApi';
 import { transformSimulationResultToNetworkData } from '../../utils/dataTransformer';
 import './Scenario2SimulationPage.css';
 
@@ -39,13 +39,12 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
 
   // API hooks
   const startSimulationMutation = useStartScenario2Simulation();
-  const addPRStrategyMutation = useAddPRStrategy(); // 使用Scenario1的API
+  const addScenario2StrategyMutation = useAddScenario2Strategy(); // 使用Scenario2的API
   const generateReportMutation = useGenerateScenario2Report();
   const resetSimulationMutation = useResetSimulation(); // 添加reset功能
   const { data: simulationStatusData } = useScenario2SimulationStatus(simulationId, isSimulationRunning);
-  // 使用Scenario1的数据获取方式，因为Scenario2现在使用相同的模拟系统
-  const { data: simulationResultData } = useSimulationResult(simulationId);
-  const { data: networkData } = useNetworkData(simulationId);
+  // 使用Scenario2的数据获取方式
+  const { data: simulationResultData } = useScenario2SimulationResult(simulationId);
 
   // 监听模拟状态变化
   useEffect(() => {
@@ -58,7 +57,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         console.log('Scenario 2 simulation completed, stopping polling and fetching results');
         setIsSimulationRunning(false);
         setCurrentRound(round);
-        setHasCompletedSimulation(true);
+        // 不在这里设置hasCompletedSimulation，让动画组件通过onAnimationCompleted回调来设置
       } else if (status === 'error') {
         console.log('Scenario 2 simulation failed');
         setIsSimulationRunning(false);
@@ -85,13 +84,12 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   useEffect(() => {
     const hasStatusData = !!simulationStatusData?.success;
     const hasResultData = !!simulationResultData?.success;
-    const hasNetworkData = !!networkData?.success;
     
-    if (hasStatusData && hasResultData && hasNetworkData) {
+    if (hasStatusData && hasResultData) {
       console.log('All Scenario 2 simulation data ready, data is available for animation');
       // 不在这里设置hasCompletedSimulation，让动画先开始
     }
-  }, [simulationStatusData, simulationResultData, networkData]);
+  }, [simulationStatusData, simulationResultData]);
 
   // 使用ref保存上一次的网络数据
   const previousNetworkDataRef = useRef<any>(null);
@@ -111,7 +109,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     // 数据转换：将后端格式转换为前端期望的格式
     if (simulationResultData?.success && simulationResultData.data) {
       console.log('[DATA DEBUG] Processing simulation result data');
-      console.log('[DATA DEBUG] Agents data:', simulationResultData.data.agents?.map(a => ({
+      console.log('[DATA DEBUG] Agents data:', simulationResultData.data.agents?.map((a: any) => ({
         username: a.username,
         stance: a.stanceScore || a.objective_stance_score
       })));
@@ -120,29 +118,18 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         // 转换数据格式以匹配期望的接口
         const transformedData = {
           ...simulationResultData.data,
-          agents: simulationResultData.data.agents.map(agent => ({
+          agents: simulationResultData.data.agents.map((agent: any) => ({
             ...agent,
             // 后端返回的字段名是 influence_score，需要转换
             influenceScore: agent.influence_score !== undefined ? agent.influence_score : (agent.influenceScore || 0)
           }))
         };
         
-        // 优先使用完整的模拟结果数据
-        const backendNetworkData = networkData?.success && networkData.data ? {
-          ...networkData.data,
-          nodes: networkData.data.nodes.map(node => ({
-            ...node,
-            influenceScore: node.influence_score || 0
-          })),
-          edges: networkData.data.edges || []
-        } : undefined;
-
         const result = transformSimulationResultToNetworkData(
-          transformedData,
-          backendNetworkData
+          transformedData
         );
         
-        console.log('[DATA DEBUG] Transformed network data users:', result?.users?.map(u => ({
+        console.log('[DATA DEBUG] Transformed network data users:', result?.users?.map((u: any) => ({
           username: u.username,
           stance: u.objective_stance_score
         })));
@@ -156,7 +143,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         // 如果转换失败，尝试简化版转换
         if (simulationResultData.data.agents) {
           // 转换数据格式以匹配期望的接口
-          const transformedAgents = simulationResultData.data.agents.map(agent => ({
+          const transformedAgents = simulationResultData.data.agents.map((agent: any) => ({
             ...agent,
             // 后端返回的字段名是 influence_score，需要转换
             influenceScore: agent.influence_score || 0
@@ -172,7 +159,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     }
     console.log('[DATA DEBUG] Returning undefined because no valid data');
     return previousNetworkDataRef.current || undefined;
-  }, [simulationResultData, networkData, isStartingNewRound]);
+  }, [simulationResultData, isStartingNewRound]);
 
   // 调试日志
   console.log('Scenario2SimulationPage - Current state:', {
@@ -181,7 +168,6 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     isStartingNewRound,
     hasStatusData: !!simulationStatusData,
     hasResultData: !!simulationResultData,
-    hasNetworkData: !!networkData,
     hasCompletedSimulation
   });
 
@@ -251,12 +237,10 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     const nextRound = currentRound + 1;
     setCurrentRound(nextRound);
     
-    // 使用setTimeout确保状态更新后再更新animationKey
-    setTimeout(() => {
-      setAnimationKey(prev => prev + 1); // 强制重置动画
-      // 再次确保hasCompletedSimulation被重置
-      setHasCompletedSimulation(false);
-    }, 0);
+    // 同步更新animationKey和hasCompletedSimulation状态
+    setAnimationKey(prev => prev + 1); // 强制重置动画
+    // 确保hasCompletedSimulation被重置
+    setHasCompletedSimulation(false);
     
     // 新轮次开始，重置报告关闭状态
     setIsReportJustClosed(false);
@@ -267,21 +251,18 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     try {
       message.loading('Starting next round simulation...', 0);
       
-      // 获取下一轮策略
-      const nextRoundStrategy = getCurrentRoundStrategy(selectedCase?.strategies || [], nextRound);
-      const strategyContent = nextRoundStrategy.replace(/<[^>]*>/g, ''); // 移除HTML标签
-      
-      const result = await addPRStrategyMutation.mutateAsync({
-        simulationId,
-        prStrategy: strategyContent,
-      });
+      const result = await addScenario2StrategyMutation.mutateAsync(simulationId);
 
       message.destroy();
       
       if (result.success && result.data) {
-        const roundNumber = result.data.round;
+        const roundNumber = result.data.currentRound;
         console.log('Next round simulation started, round:', roundNumber);
+        console.log('Backend returned new data, clearing isStartingNewRound flag');
+        
+        // 后端返回了新数据，清除新轮次标记
         setIsStartingNewRound(false);
+        
         // 确保轮次与后端返回的一致
         if (roundNumber !== nextRound) {
           setCurrentRound(roundNumber);
@@ -315,7 +296,11 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
 
     try {
       message.loading('Generating report...', 0);
-      const result = await generateReportMutation.mutateAsync(simulationId);
+      const result = await generateReportMutation.mutateAsync({
+        simulationId,
+        reportType: 'comprehensive',
+        includeVisualizations: true,
+      });
 
       message.destroy();
       
@@ -351,7 +336,13 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
       setIsSimulationRunning(false);
       setHasCompletedSimulation(false);
       setIsStartingNewRound(false);
+      setAnimationKey(0); // 重置动画key
+      setIsReportJustClosed(false);
+      setShouldKeepFinalState(false);
       setReportData(null);
+      
+      // 清空缓存的网络数据，防止reset后仍然显示旧数据
+      previousNetworkDataRef.current = null;
     } catch (error) {
       console.error('Reset error:', error);
       message.error('Failed to reset simulation');
@@ -391,7 +382,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     return (
       <VisualizationArea
         key={`scenario2-${currentRound}-${simulationId}-${animationKey}`} // 添加animationKey来强制重新渲染
-        isLoading={startSimulationMutation.isPending || addPRStrategyMutation.isPending || isSimulationRunning || isStartingNewRound}
+        isLoading={startSimulationMutation.isPending || addScenario2StrategyMutation.isPending || isSimulationRunning || isStartingNewRound}
         isSimulationRunning={isSimulationRunning || isStartingNewRound}
         hasCompletedSimulation={hasCompletedSimulation}
         onAnimationCompleted={() => setHasCompletedSimulation(true)}
@@ -413,8 +404,6 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
           <Title level={4} className="event-title">{selectedCase.title}</Title>
           <Text className="event-description">{selectedCase.description}</Text>
         </div>
-
-        <Divider />
 
         <div className="current-round-section">
           <Title level={5} className="round-title">Current PR Strategy</Title>
@@ -447,7 +436,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
                   className="action-button primary-button"
                   onClick={handleContinueNextRound}
                   disabled={isStartingNewRound}
-                  loading={addPRStrategyMutation.isPending}
+                  loading={addScenario2StrategyMutation.isPending}
                   icon={<ReloadOutlined />}
                 >
                   Continue Next Round Simulation
@@ -494,12 +483,9 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
 
 
   // 如果显示结果页面，渲染结果比较页面
-  if (showResults) {
+  if (showResults && reportData) {
     return (
-      <Scenario2ResultsPage
-        selectedCase={selectedCase}
-        simulationResults={simulationResultData?.data}
-        realWorldResults={selectedCase?.realWorldOutcome}
+      <Scenario2ReportPage
         reportData={reportData}
         onBack={() => {
           setShowResults(false);
@@ -513,6 +499,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
           setShouldKeepFinalState(true);
           // 不要重置动画状态，保持当前的动画状态
         }}
+        onReset={handleReset}
       />
     );
   }

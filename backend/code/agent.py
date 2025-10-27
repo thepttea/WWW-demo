@@ -127,13 +127,50 @@ class Agent:
 
             chain = prompt_template | self.llm | parser
             
-            cognitive_result = chain.invoke({
-                "persona": json.dumps(persona_data, ensure_ascii=False),
-                "memories": "\n- ".join(raw_memories) if raw_memories else "（没有相关长期记忆）",
-                "recent_messages": "\n".join(state['recent_messages']),
-                "current_stance": self.last_cognitive_summary if self.last_cognitive_summary else "（这是我的初步看法）",
-                "platform": platform
-            })
+            # 添加重试机制处理LLM解析失败
+            max_retries = 3
+            cognitive_result = None
+            
+            for attempt in range(max_retries):
+                try:
+                    cognitive_result = chain.invoke({
+                        "persona": json.dumps(persona_data, ensure_ascii=False),
+                        "memories": "\n- ".join(raw_memories) if raw_memories else "（没有相关长期记忆）",
+                        "recent_messages": "\n".join(state['recent_messages']),
+                        "current_stance": self.last_cognitive_summary if self.last_cognitive_summary else "（这是我的初步看法）",
+                        "platform": platform
+                    })
+                    
+                    # 检查结果是否有效
+                    if cognitive_result is None:
+                        raise ValueError("LLM returned null response")
+                    
+                    # 验证必要字段
+                    if not hasattr(cognitive_result, 'internal_monologue') or not hasattr(cognitive_result, 'final_action'):
+                        raise ValueError("LLM response missing required fields")
+                    
+                    break  # 成功，跳出重试循环
+                    
+                except Exception as e:
+                    log_message(f"   [LLM解析失败] 尝试 {attempt + 1}/{max_retries}: {str(e)}")
+                    
+                    if attempt == max_retries - 1:
+                        # 最后一次尝试失败，使用默认响应
+                        log_message(f"   [LLM解析失败] 所有重试失败，使用默认响应")
+                        from pydantic import ValidationError
+                        
+                        # 创建默认的CognitiveStep
+                        cognitive_result = CognitiveStep(
+                            internal_monologue="由于技术问题，我无法完成正常的思考过程。",
+                            cognitive_summary="暂时无法形成明确观点。",
+                            final_action=AgentAction(action="NO_ACTION", content=""),
+                            stance_score=0
+                        )
+                        break
+                    else:
+                        # 等待一秒后重试
+                        import time
+                        time.sleep(1)
 
             log_message(f"   [关联记忆]: {cognitive_result.internal_monologue}")
             log_message(f"   [认知总结]: {cognitive_result.cognitive_summary}")

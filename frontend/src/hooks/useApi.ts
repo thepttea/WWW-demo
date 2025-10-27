@@ -61,7 +61,6 @@ export const useAddPRStrategy = () => {
       // 清除相关的查询缓存，强制重新获取最新数据
       queryClient.invalidateQueries({ queryKey: ['simulationStatus', variables.simulationId] });
       queryClient.invalidateQueries({ queryKey: ['simulationResult', variables.simulationId] });
-      queryClient.invalidateQueries({ queryKey: ['networkData', variables.simulationId] });
     },
     onError: (error) => {
       console.error('Failed to add PR strategy:', error);
@@ -89,25 +88,6 @@ export const useSimulationResult = (simulationId: string | null) => {
   });
 };
 
-export const useNetworkData = (simulationId: string | null) => {
-  return useQuery({
-    queryKey: ['networkData', simulationId],
-    queryFn: () => apiClient.getNetworkData(simulationId!),
-    enabled: !!simulationId,
-    staleTime: 60 * 1000, // 1分钟
-    retry: 3, // 重试3次
-    retryDelay: 1000, // 重试间隔1秒
-  });
-};
-
-export const useSimulationResultData = (simulationId: string | null) => {
-  return useQuery({
-    queryKey: ['simulationResultData', simulationId],
-    queryFn: () => apiClient.getSimulationResultData(simulationId!),
-    enabled: !!simulationId,
-    staleTime: 30 * 1000, // 30秒
-  });
-};
 
 export const useStopSimulation = () => {
   const queryClient = useQueryClient();
@@ -148,7 +128,6 @@ export const useResetSimulation = () => {
       queryClient.removeQueries({ queryKey: ['simulation', simulationId] });
       queryClient.removeQueries({ queryKey: ['simulationStatus', simulationId] });
       queryClient.removeQueries({ queryKey: ['simulationResult', simulationId] });
-      queryClient.removeQueries({ queryKey: ['networkData', simulationId] });
     },
     onError: (error) => {
       console.error('Failed to reset simulation:', error);
@@ -214,7 +193,7 @@ export const useScenario2SimulationResult = (simulationId: string | null) => {
 
 export const useGenerateScenario2Report = () => {
   return useMutation({
-    mutationFn: (simulationId: string) => apiClient.generateScenario2Report(simulationId),
+    mutationFn: (request: ReportRequest) => apiClient.generateScenario2Report(request),
     onSuccess: (data) => {
       console.log('Scenario 2 report generated:', data);
     },

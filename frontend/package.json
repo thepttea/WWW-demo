@@ -8,7 +8,9 @@
     "@tanstack/react-query": "^5.0.0",
     "antd": "^5.27.4",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",

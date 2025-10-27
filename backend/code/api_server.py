@@ -210,55 +210,6 @@ def get_scenario1_result(simulation_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/scenario1/simulation/{simulation_id}/network", response_model=ApiResponse, tags=["Scenario 1 - Simulation"])
-def get_scenario1_network(simulation_id: str):
-    """
-    1.3.1 获取网络拓扑数据
-    """
-    try:
-        if simulation_id not in simulation_manager._simulations:
-            raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
-        
-        sim = simulation_manager._simulations[simulation_id]
-        G = sim["network"]
-        agents = sim["agents"]
-        
-        # 构建节点数据
-        nodes = []
-        for agent_id, agent in agents.items():
-            nodes.append({
-                "id": agent_id,
-                "username": agent.persona.get("username"),
-                "platform": agent.persona.get("primary_platform"),
-                "influenceScore": agent.persona.get("influence_score"),
-                "sentiment": "neutral"  # 可以根据最新stance_score动态计算
-            })
-        
-        # 构建边数据
-        edges = []
-        for source, target in G.edges():
-            edge_data = G.get_edge_data(source, target)
-            edges.append({
-                "source": source,
-                "target": target,
-                "strength": 0.8,
-                "type": edge_data.get("tie_strength", "following")
-            })
-        
-        network_data = {
-            "nodes": nodes,
-            "edges": edges
-        }
-        
-        return ApiResponse(success=True, data=network_data)
-    except ValueError as e:
-        error_payload = {"code": "SIMULATION_NOT_FOUND", "message": str(e)}
-        return JSONResponse(
-            status_code=404,
-            content={"success": False, "error": error_payload}
-        )
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/scenario1/simulation/{simulation_id}/stop", response_model=ApiResponse, tags=["Scenario 1 - Simulation"])
 def stop_scenario1_sim(simulation_id: str):
@@ -430,26 +381,6 @@ def get_scenario2_sim_result(simulation_id: str):
         
         return result_response
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/api/scenario2/simulation/{simulation_id}/generate-report", response_model=ApiResponse, tags=["Scenario 2 - Reports"])
-def generate_scenario2_report(simulation_id: str):
-    """
-    生成 Scenario 2 对比分析报告
-    """
-    try:
-        report_data = simulation_manager.generate_scenario2_report(simulation_id)
-        return ApiResponse(success=True, data=report_data)
-    except ValueError as e:
-        error_payload = {"code": "SIMULATION_NOT_FOUND", "message": str(e)}
-        return JSONResponse(
-            status_code=404,
-            content={"success": False, "error": error_payload}
-        )
-    except Exception as e:
-        import traceback
-        print(f"❌ Error generating Scenario 2 report: {str(e)}")
-        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/scenario2/reports/generate", response_model=ApiResponse, tags=["Scenario 2 - Reports"])

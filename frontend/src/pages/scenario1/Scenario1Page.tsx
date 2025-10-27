@@ -3,9 +3,9 @@ import { Typography, message } from 'antd';
 import ConfigurationPanel from './ConfigurationPanel';
 import VisualizationArea from './VisualizationArea';
 import StrategyRefinementDrawer from '../../components/StrategyRefinementDrawer';
-import Scenario1ResultsPageStatic from './Scenario1ResultsPageStatic';
+import Scenario1ReportPage from './Scenario1ReportPage';
 import { SimulationConfig, SimulationParameters, SimulationState } from '../../types';
-import { useStartSimulation, useAddPRStrategy, useSimulationStatus, useSimulationResult, useGenerateReport, useResetSimulation, useNetworkData } from '../../hooks/useApi';
+import { useStartSimulation, useAddPRStrategy, useSimulationStatus, useSimulationResult, useGenerateReport, useResetSimulation } from '../../hooks/useApi';
 import { transformSimulationResultToNetworkData, transformAgentsToNetworkData } from '../../utils/dataTransformer';
 import './Scenario1Page.css';
 
@@ -34,7 +34,6 @@ const Scenario1Page: React.FC = () => {
   const resetSimulationMutation = useResetSimulation();
   const { data: simulationStatusData } = useSimulationStatus(simulationId, isSimulationRunning);
   const { data: simulationResultData } = useSimulationResult(simulationId);
-  const { data: networkData } = useNetworkData(simulationId);
 
 
   // 监听模拟状态变化
@@ -73,13 +72,12 @@ const Scenario1Page: React.FC = () => {
   useEffect(() => {
     const hasStatusData = !!simulationStatusData?.success;
     const hasResultData = !!simulationResultData?.success;
-    const hasNetworkData = !!networkData?.success;
     
-    if (hasStatusData && hasResultData && hasNetworkData) {
+    if (hasStatusData && hasResultData) {
       console.log('All simulation data ready, data is available for animation');
       // 不在这里设置hasCompletedSimulation，让动画先开始
     }
-  }, [simulationStatusData, simulationResultData, networkData]);
+  }, [simulationStatusData, simulationResultData]);
 
   // 使用ref保存上一次的网络数据
   const previousNetworkDataRef = useRef<any>(null);
@@ -99,7 +97,7 @@ const Scenario1Page: React.FC = () => {
     // 数据转换：将后端格式转换为前端期望的格式
     if (simulationResultData?.success && simulationResultData.data) {
       console.log('[DATA DEBUG] Processing simulation result data');
-      console.log('[DATA DEBUG] Agents data:', simulationResultData.data.agents?.map(a => ({
+      console.log('[DATA DEBUG] Agents data:', simulationResultData.data.agents?.map((a: any) => ({
         username: a.username,
         stance: a.stanceScore || a.objective_stance_score
       })));
@@ -108,26 +106,15 @@ const Scenario1Page: React.FC = () => {
         // 转换数据格式以匹配期望的接口
         const transformedData = {
           ...simulationResultData.data,
-          agents: simulationResultData.data.agents.map(agent => ({
+          agents: simulationResultData.data.agents.map((agent: any) => ({
             ...agent,
             // 后端返回的字段名是 influence_score，需要转换
             influenceScore: agent.influence_score !== undefined ? agent.influence_score : (agent.influenceScore || 0)
           }))
         };
         
-        // 优先使用完整的模拟结果数据
-        const backendNetworkData = networkData?.success && networkData.data ? {
-          ...networkData.data,
-          nodes: networkData.data.nodes.map(node => ({
-            ...node,
-            influenceScore: node.influence_score || 0
-          })),
-          edges: networkData.data.edges || []
-        } : undefined;
-        
         const result = transformSimulationResultToNetworkData(
-          transformedData,
-          backendNetworkData
+          transformedData
         );
         
         console.log('[DATA DEBUG] Transformed network data users:', result?.users?.map(u => ({
@@ -157,7 +144,7 @@ const Scenario1Page: React.FC = () => {
     }
     console.log('[DATA DEBUG] Returning undefined because no valid data');
     return previousNetworkDataRef.current || undefined;
-  }, [simulationResultData, networkData, isStartingNewRound]);
+  }, [simulationResultData, isStartingNewRound]);
 
   // 调试日志 - 移到memoizedNetworkData定义之后
   console.log('Scenario1Page - Current state:', {
@@ -166,7 +153,6 @@ const Scenario1Page: React.FC = () => {
     isStartingNewRound,
     hasStatusData: !!simulationStatusData,
     hasResultData: !!simulationResultData,
-    hasNetworkData: !!networkData,
     hasCompletedSimulation,
     hasMemoizedNetworkData: !!memoizedNetworkData,
     simulationState: simulationState
@@ -378,6 +364,13 @@ const Scenario1Page: React.FC = () => {
       setIsGeneratingReport(false);
       setHasCompletedSimulation(false);
       setIsStartingNewRound(false);
+      setAnimationKey(0); // 重置动画key
+      setIsReportJustClosed(false);
+      setShouldKeepFinalState(false);
+      setPreservedUserColorStates({});
+      
+      // 清空缓存的网络数据，防止reset后仍然显示旧数据
+      previousNetworkDataRef.current = null;
       
       message.success('Simulation reset successfully');
     } catch (error) {
@@ -417,10 +410,10 @@ const Scenario1Page: React.FC = () => {
   };
 
   // 如果显示结果页面，渲染结果组件
-  if (showResults) {
+  if (showResults && reportData) {
     return (
-      <Scenario1ResultsPageStatic
-        simulationResults={reportData}
+      <Scenario1ReportPage
+        reportData={reportData}
         onBack={handleBackToSimulation}
         onClose={handleCloseResults}
         onReset={handleReset}

@@ -206,13 +206,6 @@ class MockApiClient {
     return this.mockRequest(reportData, 1200);
   }
 
-  // 获取模拟结果数据的API调用
-  async getSimulationResultData(simulationId: string): Promise<ApiResponse<SimulationResultData>> {
-    console.log('Mock API: Getting simulation result data for:', simulationId);
-    
-    return this.mockRequest(resultData, 500);
-  }
-
   // 模拟重置模拟的API调用
   async resetSimulation(simulationId: string): Promise<ApiResponse<{ success: boolean; message: string }>> {
     console.log('Mock API: Resetting simulation:', simulationId);
