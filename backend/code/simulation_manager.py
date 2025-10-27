@@ -9,6 +9,7 @@ from network import create_social_network
 import case_manager as cm
 from llm_provider import get_llm
 from langchain.prompts import PromptTemplate
+import evaluation_metrics as em
 
 _simulations: Dict[str, Dict[str, Any]] = {}
 
@@ -452,14 +453,14 @@ def stop_scenario1_simulation(simulation_id: str) -> Dict[str, Any]:
 
 def generate_scenario1_report(simulation_id: str, report_type: str = "comprehensive") -> Dict[str, Any]:
     """
-    生成 Scenario 1 的舆情分析报告。
+    生成 Scenario 1 的舆情分析报告（使用9维度评估）。
     
     Args:
         simulation_id: 模拟ID
         report_type: 报告类型 ("summary" 或 "comprehensive")
     
     Returns:
-        包含报告内容的字典
+        包含报告内容和维度评分的字典
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -469,33 +470,42 @@ def generate_scenario1_report(simulation_id: str, report_type: str = "comprehens
     if sim.get("scenario") != "scenario1":
         raise ValueError("This API is only for Scenario 1 simulations.")
     
-    log_message(f"Generating {report_type} report for simulation {simulation_id}")
+    log_message(f"Generating {report_type} report for Scenario 1 simulation {simulation_id}")
     
+    # 准备模拟数据
+    log_message("准备模拟数据...")
+    sim_data = em.prepare_simulation_data(sim)
+    
+    # 执行9维度评估（场景一：只评估模拟本身）
+    log_message("执行维度评估...")
+    evaluation_result = em.comprehensive_evaluation(sim_data, real_case_data=None)
+    
+    # 生成文字报告（使用LLM）
     agents = sim["agents"]
     discourse_history = sim["discourseHistory"]
     
-    # 构建完整的对话历史用于 LLM 分析
-    log_message(f"Building conversation history from {len(discourse_history)} posts...")
+    log_message("生成文字报告...")
     formatted_history = ""
     for author_id, content, round_num, stance in discourse_history:
         if author_id == "system":
-            formatted_history += f"\n[Round {round_num}] 【官方公关声明】: {content}\n"
+            formatted_history += f"\n[第{round_num}轮] 【官方公关声明】: {content}\n"
         else:
             username = agents[author_id].persona.get('username', author_id) if author_id in agents else "Unknown"
-            formatted_history += f"[Round {round_num}] {username} (立场: {stance}): {content}\n"
+            formatted_history += f"[第{round_num}轮] {username} (立场: {stance}): {content}\n"
     
-    log_message(f"Formatted history length: {len(formatted_history)} characters")
-    
-    # 使用 LLM 生成报告
-    log_message("--- Initializing LLM for report generation ---")
     llm = get_llm()
     
+    # 构建评估结果摘要
+    eval_summary = evaluation_result.get('summary', '')
+    
     if report_type == "summary":
-        log_message("Generating SUMMARY report...")
         prompt = f"""请为以下舆情模拟生成简要分析报告（200-300字）。
 
 模拟对话记录：
-{formatted_history}
+{formatted_history[:1500]}
+
+评估结果：
+{eval_summary}
 
 请简要总结：
 1. 舆情整体走向
@@ -504,11 +514,13 @@ def generate_scenario1_report(simulation_id: str, report_type: str = "comprehens
 
 请用简洁的语言撰写报告。"""
     else:  # comprehensive
-        log_message("Generating COMPREHENSIVE report...")
         prompt = f"""请为以下舆情模拟生成详细的分析报告。
 
 模拟对话记录：
-{formatted_history}
+{formatted_history[:3000]}
+
+9维度评估结果：
+{eval_summary}
 
 请详细分析以下内容：
 
@@ -536,156 +548,344 @@ def generate_scenario1_report(simulation_id: str, report_type: str = "comprehens
 
 请用专业、客观的语言撰写报告。"""
     
-
-    log_message("Invoking LLM to generate report content...")
     report_content = llm.invoke(prompt).content
-    log_message(f"Report generated! Content length: {len(report_content)} characters")
     
-    # 打印报告内容
     log_message("\n" + "="*80)
-    log_message("=== GENERATED REPORT CONTENT ===")
+    log_message("=== SCENARIO 1 REPORT ===")
     log_message("="*80)
     log_message(report_content)
     log_message("="*80 + "\n")
     
-    # 分析关键洞察
-    key_insights = []
-    improvements = []
-    
-    # 统计整体情感
-    all_stances = [post[3] for post in discourse_history if post[3] is not None]
-    if all_stances:
-        avg_stance = sum(all_stances) / len(all_stances)
-        overall_sentiment = round(avg_stance / 3, 2)  # 归一化到 -1 到 1
-    else:
-        overall_sentiment = 0
-    
-    # 识别关键意见领袖
-    agent_post_counts = {}
-    for author_id, content, round_num, stance in discourse_history:
-        if author_id != "system":
-            if author_id not in agent_post_counts:
-                agent_post_counts[author_id] = 0
-            agent_post_counts[author_id] += 1
-    
-    top_agents = sorted(agent_post_counts.items(), key=lambda x: x[1], reverse=True)[:3]
-    for agent_id, count in top_agents:
-        if agent_id in agents:
-            username = agents[agent_id].persona.get('username')
-            key_insights.append(f"{username} 是关键意见领袖，发表了 {count} 次评论")
-    
-    # 分析策略数量
-    pr_strategies = [post for post in discourse_history if post[0] == "system"]
-    key_insights.append(f"共使用了 {len(pr_strategies)} 个公关策略")
-    key_insights.append(f"最终平均立场评分: {round(avg_stance, 2) if all_stances else 0}")
-    
-    # 打印关键洞察
-    log_message("\n--- Key Insights ---")
-    for i, insight in enumerate(key_insights, 1):
-        log_message(f"{i}. {insight}")
-    log_message(f"\n--- Overall Sentiment: {overall_sentiment} ---")
-    
     report_data = {
         "reportId": f"report_{simulation_id}_{int(time.time())}",
+        "reportType": "scenario1",
         "content": report_content,
-        "summary": {
-            "overallSentiment": overall_sentiment,
-            "keyInsights": key_insights,
-            "improvements": improvements
-        },
+        "evaluation": evaluation_result,
         "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     }
     
-    log_message(f"\n✅ Report generation completed successfully!")
+    log_message(f"\n✅ Scenario 1 report generation completed!")
     log_message(f"Report ID: {report_data['reportId']}")
     
     return report_data
 
+def generate_scenario2_report(simulation_id: str, report_type: str = "comprehensive") -> Dict[str, Any]:
+    """
+    生成 Scenario 2 的对比分析报告（模拟vs真实案例）。
+    
+    Args:
+        simulation_id: 模拟ID
+        report_type: 报告类型 ("summary" 或 "comprehensive")
+    
+    Returns:
+        包含对比分析和相似度评分的字典
+    """
+    if simulation_id not in _simulations:
+        raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
+    
+    sim = _simulations[simulation_id]
+    
+    # 场景二需要有关联的case
+    case_id = sim.get("caseId")
+    if not case_id:
+        raise ValueError("This simulation is not associated with a historical case.")
+    
+    log_message(f"Generating {report_type} report for Scenario 2 simulation {simulation_id}")
+    log_message(f"Associated case: {case_id}")
+    
+    # 获取真实案例数据
+    case = cm.get_case_by_id(case_id)
+    if not case:
+        raise ValueError(f"Case '{case_id}' not found.")
+    
+    # 准备数据
+    log_message("准备模拟数据和真实案例数据...")
+    sim_data = em.prepare_simulation_data(sim)
+    real_case_data = em.prepare_real_case_context(case)
+    
+    # 执行9维度对比评估
+    log_message("执行对比评估...")
+    evaluation_result = em.comprehensive_evaluation(sim_data, real_case_data)
+    
+    # 生成对比报告
+    agents = sim["agents"]
+    discourse_history = sim["discourseHistory"]
+    
+    log_message("生成对比分析报告...")
+    formatted_history = ""
+    for author_id, content, round_num, stance in discourse_history:
+        if author_id == "system":
+            formatted_history += f"\n[第{round_num}轮] 【官方公关声明】: {content}\n"
+        else:
+            username = agents[author_id].persona.get('username', author_id) if author_id in agents else "Unknown"
+            formatted_history += f"[第{round_num}轮] {username} (立场: {stance}): {content}\n"
+    
+    llm = get_llm()
+    
+    # 构建评估结果摘要
+    eval_summary = evaluation_result.get('summary', '')
+    overall_similarity = evaluation_result.get('overall_similarity_percentage', 0)
+    
+    if report_type == "summary":
+        prompt = f"""请为以下模拟与真实案例的对比生成简要报告（200-300字）。
+
+真实案例：{case['title']}
+案例背景：{case['background'][:200]}...
+
+模拟对话记录（部分）：
+{formatted_history[:1000]}...
+
+总体相似度：{overall_similarity}%
+
+请简要总结：
+1. 模拟与真实案例的主要相似之处
+2. 模拟与真实案例的主要差异
+3. 模拟的整体表现评价
+
+请用简洁的语言撰写报告。"""
+    else:  # comprehensive
+        prompt = f"""请为以下模拟与真实案例生成详细的对比分析报告。
+
+# 真实案例信息
+案例：{case['title']}
+行业：{case['industry']}
+背景：{case['background']}
+
+各轮策略：
+{chr(10).join([f"第{s['round']}轮: {s['title']} - {s['content'][:100]}..." for s in case['strategies']])}
+
+真实结果：
+成功：{case['realWorldOutcome']['success']}
+关键因素：{', '.join(case['realWorldOutcome']['keyFactors'])}
+
+# 模拟数据
+{formatted_history[:2000]}...
+
+# 相似度评估
+总体相似度：{overall_similarity}%
+
+评估详情：
+{eval_summary}
+
+请详细分析以下内容：
+
+## 1. 立场分布对比
+- 模拟的立场分布
+- 真实案例的立场描述
+- 相似度分析
+
+## 2. 演变趋势对比
+- 模拟的舆论演变轨迹
+- 真实案例的舆论走向
+- 关键转折点是否匹配
+
+## 3. 核心议题对比
+- 模拟讨论的主要焦点
+- 真实案例的核心矛盾
+- 议题覆盖度分析
+
+## 4. 情绪和论点对比
+- 模拟的情绪表达特征
+- 真实案例的舆论情绪
+- 主流论点的匹配程度
+
+## 5. 综合评价
+- 模拟的优点（哪些方面高度还原）
+- 模拟的不足（哪些方面需要改进）
+- 对模拟系统的建议
+
+请用专业、客观的语言撰写报告，突出对比分析。"""
+    
+    report_content = llm.invoke(prompt).content
+    
+    log_message("\n" + "="*80)
+    log_message("=== SCENARIO 2 COMPARATIVE REPORT ===")
+    log_message("="*80)
+    log_message(report_content)
+    log_message("="*80 + "\n")
+    
+    # 提取总体相似度
+    overall_similarity = evaluation_result.get('overall_similarity_percentage', 0)
+    
+    report_data = {
+        "reportId": f"report_{simulation_id}_{int(time.time())}",
+        "reportType": "scenario2_comparative",
+        "caseId": case_id,
+        "caseTitle": case['title'],
+        "content": report_content,
+        "evaluation": evaluation_result,
+        "overallSimilarityPercentage": overall_similarity,
+        "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+    
+    log_message(f"\n✅ Scenario 2 comparative report generation completed!")
+    log_message(f"Report ID: {report_data['reportId']}")
+    log_message(f"Overall Similarity: {overall_similarity}%")
+    
+    return report_data
+
+
 def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: Dict) -> Dict[str, Any]:
     """
-    启动一个新的Scenario 2模拟任务。
-    使用与Scenario1完全相同的模拟系统，只是输入来源不同。
+    启动一个新的Scenario 2模拟任务（使用agent模拟）。
     """
     case = cm.get_case_by_id(case_id)
     if not case:
         raise ValueError(f"Case ID '{case_id}' does not exist.")
 
-    # 从案例中获取事件描述和第一轮策略
-    initial_topic = case.get("background", "")
-    first_strategy = ""
-    if case.get("strategies") and len(case["strategies"]) > 0:
-        first_strategy = case["strategies"][0].get("content", "")
+    sim_id = f"sim_scenario2_{uuid.uuid4()}"
+    log_message(f"Starting Scenario 2 simulation: {sim_id}, case: {case['title']}")
+    
+    # 创建网络和agents（与scenario1相同）
+    num_agents = simulation_config.get("agents", 10)
+    G, agents = create_social_network(num_agents, sim_id_prefix=sim_id)
+    
+    # 使用案例背景作为初始话题
+    initial_topic = case.get("background", case.get("title"))
+    
+    # 获取第一轮的公关策略
+    first_round_strategy = ""
+    if case.get("strategies"):
+        for strategy in case["strategies"]:
+            if strategy.get("round") == 1:
+                first_round_strategy = strategy.get("content", "")
+                break
 
-    # 直接调用Scenario1的模拟启动函数
-    sim_data = start_scenario1_simulation(
-        initial_topic=initial_topic,
-        llm_model=llm_model,
-        simulation_config=simulation_config,
-        pr_strategy=first_strategy
-    )
+    # 存储模拟状态（结构与scenario1类似）
+    _simulations[sim_id] = {
+        "simulationId": sim_id,
+        "scenario": "scenario2",
+        "caseId": case_id,
+        "caseTitle": case.get("title"),
+        "initialTopic": initial_topic,
+        "llmModel": llm_model,
+        "simulationConfig": simulation_config,
+        "network": G,
+        "agents": agents,
+        "discourseHistory": [("system", f"[Initial Topic] {initial_topic}", 0, None)],
+        "activeAgents": list(agents.keys()),
+        "inactiveAgents": [],
+        "status": "initialized",
+        "totalRounds": case.get("totalRounds", 1),
+        "currentRound": 0,
+        "prStrategies": []
+    }
     
-    # 在模拟数据中添加案例ID信息
-    sim_data["caseId"] = case_id
-    
-    # ✅ 重要：同时也需要将caseId添加到存储在_simulations中的实际对象中
-    simulation_id = sim_data["simulationId"]
-    if simulation_id in _simulations:
-        _simulations[simulation_id]["caseId"] = case_id
-    
-    log_message(f"Started Scenario 2 simulation using Scenario1 system: {sim_data['simulationId']}, case: {case['title']}")
-    
-    return sim_data
+    # 如果有第一轮策略，直接执行
+    if first_round_strategy:
+        log_message(f"Executing first round with strategy from case...")
+        try:
+            _simulations[sim_id]["prStrategies"].append({
+                "round": 1,
+                "strategy": first_round_strategy
+            })
+            _simulations[sim_id]["discourseHistory"].append(
+                ("system", f"[Official PR Statement] {first_round_strategy}", 1, None)
+            )
+            
+            result = run_scenario1_round(sim_id)  # 复用scenario1的模拟逻辑
+            _simulations[sim_id]["status"] = "round_completed"
+            _simulations[sim_id]["currentRound"] = 1
+            
+            return {
+                "simulationId": sim_id,
+                "caseId": case_id,
+                "caseTitle": case.get("title"),
+                "status": "round_completed",
+                "totalRounds": case.get("totalRounds", 1),
+                "currentRound": 1,
+                "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}",
+                "result": result
+            }
+        except Exception as e:
+            log_message(f"Error executing first round: {str(e)}")
+            return {
+                "simulationId": sim_id,
+                "caseId": case_id,
+                "status": "initialized",
+                "totalRounds": case.get("totalRounds", 1),
+                "currentRound": 0,
+                "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}",
+                "error": str(e)
+            }
+
+    return {
+        "simulationId": sim_id,
+        "caseId": case_id,
+        "caseTitle": case.get("title"),
+        "status": "initialized",
+        "totalRounds": case.get("totalRounds", 1),
+        "currentRound": 0,
+        "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}"
+    }
 
 def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     """
-    将模拟推进到下一轮。
-    使用与Scenario1完全相同的系统。
+    将Scenario 2模拟推进到下一轮（执行agent模拟）。
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
 
     sim = _simulations[simulation_id]
-
+    
     if sim["currentRound"] >= sim["totalRounds"]:
         raise ValueError("Simulation has already reached the final round and cannot continue.")
-
-    # 获取下一轮策略
-    case = cm.get_case_by_id(sim.get("caseId", ""))
-    next_round = sim["currentRound"] + 1
-    round_strategy = "No strategy found for this round."
     
+    # 获取下一轮的策略
+    next_round = sim["currentRound"] + 1
+    case = cm.get_case_by_id(sim["caseId"])
+    
+    round_strategy = ""
     if case and 'strategies' in case:
         for strategy in case['strategies']:
             if strategy.get('round') == next_round:
-                round_strategy = strategy.get('content', round_strategy)
+                round_strategy = strategy.get('content', "")
                 break
-
-    # 直接调用Scenario1的添加策略函数
-    result = add_pr_strategy_and_simulate(simulation_id, round_strategy)
     
-    log_message(f"Scenario 2 simulation {simulation_id} advanced to round {next_round} using Scenario1 system.")
+    if not round_strategy:
+        log_message(f"Warning: No strategy found for round {next_round}")
     
-    return result
+    # 添加公关策略
+    sim["prStrategies"].append({
+        "round": next_round,
+        "strategy": round_strategy
+    })
+    
+    if round_strategy:
+        sim["discourseHistory"].append(
+            ("system", f"[Official PR Statement] {round_strategy}", next_round, None)
+        )
+    
+    log_message(f"Simulation {simulation_id} advancing to round {next_round}...")
+    
+    # 执行模拟
+    try:
+        num_rounds = sim["simulationConfig"].get("num_rounds", 1)
+        log_message(f"Will simulate {num_rounds} interaction round(s)")
+        
+        result = None
+        for i in range(num_rounds):
+            log_message(f"Executing interaction round {i+1}/{num_rounds}")
+            result = run_scenario1_round(simulation_id)  # 复用scenario1的逻辑
+            
+            if sim["status"] == "all_agents_inactive":
+                log_message(f"All agents inactive, stopping early")
+                break
+        
+        return {
+            "simulationId": simulation_id,
+            "currentRound": sim["currentRound"],
+            "status": sim["status"],
+            "roundStrategy": round_strategy,
+            "result": result
+        }
+    except Exception as e:
+        log_message(f"Error advancing to next round: {str(e)}")
+        raise
 
 def get_scenario2_result(simulation_id: str) -> Dict[str, Any]:
     """
-    获取Scenario 2当前轮次的模拟结果。
-    直接使用Scenario1的结果系统。
-    """
-    # 直接调用Scenario1的结果获取函数
-    result = get_scenario1_result(simulation_id)
-    
-    # 添加案例ID信息
-    if simulation_id in _simulations:
-        result["caseId"] = _simulations[simulation_id].get("caseId", "")
-    
-    log_message(f"Retrieved Scenario 2 result using Scenario1 system: {simulation_id}")
-    
-    return result
-
-def generate_scenario2_report(simulation_id: str) -> Dict[str, Any]:
-    """
-    生成Scenario 2的对比分析报告（模拟）。
+    获取Scenario 2当前轮次的模拟结果（使用真实agent模拟数据）。
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -702,76 +902,17 @@ def generate_scenario2_report(simulation_id: str) -> Dict[str, Any]:
     if not case:
         raise ValueError(f"Associated case '{case_id}' not found for simulation.")
 
-    log_message(f"Generating Scenario 2 comparison report for simulation {simulation_id}")
+    # 使用与scenario1相同的结果获取逻辑
+    result = get_scenario1_result(simulation_id)
     
-    # 模拟对比分析报告
-    mock_report = {
-        "reportId": f"report_scenario2_{simulation_id}",
-        "simulationId": simulation_id,
-        "caseId": sim["caseId"],
-        "caseTitle": case["title"],
-        "comparisonAnalysis": {
-            "accuracyScore": 87,
-            "rating": "High Accuracy",
-            "simulatedOutcome": {
-                "sentimentDistribution": {
-                    "positive": 45,
-                    "negative": 20,
-                    "neutral": 35
-                },
-                "overallSentiment": 72,
-                "engagementRate": 15.3,
-                "reach": 850
-            },
-            "realWorldOutcome": case["realWorldOutcome"],
-            "alignment": {
-                "sentimentAlignment": 92,
-                "outcomeAlignment": 85,
-                "trendAlignment": 88
-            }
-        },
-        "keyInsights": "The simulation successfully predicted the positive outcome of the PR strategy. The sentiment distribution closely matches reported media coverage patterns. The model accurately captured the importance of quick response and transparency.",
-        "deviations": [
-            "Simulation slightly overestimated negative sentiment in Round 1",
-            "Engagement rate prediction was 2% higher than actual"
-        ],
-        "modelValidation": {
-            "strengths": [
-                "Accurate prediction of overall sentiment trend",
-                "Successfully identified key influencers",
-                "Realistic propagation patterns"
-            ],
-            "improvements": [
-                "Fine-tune initial sentiment distribution",
-                "Improve engagement rate modeling"
-            ]
-        },
-        "visualizations": {
-            "sentimentComparison": {
-                "simulated": { "positive": 45, "negative": 20, "neutral": 35 },
-                "estimated_real": { "positive": 48, "negative": 18, "neutral": 34 }
-            },
-            "timelineComparison": [
-                {
-                    "round": 1,
-                    "simulated_sentiment": 58,
-                    "estimated_real_sentiment": 55
-                },
-                {
-                    "round": 2,
-                    "simulated_sentiment": 68,
-                    "estimated_real_sentiment": 70
-                },
-                {
-                    "round": 3,
-                    "simulated_sentiment": 72,
-                    "estimated_real_sentiment": 75
-                }
-            ]
-        },
-        "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%S.000Z")
-    }
+    # 添加scenario2特有的信息
+    result["caseId"] = sim["caseId"]
+    result["caseTitle"] = case.get("title")
+    result["totalRounds"] = sim["totalRounds"]
+    
+    # 检查是否是最后一轮
+    if sim["currentRound"] >= sim["totalRounds"]:
+        sim["status"] = "completed"
+        log_message(f"Simulation {simulation_id} has completed all rounds.")
 
-    log_message(f"Scenario 2 report generated: {mock_report['reportId']}")
-    
-    return mock_report
+    return result

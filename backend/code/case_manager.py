@@ -29,25 +29,109 @@ def get_all_cases() -> List[Dict[str, Any]]:
     """
     _load_cases_if_needed()
     # 根据API文档，列表视图只需要部分字段
+    # 适配新的数据结构：event_id, event_name, event_summary等
     summary_list = [
         {
-            "id": case.get("id"),
-            "title": case.get("title"),
-            "description": case.get("description"),
-            "industry": case.get("industry"),
-            "difficulty": case.get("difficulty"),
-            "totalRounds": case.get("totalRounds")
+            "id": case.get("event_id", case.get("id")),  # 兼容新旧字段
+            "title": case.get("event_name", case.get("title")),  # 兼容新旧字段
+            "description": case.get("event_summary", case.get("description")),  # 兼容新旧字段
+            "company": case.get("company", ""),  # 新字段
+            "date": case.get("date", ""),  # 新字段
+            "crisis_type": case.get("crisis_type", case.get("industry", "")),  # 新字段，回退到industry
+            "core_conflict": case.get("core_conflict", ""),  # 新字段
+            # 旧字段保留以兼容
+            "industry": case.get("industry", case.get("crisis_type", "")),
+            "difficulty": case.get("difficulty", ""),
+            "totalRounds": case.get("totalRounds", len(case.get("nodes", case.get("strategies", []))))  # 从nodes数量推断
         }
         for case in _cases
     ]
     return summary_list
 
+def _normalize_case_data(case: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    规范化案例数据，统一新旧数据结构。
+    将旧字段名转换为新字段名，同时保留兼容性。
+    """
+    normalized = case.copy()
+    
+    # 规范化基本字段
+    normalized["id"] = case.get("event_id", case.get("id"))
+    normalized["event_id"] = case.get("event_id", case.get("id"))
+    normalized["title"] = case.get("event_name", case.get("title"))
+    normalized["event_name"] = case.get("event_name", case.get("title"))
+    normalized["description"] = case.get("event_summary", case.get("description", ""))
+    normalized["event_summary"] = case.get("event_summary", case.get("description", ""))
+    normalized["background"] = case.get("event_summary", case.get("background", ""))
+    
+    # 新字段
+    normalized["company"] = case.get("company", "")
+    normalized["date"] = case.get("date", "")
+    normalized["crisis_type"] = case.get("crisis_type", case.get("industry", ""))
+    normalized["core_conflict"] = case.get("core_conflict", "")
+    
+    # 保留旧字段以兼容
+    normalized["industry"] = case.get("industry", case.get("crisis_type", ""))
+    normalized["difficulty"] = case.get("difficulty", "medium")
+    
+    # 规范化策略/节点数据
+    if "nodes" in case:
+        # 新数据结构：将nodes转换为strategies格式
+        normalized["strategies"] = [
+            {
+                "round": node.get("node_id", idx + 1),
+                "title": node.get("strategy", ""),
+                "content": node.get("content", ""),
+                "timeline": node.get("timestamp", ""),
+                # 保留新字段
+                "node_id": node.get("node_id", idx + 1),
+                "timestamp": node.get("timestamp", ""),
+                "protagonist": node.get("protagonist", ""),
+                "strategy": node.get("strategy", ""),
+                "situation": node.get("situation", {})
+            }
+            for idx, node in enumerate(case.get("nodes", []))
+        ]
+        normalized["nodes"] = case["nodes"]
+        normalized["totalRounds"] = len(case.get("nodes", []))
+    elif "strategies" in case:
+        # 旧数据结构：保持不变
+        normalized["strategies"] = case["strategies"]
+        normalized["totalRounds"] = case.get("totalRounds", len(case.get("strategies", [])))
+        # 将strategies转换为nodes格式
+        normalized["nodes"] = [
+            {
+                "node_id": s.get("round", idx + 1),
+                "timestamp": s.get("timeline", ""),
+                "protagonist": normalized.get("company", ""),
+                "strategy": s.get("title", ""),
+                "content": s.get("content", ""),
+                "situation": {}
+            }
+            for idx, s in enumerate(case.get("strategies", []))
+        ]
+    else:
+        normalized["strategies"] = []
+        normalized["nodes"] = []
+        normalized["totalRounds"] = 0
+    
+    # 真实结果（新数据可能没有这个字段）
+    normalized["realWorldOutcome"] = case.get("realWorldOutcome", {
+        "success": None,
+        "metrics": {},
+        "keyFactors": []
+    })
+    
+    return normalized
+
 def get_case_by_id(case_id: str) -> Dict[str, Any] | None:
     """
     通过ID获取单个案例的详细信息。
+    返回规范化的数据结构，兼容新旧格式。
     """
     _load_cases_if_needed()
     for case in _cases:
-        if case.get("id") == case_id:
-            return case
+        # 兼容新旧ID字段
+        if case.get("id") == case_id or case.get("event_id") == case_id:
+            return _normalize_case_data(case)
     return None
