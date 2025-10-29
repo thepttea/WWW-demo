@@ -83,7 +83,7 @@
   flex: 1;
 }
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 1200px) {
   .page-title {
     font-size: 28px;

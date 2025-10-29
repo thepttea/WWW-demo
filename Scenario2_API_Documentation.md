@@ -350,17 +350,28 @@
 
 ### 3.1 生成对比分析报告
 
+<<<<<<< HEAD
 **接口**: `POST /api/scenario2/simulation/{simulationId}/generate-report`
 
 **描述**: 生成 Scenario 2 的对比分析报告，对比模拟结果与历史真实结果
 
 **路径参数**:
 - `simulationId`: 模拟ID
+=======
+**接口**: `POST /api/scenario2/reports/generate`
+
+**描述**: 生成Scenario 2的对比分析报告，使用9维度LLM驱动评估系统对比模拟结果与历史真实结果
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 
 **请求体**: 
 ```json
 {
+<<<<<<< HEAD
   "reportType": "comparison",
+=======
+  "simulationId": "sim_scenario2_1759732135883",
+  "reportType": "comprehensive",
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
   "includeVisualizations": true
 }
 ```
@@ -370,6 +381,7 @@
 {
   "success": true,
   "data": {
+<<<<<<< HEAD
     "reportId": "report_scenario2_1759732135883",
     "simulationId": "sim_scenario2_1759732135883",
     "caseId": "case_001",
@@ -439,6 +451,205 @@
         }
       ]
     },
+=======
+    "reportId": "report_sim_scenario2_1759732135883_1729987200",
+    "reportType": "scenario2_comparative",
+    "caseId": "CASE-01",
+    "caseTitle": "'Ascending Dragon' Fireworks Incident",
+    "content": "# 对比分析报告\n\n## 1. 模拟与真实案例对比\n- 模拟案例：Arc'teryx烟花事件...\n- 真实案例：Arc'teryx烟花事件...\n\n## 2. 9维度相似度分析\n- 总体立场倾向：相似度85.5%...\n- 舆论演变方向：相似度82.3%...\n\n## 3. 关键差异分析\n- 模拟中的情绪波动比真实案例更剧烈...\n\n## 4. 模型验证结果\n- 总体相似度：84.2%，评级为"高相似度"...",
+    "evaluation": {
+      "evaluation_type": "comparative",
+      "overall_similarity_percentage": 84.2,
+      "dimension_scores": {
+        "总体立场倾向": {
+          "weight": 0.12,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "summary": "模拟中的总体立场倾向显示出明显的反对态度，反对者数量超过支持者，且平均立场为负值，反映出对品牌诚信和透明度的质疑。虽然有部分支持声音，但整体上公众对品牌恢复信任的前景持悲观态度，强调实质性改革的重要性。"
+            },
+            "real_case": {
+              "summary": "真实案例中，公众对Arc'teryx的立场倾向呈现出明显的反对态度，主要围绕品牌价值观与实际行动的不一致。消费者对品牌的环境承诺表示质疑，认为烟花活动与环保理念相冲突，导致品牌信任度下降。"
+            },
+            "similarity": {
+              "similarity_score": 85.5,
+              "reasoning": "模拟结果与真实案例在总体立场倾向方面高度一致，都反映了公众对品牌诚信的质疑。模拟成功捕捉了真实案例中公众对品牌价值观与实际行动不一致的担忧，相似度达到85.5%。"
+            }
+          }
+        },
+        "舆论演变方向": {
+          "weight": 0.12,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "percentage": 65,
+              "summary": "舆论演变整体走向趋向恶化，平均立场从0.11下降至-0.33，变化幅度达到0.44，显示出支持与反对意见的剧烈反转。",
+              "reasoning": "模拟显示舆论演变方向需要调整，当前策略未能有效扭转负面趋势。"
+            },
+            "real_case": {
+              "percentage": 68,
+              "summary": "真实案例中，舆论演变方向也呈现出恶化趋势，公众对品牌的质疑逐渐加深，从最初的环保争议发展为对品牌整体价值观的质疑。",
+              "reasoning": "真实案例中舆论演变方向确实趋向恶化，与模拟结果基本一致。"
+            },
+            "similarity": {
+              "similarity_percentage": 82.3,
+              "summary": "相似度较高",
+              "reasoning": "模拟结果与真实案例在舆论演变方向方面高度一致，都反映了舆论恶化的趋势，相似度达到82.3%。"
+            }
+          }
+        },
+        "舆论分化程度": {
+          "weight": 0.08,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "percentage": 70,
+              "summary": "该模拟中舆论呈现出明显的分化特征，参与者的观点呈现出极端支持与极端反对的对立局面，导致整体舆论趋向极端化且缺乏中立意见。",
+              "reasoning": "舆论分化程度较高，反映了争议性话题的特点。"
+            },
+            "real_case": {
+              "percentage": 72,
+              "summary": "真实案例中，舆论分化程度也很高，支持环保的消费者与支持品牌活动的消费者形成对立，缺乏中间立场。",
+              "reasoning": "真实案例中舆论分化程度确实很高，与模拟结果基本一致。"
+            },
+            "similarity": {
+              "similarity_percentage": 78.9,
+              "summary": "相似度较高",
+              "reasoning": "模拟结果与真实案例在舆论分化程度方面高度一致，都反映了舆论极端化的特征，相似度达到78.9%。"
+            }
+          }
+        },
+        "关键转折点时机": {
+          "weight": 0.08,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "percentage": 60,
+              "summary": "在第3轮出现了显著的转折点，立场发生了恶化，平均立场下降幅度达到-0.56。",
+              "reasoning": "转折点时机显示公关策略在后期出现失误。"
+            },
+            "real_case": {
+              "percentage": 62,
+              "summary": "真实案例中，关键转折点出现在品牌回应后，公众对品牌诚意的质疑达到高峰。",
+              "reasoning": "真实案例中转折点时机与模拟结果基本一致。"
+            },
+            "similarity": {
+              "similarity_percentage": 75.2,
+              "summary": "相似度中等",
+              "reasoning": "模拟结果与真实案例在关键转折点时机方面基本一致，都反映了后期出现负面转折的特征，相似度达到75.2%。"
+            }
+          }
+        },
+        "核心争议焦点": {
+          "weight": 0.15,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "percentage": 80,
+              "summary": "公众讨论的焦点主要集中在品牌对AI产品的回应及透明度上，围绕品牌的声誉和消费者对产品安全的担忧形成。传递出对品牌责任感的期待。",
+              "reasoning": "核心争议焦点把握准确，成功识别了公众的主要关切。"
+            },
+            "real_case": {
+              "percentage": 82,
+              "summary": "真实案例中，核心争议焦点集中在品牌价值观与实际行动的不一致，特别是环保承诺与烟花活动的冲突。",
+              "reasoning": "真实案例中核心争议焦点确实围绕价值观一致性，与模拟结果基本一致。"
+            },
+            "similarity": {
+              "similarity_percentage": 88.7,
+              "summary": "相似度很高",
+              "reasoning": "模拟结果与真实案例在核心争议焦点方面高度一致，都反映了公众对品牌价值观一致性的关注，相似度达到88.7%。"
+            }
+          }
+        },
+        "主流论点": {
+          "weight": 0.12,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "percentage": 85,
+              "summary": "在AI产品争议案例中，强调了品牌恢复信任需要以透明和诚实为基础，消费者希望看到实际的行动而不仅是口头承诺。对品牌形象的脆弱性应给予重视，面对质疑时，企业必须展示出真诚的改进措施。",
+              "reasoning": "主流论点分析准确，成功捕捉了公众对品牌改进的期待。"
+            },
+            "real_case": {
+              "percentage": 83,
+              "summary": "真实案例中，主流论点也强调品牌需要展示真诚的改进措施，特别是需要实际行动来证明环保承诺。",
+              "reasoning": "真实案例中主流论点确实强调实际行动的重要性，与模拟结果基本一致。"
+            },
+            "similarity": {
+              "similarity_percentage": 91.4,
+              "summary": "相似度很高",
+              "reasoning": "模拟结果与真实案例在主流论点方面高度一致，都强调了实际行动的重要性，相似度达到91.4%。"
+            }
+          }
+        },
+        "情绪基调": {
+          "weight": 0.10,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "percentage": 75,
+              "summary": "大部分发言者支持品牌通过透明和真诚来重建信任，但也有不少人对其诚意表示怀疑，认为应采取更多实质性措施。",
+              "reasoning": "情绪基调分析合理，反映了公众的复杂心理。"
+            },
+            "real_case": {
+              "percentage": 77,
+              "summary": "真实案例中，情绪基调也呈现出对品牌诚意的怀疑，期待更多实质性措施来证明环保承诺。",
+              "reasoning": "真实案例中情绪基调确实存在对诚意的怀疑，与模拟结果基本一致。"
+            },
+            "similarity": {
+              "similarity_percentage": 86.8,
+              "summary": "相似度很高",
+              "reasoning": "模拟结果与真实案例在情绪基调方面高度一致，都反映了对品牌诚意的怀疑，相似度达到86.8%。"
+            }
+          }
+        },
+        "公关策略响应模式": {
+          "weight": 0.10,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "percentage": 70,
+              "summary": "在多轮评审后，支持票和反对票接近平衡，显示出争议性。",
+              "reasoning": "公关策略响应模式显示策略效果有限。"
+            },
+            "real_case": {
+              "percentage": 72,
+              "summary": "真实案例中，公关策略响应模式也显示出争议性，公众对品牌回应存在分歧。",
+              "reasoning": "真实案例中公关策略响应模式确实存在争议，与模拟结果基本一致。"
+            },
+            "similarity": {
+              "similarity_percentage": 79.3,
+              "summary": "相似度较高",
+              "reasoning": "模拟结果与真实案例在公关策略响应模式方面基本一致，都反映了策略效果的争议性，相似度达到79.3%。"
+            }
+          }
+        },
+        "次生话题扩散路径": {
+          "weight": 0.13,
+          "details": {
+            "category": "comparative",
+            "simulation": {
+              "percentage": 65,
+              "summary": "品牌初始的公关回应是防御性和对抗性的，未能有效解决公众关切。",
+              "reasoning": "次生话题扩散路径分析准确，识别了初始策略的问题。"
+            },
+            "real_case": {
+              "percentage": 67,
+              "summary": "真实案例中，品牌初始回应也确实存在防御性，未能有效解决公众对价值观一致性的关切。",
+              "reasoning": "真实案例中初始回应确实存在防御性，与模拟结果基本一致。"
+            },
+            "similarity": {
+              "similarity_percentage": 81.6,
+              "summary": "相似度较高",
+              "reasoning": "模拟结果与真实案例在次生话题扩散路径方面基本一致，都反映了初始策略的防御性问题，相似度达到81.6%。"
+            }
+          }
+        }
+      },
+      "summary": "【场景二：对比评估】\n\n本次模拟与真实案例在9个关键维度上表现出高度一致性，总体相似度为84.2%，评级为"高相似度"。\n\n**高度一致的维度**：\n- 主流论点：相似度91.4%，都强调实际行动的重要性\n- 核心争议焦点：相似度88.7%，都围绕价值观一致性\n- 情绪基调：相似度86.8%，都反映对品牌诚意的怀疑\n- 总体立场倾向：相似度85.5%，都反映对品牌诚信的质疑\n\n**基本一致的维度**：\n- 舆论演变方向：相似度82.3%，都反映恶化趋势\n- 次生话题扩散路径：相似度81.6%，都反映初始策略问题\n- 公关策略响应模式：相似度79.3%，都反映策略争议性\n- 舆论分化程度：相似度78.9%，都反映极端化特征\n\n**需要改进的维度**：\n- 关键转折点时机：相似度75.2%，转折点时机把握需要优化\n\n**模型验证结论**：\n1. 模拟成功捕捉了真实案例的核心特征和演变趋势\n2. 在主流论点和争议焦点方面表现尤为出色\n3. 建议优化转折点时机预测，提升整体相似度"
+    },
+    "overallSimilarityPercentage": 84.2,
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     "generatedAt": "2024-01-01T12:00:00.000Z"
   }
 }
@@ -450,7 +661,11 @@
   "success": false,
   "error": {
     "code": "SIMULATION_NOT_FOUND",
+<<<<<<< HEAD
     "message": "Simulation not found or not completed",
+=======
+    "message": "Simulation ID 'xxx' does not exist.",
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     "timestamp": "2024-01-01T12:00:00.000Z"
   }
 }
@@ -458,6 +673,7 @@
 
 ---
 
+<<<<<<< HEAD
 ### 3.2 获取分析结果数据
 
 **接口**: `GET /api/scenario2/simulation/{simulationId}/analysis`
@@ -499,6 +715,8 @@
 
 ---
 
+=======
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 ## 4. 数据模型说明
 
 ### 4.1 历史案例模型 (HistoricalCase)
@@ -556,6 +774,7 @@ interface Scenario2SimulationStatus {
 }
 ```
 
+<<<<<<< HEAD
 ### 4.5 对比分析报告模型 (ComparisonReport)
 
 ```typescript
@@ -591,6 +810,47 @@ interface ComparisonReport {
     improvements: string[];
   };
   visualizations?: any;               // 可视化数据
+=======
+### 4.5 对比分析报告模型 (ReportResponse)
+
+```typescript
+interface ReportResponse {
+  reportId: string;                   // 报告ID
+  reportType: string;                 // 报告类型 ("scenario2_comparative")
+  caseId: string;                     // 案例ID
+  caseTitle: string;                  // 案例标题
+  content: string;                    // 报告内容 (Markdown格式)
+  evaluation: {                       // 9维度对比评估结果
+    evaluation_type: string;          // 评估类型 ("comparative")
+    overall_similarity_percentage: number; // 总体相似度 0-100
+    dimension_scores: {               // 9个维度的详细对比评分
+      [dimensionName: string]: {
+        weight: number;               // 权重
+        details: {
+          category: string;            // 类别 ("comparative")
+          simulation: {               // 模拟结果
+            percentage?: number;       // 达标度分数 (维度2-9)
+            summary: string;           // 简短总结 (维度2-9) 或详细描述 (维度1)
+            reasoning?: string;        // 推理说明 (维度2-9)
+          };
+          real_case: {                // 真实案例结果
+            percentage?: number;       // 达标度分数 (维度2-9)
+            summary: string;           // 简短总结 (维度2-9) 或详细描述 (维度1)
+            reasoning?: string;        // 推理说明 (维度2-9)
+          };
+          similarity: {               // 相似度分析
+            similarity_score?: number; // 相似度分数 (维度1使用)
+            similarity_percentage?: number; // 相似度百分比 (维度2-9使用)
+            summary?: string;          // 相似度总结 (维度2-9)
+            reasoning: string;         // 详细相似度分析
+          };
+        };
+      };
+    };
+    summary: string;                  // 评估总结
+  };
+  overallSimilarityPercentage: number; // 总体相似度 (兼容字段)
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
   generatedAt: string;                // 生成时间
 }
 ```
@@ -605,7 +865,13 @@ interface ComparisonReport {
 | **策略来源** | 用户手动输入/LLM优化 | 从案例数据自动读取 |
 | **轮次推进** | `POST /add-strategy` 需要传入策略 | `POST /next-round` 自动读取 |
 | **报告类型** | 舆情分析报告（PR效果评估） | 对比报告（模拟vs真实） |
+<<<<<<< HEAD
 | **核心指标** | PR Effectiveness, Sentiment Trend | Accuracy Score, Alignment |
+=======
+| **核心指标** | 9维度达标度评估 | 9维度相似度对比 |
+| **评估系统** | 独立评估（standalone） | 对比评估（comparative） |
+| **报告接口** | `POST /api/scenario1/reports/generate` | `POST /api/scenario2/reports/generate` |
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 | **LLM Chat** | 有策略优化Chat界面 | 无（直接使用历史策略） |
 
 ---
@@ -643,6 +909,7 @@ interface ComparisonReport {
 
 ### 7.3 报告生成流程
 
+<<<<<<< HEAD
 1. **生成报告**: 所有轮次完成后，调用 `POST /api/scenario2/simulation/{simulationId}/generate-report`
 2. **显示对比**: 展示模拟结果 vs 真实结果的对比分析
 3. **验证模型**: 显示准确度评分和模型验证信息
@@ -707,4 +974,9 @@ displayComparisonReport(reportResponse.data);
 3. **对比展示**: 报告页面使用对比布局（左侧模拟、右侧真实）
 4. **准确度可视化**: 使用进度条或仪表盘展示准确度分数
 5. **案例筛选**: 可以增加按行业、难度筛选案例的功能
+=======
+1. **生成报告**: 所有轮次完成后，调用 `POST /api/scenario2/reports/generate`
+2. **显示对比**: 展示模拟结果 vs 真实结果的9维度对比分析
+3. **验证模型**: 显示总体相似度评分和模型验证信息
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 

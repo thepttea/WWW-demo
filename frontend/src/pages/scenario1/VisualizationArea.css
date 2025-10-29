@@ -86,6 +86,87 @@
   line-height: 1.5;
 }
 
+/* Simulation running state styles */
+.simulation-running-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  color: inherit;
+  padding: 40px 20px;
+}
+
+.simulation-loading-icon {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(19, 127, 236, 0.2);
+  border-top: 4px solid #137fec;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.simulation-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #137fec;
+  background: linear-gradient(135deg, #137fec, #0f6fd8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.simulation-description {
+  margin: 0;
+  font-size: 16px;
+  max-width: 400px;
+  line-height: 1.6;
+  color: inherit;
+  opacity: 0.8;
+}
+
+.simulation-progress {
+  width: 100%;
+  max-width: 300px;
+  margin-top: 10px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(19, 127, 236, 0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #137fec, #0f6fd8);
+  border-radius: 3px;
+  animation: progress 2s ease-in-out infinite;
+}
+
+@keyframes progress {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
 .results-action {
   margin-top: 20px;
   text-align: center;
@@ -109,7 +190,7 @@
   box-shadow: 0 6px 16px rgba(19, 127, 236, 0.4);
 }
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 768px) {
   .visualization-content {
     min-height: 300px;

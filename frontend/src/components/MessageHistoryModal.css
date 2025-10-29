@@ -93,7 +93,11 @@
 }
 
 .message-card.clickable-message::after {
+<<<<<<< HEAD
   content: "点击播放传播动画";
+=======
+  content: "Click to replay the animation";
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
   position: absolute;
   top: 8px;
   right: 8px;

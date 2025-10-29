@@ -17,8 +17,14 @@ const Scenario2Page: React.FC = () => {
   const [simulationResult] = useState<any>(null);
   const [selectedCase, setSelectedCase] = useState<HistoricalCase | null>(null);
   const [historicalCases, setHistoricalCases] = useState<HistoricalCase[]>([]);
+<<<<<<< HEAD
 
   // 获取案例列表
+=======
+  const [selectedLlm, setSelectedLlm] = useState<string>('gpt-4o-mini'); 
+
+  // Fetch case list
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
   useEffect(() => {
     const fetchCases = async () => {
       setIsLoading(true);
@@ -42,20 +48,24 @@ const Scenario2Page: React.FC = () => {
   }, []);
 
 
-  const handleStartSimulation = async (_config: SimulationConfig) => {
+  const handleStartSimulation = async (config: { llm: string }) => {
     if (!selectedCase) {
       message.warning('Please select a classic PR case first');
       return;
     }
 
-    // 直接跳转到模拟页面，不需要等待
+    setSelectedLlm(config.llm); // Save the selected LLM
     setCurrentView('simulation');
     message.success('Starting simulation...');
   };
 
 
   const handleCaseSelect = (caseItem: HistoricalCase) => {
+<<<<<<< HEAD
     // Modal已经获取了完整的案例详情，直接使用即可
+=======
+    // The modal has already fetched the complete case details, so we can use it directly
+>>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     setSelectedCase(caseItem);
     message.success(`Selected case: ${caseItem.title}`);
   };
@@ -72,6 +82,7 @@ const Scenario2Page: React.FC = () => {
     return (
       <Scenario2SimulationPage
         selectedCase={selectedCase}
+        llmModel={selectedLlm} // Pass the selected LLM to the simulation page
         onBack={handleBackToSelection}
         onReselectCase={handleReselectCase}
       />
@@ -93,7 +104,7 @@ const Scenario2Page: React.FC = () => {
         <div className="content-grid">
           <div className="config-column">
             <CaseSelectionPanel
-              historicalCases={historicalCases} // 传递数据
+              historicalCases={historicalCases} // Pass data
               selectedCase={selectedCase}
               onCaseSelect={handleCaseSelect}
               onStartSimulation={handleStartSimulation}
