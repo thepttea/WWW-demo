@@ -1,4 +1,4 @@
-// 项目类型定义
+// Project type definitions
 
 export interface LLMOption {
   value: string;

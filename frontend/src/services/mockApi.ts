@@ -1,8 +1,8 @@
-// 模拟API服务 - 用于开发阶段，模拟后端返回数据
-import round1Data from '../../data/round1.json';  // 第一轮数据
-import round2Data from '../../data/round2.json';  // 第二轮数据
-import round3Data from '../../data/round3.json';  // 第三轮数据
-import resultData from '../../data/result.json';  // 模拟结果数据
+// Mock API service - used during development to simulate backend responses
+import round1Data from '../../data/round1.json';  // Round 1 data
+import round2Data from '../../data/round2.json';  // Round 2 data
+import round3Data from '../../data/round3.json';  // Round 3 data
+import resultData from '../../data/result.json';  // Mock result data
 import { ApiResponse } from './api';
 
 export interface MockSimulationData {
@@ -41,7 +41,7 @@ export interface MockSimulationData {
   }>;
 }
 
-// 轮询状态接口
+// Polling status interface
 export interface SimulationStatus {
   simulationId: string;
   status: 'initial' | 'running' | 'completed' | 'consumed' | 'error';
@@ -50,7 +50,7 @@ export interface SimulationStatus {
   message?: string;
 }
 
-// 模拟结果数据接口
+// Mock result data interface
 export interface SimulationResultData {
   overallSentiment: number;
   engagementRate: number;
@@ -85,7 +85,7 @@ export interface SimulationResultData {
   };
 }
 
-// 模拟状态存储
+// Mock state storage
 interface SimulationState {
   status: 'initial' | 'running' | 'completed' | 'consumed' | 'error';
   progress: number;
@@ -104,7 +104,7 @@ class MockApiClient {
   }
 
   private async mockRequest<T>(data: T, delay: number = 500): Promise<ApiResponse<T>> {
-    // 模拟网络延迟
+    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, delay));
     return {
       success: true,
@@ -112,7 +112,7 @@ class MockApiClient {
     };
   }
 
-  // 模拟开始模拟的API调用
+  // Mock API call to start simulation
   async startSimulation(config: {
     eventDescription: string;
     llm: string;
@@ -122,7 +122,7 @@ class MockApiClient {
     
     const simulationId = `sim_${Date.now()}`;
     
-    // 初始化模拟状态
+    // Initialize simulation state
     this.simulationStates.set(simulationId, {
       status: 'running',
       progress: 0,
@@ -137,14 +137,14 @@ class MockApiClient {
   }
 
 
-  // 模拟添加下一轮策略的API调用
+  // Mock API call to add next round strategy
   async addNextRoundStrategy(simulationId: string, strategy: string, currentRound: number = 1): Promise<ApiResponse<{ simulationId: string; status: string }>> {
     console.log('Mock API: Adding next round strategy:', strategy, 'for round:', currentRound + 1);
     
     const targetRound = currentRound + 1;
     console.log('Mock API: Target round:', targetRound);
     
-    // 更新模拟状态
+    // Update simulation state
     const state = this.simulationStates.get(simulationId);
     if (state) {
       console.log('Mock API: Updating existing state from round', state.currentRound, 'to round', targetRound);
@@ -156,7 +156,7 @@ class MockApiClient {
       state.data = undefined;
     } else {
       console.log('Mock API: Creating new state for round', targetRound);
-      // 如果状态不存在，创建新的
+      // If state does not exist, create a new one
       this.simulationStates.set(simulationId, {
         status: 'running',
         progress: 0,
@@ -171,7 +171,7 @@ class MockApiClient {
     }, 500);
   }
 
-  // 模拟生成报告的API调用
+  // Mock API call to generate report
   async generateReport(simulationId: string): Promise<ApiResponse<{
     reportId: string;
     content: string;
@@ -186,18 +186,18 @@ class MockApiClient {
     
     const reportData = {
       reportId: `report_${Date.now()}`,
-      content: "基于模拟结果的分析报告...",
+      content: "Analysis report based on simulation results...",
       summary: {
         overallSentiment: 0.2,
         keyInsights: [
-          "大部分用户对AI产品持谨慎态度",
-          "技术专家群体支持度较高",
-          "监管风险是主要关注点"
+          "Most users are cautious about AI products",
+          "Support from technical experts is relatively high",
+          "Regulatory risk is a major concern"
         ],
         improvements: [
-          "加强隐私保护措施",
-          "提高透明度",
-          "加强与监管机构沟通"
+          "Strengthen privacy protection measures",
+          "Increase transparency",
+          "Enhance communication with regulatory agencies"
         ]
       },
       generatedAt: new Date().toISOString()
@@ -206,7 +206,7 @@ class MockApiClient {
     return this.mockRequest(reportData, 1200);
   }
 
-  // 模拟重置模拟的API调用
+  // Mock API call to reset simulation
   async resetSimulation(simulationId: string): Promise<ApiResponse<{ success: boolean; message: string }>> {
     console.log('Mock API: Resetting simulation:', simulationId);
     
@@ -216,7 +216,7 @@ class MockApiClient {
     }, 200);
   }
 
-  // 轮询API - 获取模拟状态
+  // Polling API - get simulation status
   async getSimulationStatus(simulationId: string): Promise<ApiResponse<SimulationStatus>> {
     console.log('Mock API: Getting simulation status for:', simulationId);
     
@@ -232,20 +232,20 @@ class MockApiClient {
       }, 100);
     }
 
-    // 如果状态是running，模拟进度更新
+    // If status is running, simulate progress update
     if (state.status === 'running') {
       const now = Date.now();
       const elapsed = now - state.startTime;
-      const totalDuration = 2000; // 模拟10秒完成
+      const totalDuration = 2000; // Simulate completion in 2 seconds
       const progress = Math.min(Math.floor((elapsed / totalDuration) * 100), 99);
       
-      // 如果超过总时长，标记为完成
+      // If total duration is exceeded, mark as completed
       if (elapsed >= totalDuration) {
         state.status = 'completed';
         state.progress = 100;
         state.completedTime = now;
         
-        // 根据当前轮数设置对应的数据
+        // Set corresponding data based on the current round
         console.log('Mock API: Setting data for round:', state.currentRound);
         let baseData;
         if (state.currentRound === 1) {
@@ -282,7 +282,7 @@ class MockApiClient {
     }, 100);
   }
 
-  // 轮询API - 获取模拟结果
+  // Polling API - get simulation result
   async getSimulationResult(simulationId: string): Promise<ApiResponse<MockSimulationData>> {
     console.log('Mock API: Getting simulation result for:', simulationId);
     
@@ -304,7 +304,7 @@ class MockApiClient {
       throw new Error('Simulation data not available');
     }
 
-    // 如果状态是completed，获取数据后改为consumed
+    // If status is 'completed', change to 'consumed' after fetching data
     if (state.status === 'completed') {
       state.status = 'consumed';
     }
@@ -313,6 +313,6 @@ class MockApiClient {
   }
 }
 
-// 导出模拟API客户端实例
+// Export mock API client instance
 export const mockApiClient = new MockApiClient();
 export default mockApiClient;

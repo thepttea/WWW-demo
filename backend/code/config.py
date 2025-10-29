@@ -1,9 +1,9 @@
 # config.py
 
-# LLM提供商(即文档给出的兼容不同模型的提供商)
+# LLM Provider (the provider compatible with different models as specified in the documentation)
 LLM_PROVIDER = "CUSTOM_OPENAI"
 
-# 自定义API基础URL
+# Custom API Base URL
 CUSTOM_API_BASE = "https://api.claude-plus.top/v1"
 
 # API key

@@ -24,15 +24,15 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
   const { evaluation, caseId, caseTitle, overallSimilarityPercentage } = reportData;
   const overallSimilarity = overallSimilarityPercentage || evaluation.overall_similarity_percentage || 0;
 
-  // 根据相似度获取颜色
+  // Get color based on similarity
   const getSimilarityColor = (score: number): string => {
-    if (score >= 85) return '#52c41a'; // 高度相似
-    if (score >= 70) return '#1890ff'; // 相似
-    if (score >= 55) return '#faad14'; // 中等相似
-    return '#ff7a45'; // 低相似度
+    if (score >= 85) return '#52c41a'; // Highly Similar
+    if (score >= 70) return '#1890ff'; // Similar
+    if (score >= 55) return '#faad14'; // Moderately Similar
+    return '#ff7a45'; // Low Similarity
   };
 
-  // 根据相似度获取评级
+  // Get rating based on similarity
   const getSimilarityRating = (score: number): string => {
     if (score >= 85) return 'Highly Similar';
     if (score >= 70) return 'Similar';
@@ -53,7 +53,7 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
       </div>
 
       <div className="report-content">
-        {/* 案例信息 */}
+        {/* Case Information */}
         <Card className="case-info-card glassmorphism">
           <Row gutter={[24, 16]} align="middle">
             <Col xs={24} sm={8} md={6}>
@@ -119,7 +119,7 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
           </Row>
         </Card>
 
-        {/* 维度对比分析 */}
+        {/* Dimension Comparison Analysis */}
         <Card className="dimensions-card glassmorphism">
           <Title level={3} className="section-title">
             <SwapOutlined className="section-icon" />
@@ -130,11 +130,11 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
               const details = dimensionData.details;
               const weight = dimensionData.weight || 0;
               
-              // 获取相似度分数（兼容两种字段名）
+              // Get similarity score (compatible with two field names)
               const similarityScore = details?.similarity?.similarity_score || 
                                     details?.similarity?.similarity_percentage || 0;
               
-              const isStanceDimension = dimensionName === "总体立场倾向";
+              const isStanceDimension = dimensionName === "Overall Stance Tendency";
 
               return (
                 <Card key={dimensionName} className="dimension-card">
@@ -157,7 +157,7 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
                   <Divider />
                   
                   <div className="comparison-content">
-                    {/* 模拟数据 */}
+                    {/* Simulation Data */}
                     <div className="simulation-side">
                       <Title level={5} className="comparison-title">Simulation</Title>
                       {isStanceDimension ? (
@@ -178,7 +178,7 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
                       )}
                     </div>
                     
-                    {/* 真实案例数据 */}
+                    {/* Real Case Data */}
                     <div className="real-case-side">
                       <Title level={5} className="comparison-title">Real Case</Title>
                       {isStanceDimension ? (
@@ -200,7 +200,7 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
                     </div>
                   </div>
                   
-                  {/* 相似度分析 */}
+                  {/* Similarity Analysis */}
                   {details?.similarity?.reasoning && (
                     <div className="similarity-reasoning">
                       <Popover
@@ -230,7 +230,7 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
           </div>
         </Card>
 
-        {/* 详细分析报告 */}
+        {/* Detailed Analysis Report */}
         <Card className="detailed-report-card glassmorphism">
           <Title level={3} className="section-title">
             <BarChartOutlined className="section-icon" />
@@ -245,7 +245,7 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
           </div>
         </Card>
 
-        {/* 操作按钮 */}
+        {/* Action Buttons */}
         <div className="action-buttons">
           <Space size="large">
             <Button

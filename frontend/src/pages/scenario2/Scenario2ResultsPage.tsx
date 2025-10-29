@@ -23,7 +23,7 @@ const Scenario2ResultsPage: React.FC<Scenario2ResultsPageProps> = ({
   onBack,
   onClose,
 }) => {
-  // 模拟数据 - 实际项目中会从props获取
+  // Mock data - in a real project, this would be obtained from props
   const mockSimulationData = {
     overallSentiment: 65,
     engagementRate: 12,

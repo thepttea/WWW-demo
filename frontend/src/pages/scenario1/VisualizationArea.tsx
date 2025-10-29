@@ -57,7 +57,7 @@ const VisualizationArea: React.FC<VisualizationAreaProps> = ({
           });
           return null;
         })()}
-        {/* 始终渲染NetworkVisualization以保持状态，只是在运行时隐藏它 */}
+        {/* Always render NetworkVisualization to maintain state, just hide it when running */}
         {networkData && (
           <div className="network-visualization" style={{ display: isSimulationRunning ? 'none' : 'block' }}>
             <NetworkVisualization 

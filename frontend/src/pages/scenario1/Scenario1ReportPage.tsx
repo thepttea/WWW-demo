@@ -57,7 +57,7 @@ const Scenario1ReportPage: React.FC<Scenario1ReportPageProps> = ({
       </div>
 
       <div className="report-content">
-        {/* 总体评估卡片 */}
+        {/* Overall Evaluation Card */}
         <Card className="overall-evaluation-card glassmorphism">
           <div className="overall-score-section">
             <Row gutter={[24, 16]} align="middle">
@@ -126,7 +126,7 @@ const Scenario1ReportPage: React.FC<Scenario1ReportPageProps> = ({
           </div>
         </Card>
 
-        {/* 维度评估 */}
+        {/* Dimension Analysis */}
         <Card className="dimensions-card glassmorphism">
           <Title level={3} className="section-title">
             <BarChartOutlined className="section-icon" />
@@ -207,7 +207,7 @@ const Scenario1ReportPage: React.FC<Scenario1ReportPageProps> = ({
           </div>
         </Card>
 
-        {/* 详细分析报告 */}
+        {/* Detailed Analysis Report */}
         <Card className="detailed-report-card glassmorphism">
           <Title level={3} className="section-title">
             <BarChartOutlined className="section-icon" />
@@ -222,7 +222,7 @@ const Scenario1ReportPage: React.FC<Scenario1ReportPageProps> = ({
           </div>
         </Card>
 
-        {/* 操作按钮 */}
+        {/* Action Buttons */}
         <div className="action-buttons">
           <Space size="large">
             <Button

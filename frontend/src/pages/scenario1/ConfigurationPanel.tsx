@@ -48,25 +48,30 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
   const [strategyModalVisible, setStrategyModalVisible] = useState(false);
 
   const llmOptions: LLMOption[] = [
-    { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
-    { value: 'claude-3-opus', label: 'Claude 3 Opus' },
-    { value: 'gemini-pro', label: 'Gemini Pro' },
+    { value: 'gpt-4o-mini', label: 'gpt-4o-mini' },
+    { value: 'gpt-4.1-mini', label: 'gpt-4.1-mini' },
+    { value: 'gpt-4-turbo', label: 'gpt-4-turbo' },
+    { value: 'gpt-4.1-nano', label: 'gpt-4.1-nano' },
+    { value: 'gpt-5-mini', label: 'gpt-5-mini' },
+    { value: 'gemini-2.5-flash-preview-05-20', label: 'gemini-2.5-flash-preview-05-20'},
+    //Tested and found unusable { value: 'gemini-2.5-flash-preview-09-2025', label: 'gemini-2.5-flash-preview-09-2025' }, 
+    { value: 'gemini-2.5-pro-preview-03-25', label: 'gemini-2.5-pro-preview-03-25' },
   ];
 
-  // 监听confirmedStrategy变化，自动填充策略输入框
+  // Listen for changes in confirmedStrategy and auto-fill the strategy input box
   useEffect(() => {
     if (confirmedStrategy && confirmedStrategy.trim()) {
       if (simulationState?.isRunning) {
-        // 如果模拟正在运行，填充下一轮策略
+        // If the simulation is running, fill in the next round's strategy
         setNextRoundStrategy(confirmedStrategy);
       } else {
-        // 如果模拟未开始，填充第一轮策略
+        // If the simulation has not started, fill in the first round's strategy
         setPrStrategy(confirmedStrategy);
       }
     }
   }, [confirmedStrategy, simulationState?.isRunning]);
 
-  // 重置所有字段
+  // Reset all fields
   const resetFields = () => {
     setSelectedLLM('gpt-4-turbo');
     setEventDescription('');
@@ -74,7 +79,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
     setNextRoundStrategy('');
   };
 
-  // 当父组件调用重置时，清空字段
+  // When the parent component calls reset, clear the fields
   useEffect(() => {
     if (onResetFields) {
       onResetFields();
@@ -87,7 +92,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
       eventDescription: eventDescription,
       strategy: {
         content: prStrategy,
-        isOptimized: false, // 默认未优化，用户需要通过侧边栏进行优化
+        isOptimized: false, // Not optimized by default, user needs to optimize via the sidebar
       },
       enableRefinement: false,
     };
@@ -102,7 +107,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
     setNextRoundStrategy('');
   };
 
-  // 如果模拟正在进行中，显示锁定状态
+  // If the simulation is in progress, display the locked state
   if (simulationState?.isRunning) {
     return (
       <>
@@ -110,7 +115,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
           <Title level={4} className="panel-title">Simulation in Progress</Title>
           
           <div className="config-content">
-            {/* 锁定的配置 */}
+            {/* Locked configuration */}
             <div className="config-section">
               <label className="config-label locked-label">
                 <LockOutlined className="locked-icon" />
@@ -149,7 +154,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
               </Button>
             </div>
 
-            {/* 下一轮配置 */}
+            {/* Next round configuration */}
             <div className="config-section">
               <label className="config-label">LLM Strategy Refinement</label>
               <div className="refinement-toggle" onClick={onOpenDrawer}>
@@ -210,7 +215,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
           </div>
         </Card>
 
-        {/* 弹窗 */}
+        {/* Modals */}
         <ContentModal
           visible={eventModalVisible}
           onClose={() => setEventModalVisible(false)}
@@ -231,7 +236,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
     );
   }
 
-  // 初始配置状态
+  // Initial configuration state
   return (
     <Card className="configuration-panel glassmorphism">
       <Title level={4} className="panel-title">Configuration</Title>
@@ -285,7 +290,7 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
           />
         </div>
 
-        {/* 轮询状态显示 */}
+        {/* Polling status display */}
         {(isPolling || pollingError) && (
           <div className="config-section">
             <label className="config-label">Simulation Status</label>

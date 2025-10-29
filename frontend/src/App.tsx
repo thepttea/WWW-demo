@@ -1,6 +1,6 @@
 /**
- * 主应用组件
- * 配置全局状态
+ * Main application component
+ * Configure global state
  */
 
 import React from 'react';
@@ -9,7 +9,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Dashboard from './pages/Dashboard';
 import './App.css';
 
-// 创建React Query客户端
+// Create React Query client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

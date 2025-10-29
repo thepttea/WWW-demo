@@ -52,7 +52,7 @@
   gap: 8px;
 }
 
-/* Glassmorphism效果 */
+/* Glassmorphism effect */
 .glassmorphism {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
@@ -61,7 +61,7 @@
   border-radius: 16px;
 }
 
-/* 总体评估卡片 */
+/* Overall Evaluation Card */
 .overall-evaluation-card {
   padding: 12px;
 }
@@ -124,7 +124,7 @@
   margin: 0;
 }
 
-/* 详细报告卡片 */
+/* Detailed Report Card */
 .detailed-report-card {
   padding: 8px !important;
 }
@@ -164,7 +164,7 @@
   margin: 0;
 }
 
-/* ReactMarkdown样式 */
+/* ReactMarkdown Styles */
 .report-text h1,
 .report-text h2,
 .report-text h3,
@@ -267,7 +267,7 @@
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* 维度评估卡片 */
+/* Dimensions Card */
 .dimensions-card {
   padding: 12px;
 }
@@ -401,7 +401,7 @@
   color: #40a9ff !important;
 }
 
-/* Popover样式 */
+/* Popover Styles */
 .reasoning-popover .ant-popover-inner {
   background: rgba(0, 0, 0, 0.9) !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -429,7 +429,7 @@
   display: block !important;
 }
 
-/* 操作按钮 */
+/* Action Buttons */
 .action-buttons {
   display: flex;
   justify-content: center;
@@ -461,7 +461,7 @@
   transform: translateY(-2px);
 }
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 1400px) {
   .dimensions-grid {
     grid-template-columns: repeat(3, 1fr) !important;
@@ -521,7 +521,7 @@
   }
 }
 
-/* 总分组成可视化 - 紧凑版本 */
+/* Score Breakdown Visualization - Compact Version */
 .score-breakdown-compact {
   height: 100%;
   display: flex;

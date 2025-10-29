@@ -1,9 +1,9 @@
 /**
- * 数据转换工具
- * 将后端API返回的数据格式转换为前端可视化组件期望的格式
+ * Data transformation utility
+ * Converts data formats from backend API responses to the format expected by frontend visualization components.
  */
 
-// 后端返回的网络数据类型
+// Backend response network data type
 interface BackendNetworkData {
   nodes: Array<{
     id: string;
@@ -20,7 +20,7 @@ interface BackendNetworkData {
   }>;
 }
 
-// 后端返回的模拟结果类型
+// Backend response simulation result type
 interface BackendSimulationResult {
   simulationId: string;
   status: string;
@@ -66,7 +66,7 @@ interface BackendSimulationResult {
   }>;
 }
 
-// 前端期望的用户数据格式
+// Frontend expected user data format
 interface FrontendUser {
   agentId?: string;
   username: string;
@@ -77,7 +77,7 @@ interface FrontendUser {
   objective_stance_score: number;
 }
 
-// 前端期望的平台数据格式
+// Frontend expected platform data format
 interface FrontendPlatform {
   name: string;
   type: string;
@@ -95,31 +95,31 @@ interface FrontendPlatform {
   }>;
 }
 
-// 前端期望的网络数据格式
+// Frontend expected network data format
 interface FrontendNetworkData {
   users: FrontendUser[];
   platforms: FrontendPlatform[];
 }
 
 /**
- * 将后端的模拟结果数据转换为前端可视化组件需要的格式
+ * Converts backend simulation result data to the format required by frontend visualization components
  */
 export function transformSimulationResultToNetworkData(
   simulationResult: BackendSimulationResult,
   networkData?: BackendNetworkData
 ): FrontendNetworkData {
-  // 1. 转换用户数据
+  // 1. Transform user data
   const users: FrontendUser[] = simulationResult.agents.map(agent => ({
     agentId: agent.agentId,
     username: agent.username,
     influence_score: agent.influenceScore !== undefined ? agent.influenceScore : (agent.influence_score || 0),
     primary_platform: agent.primaryPlatform,
     emotional_style: agent.emotionalStyle,
-    final_decision: agent.latestPost || "尚未发言",
+    final_decision: agent.latestPost || "No statement yet",
     objective_stance_score: agent.stanceScore,
   }));
 
-  // 2. 构建平台数据
+  // 2. Construct platform data
   const platformMap = new Map<string, FrontendPlatform>();
   const platformTypes: { [key: string]: string } = {
     'Weibo/Twitter-like': 'social_media',
@@ -128,7 +128,7 @@ export function transformSimulationResultToNetworkData(
     'Forum-like': 'discussion_forum',
   };
 
-  // 按平台分组用户
+  // Group users by platform
   simulationResult.agents.forEach(agent => {
     const platformName = agent.primaryPlatform;
     if (!platformMap.has(platformName)) {
@@ -147,11 +147,11 @@ export function transformSimulationResultToNetworkData(
     }
   });
 
-  // 3. 构建消息传播数据
-  // 检查后端是否直接提供了platforms数据（包含message_propagation）
+  // 3. Construct message propagation data
+  // Check if the backend directly provides platforms data (including message_propagation)
   const messagePropagationMap = new Map<string, Array<any>>();
   
-  // 首先检查是否有直接的platforms数据（后端可能直接返回）
+  // First, check for direct platforms data (which the backend might return directly)
   if (simulationResult.platforms && Array.isArray(simulationResult.platforms)) {
     console.log('DataTransformer - Found direct platforms data with', simulationResult.platforms.length, 'platforms');
     simulationResult.platforms.forEach((platform: any) => {
@@ -162,7 +162,7 @@ export function transformSimulationResultToNetworkData(
     });
   }
   
-  // 如果没有直接的platforms数据，尝试从propagationPaths构建
+  // If there's no direct platforms data, try to build it from propagationPaths
   if (messagePropagationMap.size === 0 && simulationResult.propagationPaths && simulationResult.propagationPaths.length > 0) {
     console.log('DataTransformer - Using propagationPaths data');
     simulationResult.propagationPaths.forEach((path, index) => {
@@ -174,7 +174,7 @@ export function transformSimulationResultToNetworkData(
         messagePropagationMap.set(platform, []);
       }
 
-      // 获取接收者（基于网络拓扑）
+      // Get receivers (based on network topology)
       const receivers: string[] = [];
       if (networkData && networkData.edges) {
         networkData.edges
@@ -186,13 +186,13 @@ export function transformSimulationResultToNetworkData(
             }
           });
       } else {
-        // 如果没有网络数据，从agents中随机选择一些作为接收者
+        // If there is no network data, randomly select some agents as receivers
         const otherAgents = simulationResult.agents.filter(a => a.agentId !== path.from);
         const numReceivers = Math.min(3, otherAgents.length);
         for (let i = 0; i < numReceivers; i++) {
           const randomIndex = Math.floor(Math.random() * otherAgents.length);
           receivers.push(otherAgents[randomIndex].username);
-          otherAgents.splice(randomIndex, 1); // 避免重复选择
+          otherAgents.splice(randomIndex, 1); // Avoid duplicate selection
         }
       }
 
@@ -200,10 +200,10 @@ export function transformSimulationResultToNetworkData(
       
       messagePropagationMap.get(platform)!.push({
         sender: sender.username,
-        receivers: receivers.slice(0, 4), // 限制接收者数量
+        receivers: receivers.slice(0, 4), // Limit the number of receivers
         content: path.content,
         sentiment: sentiment,
-        timestamp: new Date(Date.now() + index * 6000).toISOString(), // 使用实际时间戳
+        timestamp: new Date(Date.now() + index * 6000).toISOString(), // Use actual timestamp
         likes: Math.floor(Math.random() * 50) + 10,
         shares: Math.floor(Math.random() * 20) + 5,
         comments: Math.floor(Math.random() * 15) + 3,
@@ -211,7 +211,7 @@ export function transformSimulationResultToNetworkData(
     });
   }
   
-  // 如果仍然没有数据，从agents的发言中生成基础消息
+  // If there is still no data, generate basic messages from agents' posts
   if (messagePropagationMap.size === 0) {
     console.log('DataTransformer - Generating messages from agents data');
     simulationResult.agents.forEach((agent, index) => {
@@ -224,14 +224,14 @@ export function transformSimulationResultToNetworkData(
         const sentiment = agent.stanceScore > 0 ? 'positive' : 
                          agent.stanceScore < 0 ? 'negative' : 'neutral';
         
-        // 为消息生成一些接收者
+        // Generate some receivers for the message
         const otherAgents = simulationResult.agents.filter(a => a.agentId !== agent.agentId);
         const numReceivers = Math.min(3, otherAgents.length);
         const receivers: string[] = [];
         for (let i = 0; i < numReceivers; i++) {
           const randomIndex = Math.floor(Math.random() * otherAgents.length);
           receivers.push(otherAgents[randomIndex].username);
-          otherAgents.splice(randomIndex, 1); // 避免重复选择
+          otherAgents.splice(randomIndex, 1); // Avoid duplicate selection
         }
 
         messagePropagationMap.get(platform)!.push({
@@ -248,7 +248,7 @@ export function transformSimulationResultToNetworkData(
     });
   }
 
-  // 将消息传播数据添加到平台
+  // Add message propagation data to platforms
   messagePropagationMap.forEach((messages, platformName) => {
     const platform = platformMap.get(platformName);
     if (platform) {
@@ -273,8 +273,8 @@ export function transformSimulationResultToNetworkData(
 }
 
 /**
- * 简化版转换函数：只根据agents数据创建基础的网络可视化数据
- * 当后端只返回agents信息而没有详细的传播路径时使用
+ * Simplified transformation function: Creates basic network visualization data based only on agents data
+ * Used when the backend only returns agent information without detailed propagation paths
  */
 export function transformAgentsToNetworkData(
   agents: BackendSimulationResult['agents']
@@ -285,11 +285,11 @@ export function transformAgentsToNetworkData(
     influence_score: agent.influenceScore !== undefined ? agent.influenceScore : (agent.influence_score || 0),
     primary_platform: agent.primaryPlatform,
     emotional_style: agent.emotionalStyle,
-    final_decision: agent.latestPost || "尚未发言",
+    final_decision: agent.latestPost || "No statement yet",
     objective_stance_score: agent.stanceScore,
   }));
 
-  // 按平台分组
+  // Group by platform
   const platformMap = new Map<string, FrontendPlatform>();
   const platformTypes: { [key: string]: string } = {
     'Weibo/Twitter-like': 'social_media',
@@ -315,19 +315,19 @@ export function transformAgentsToNetworkData(
       platform.activeUsers.push(agent.username);
     }
 
-    // 如果有发言，添加到消息传播
+    // If there is a post, add it to message propagation
     if (agent.latestPost && agent.postsSent > 0) {
       const sentiment = agent.stanceScore > 0 ? 'positive' : 
                        agent.stanceScore < 0 ? 'negative' : 'neutral';
       
-      // 为消息生成一些接收者
+      // Generate some receivers for the message
       const otherAgents = agents.filter(a => a.agentId !== agent.agentId);
       const numReceivers = Math.min(3, otherAgents.length);
       const receivers: string[] = [];
       for (let i = 0; i < numReceivers; i++) {
         const randomIndex = Math.floor(Math.random() * otherAgents.length);
         receivers.push(otherAgents[randomIndex].username);
-        otherAgents.splice(randomIndex, 1); // 避免重复选择
+        otherAgents.splice(randomIndex, 1); // Avoid duplicate selection
       }
 
       platform.message_propagation.push({
@@ -352,7 +352,7 @@ export function transformAgentsToNetworkData(
 }
 
 /**
- * 检查数据是否有效
+ * Check if data is valid
  */
 export function isValidNetworkData(data: any): data is FrontendNetworkData {
   return (

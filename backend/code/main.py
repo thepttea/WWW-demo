@@ -12,41 +12,41 @@ from langchain.prompts import PromptTemplate
 from logger import setup_logging, log_message
 
 def get_personalized_feed(agent_id, agents, G, all_posts_last_round):
-    """根据不同平台的规则，为Agent计算本回合可见的帖子"""
+    """Calculate the visible posts for an agent in this round based on platform-specific rules."""
     if not all_posts_last_round:
         return []
 
     feed = []
     
     for author_id, content, _ in all_posts_last_round:
-        if author_id == agent_id: continue # 自己刚发的不会对自己的思考产生影响
+        if author_id == agent_id: continue # A post just made by the agent will not affect their own thinking
 
         author_persona = agents[author_id].persona
         author_platform = author_persona.get("primary_platform")
         
         is_visible = False
         
-        # 朋友圈：仅“互为好友”(强连接)可见
+        # WeChat Moments-like: Visible only to "mutual friends" (strong connections)
         if author_platform == "WeChat Moments-like":
             edge_data = G.get_edge_data(agent_id, author_id)
             if edge_data and edge_data.get("tie_strength") == "mutual":
                 is_visible = True
         
-        # 微博/Twitter：我关注了Ta，或者因热度被算法推荐
+        # Weibo/Twitter-like: I follow them, or recommended by algorithm due to popularity
         elif author_platform == "Weibo/Twitter-like":
-            if G.has_edge(agent_id, author_id): # 我关注了作者
+            if G.has_edge(agent_id, author_id): # I follow the author
                 is_visible = True
-            else: # 模拟算法推荐，影响力越高越容易被推荐给非粉丝
+            else: # Simulate algorithmic recommendation, higher influence increases the chance of being recommended to non-followers
                 if random.random() < author_persona.get("influence_score", 50) / 300.0:
                     is_visible = True
 
-        # 小红书/抖音：纯算法推荐，社交关系弱
+        # TikTok-like: Purely algorithmic recommendation, weak social ties
         elif author_platform == "TikTok-like":
-            # 简化模型：影响力越高越容易刷到
+            # Simplified model: Higher influence makes it more likely to be seen
             if random.random() < author_persona.get("influence_score", 50) / 150.0:
                 is_visible = True
         
-        # 论坛：对所有模拟中的人开放
+        # Forum-like: Open to everyone in the simulation
         elif author_platform == "Forum-like":
             is_visible = True
             
@@ -59,7 +59,7 @@ def get_personalized_feed(agent_id, agents, G, all_posts_last_round):
 
 def summarize_discourse(discourse_history: list, agents: dict):
     """
-    在模拟结束后，调用LLM生成一份舆情总结报告。
+    After the simulation is over, call the LLM to generate a public opinion summary report.
     """
     log_message("\n" + "="*25 + "\n=== Generating public opinion summary report... ===\n" + "="*25)
 
@@ -97,16 +97,16 @@ def summarize_discourse(discourse_history: list, agents: dict):
     
     return summary_report
 
-# num_rounds是回合数，测试的时候可以调整
+# num_rounds is the number of rounds, can be adjusted for testing
 def run_simulation(num_rounds: int = 2, participation_prob: float = 0.8, rejoining_prob: float = 0.1):
     """
-    运行舆情模拟。
+    Run the public opinion simulation.
     
     Args:
-        num_rounds: 模拟回合数
-        participation_prob: 参与概率
-        rejoining_prob: 重新加入概率
-        persona_csv_path: 人设CSV文件路径
+        num_rounds: Number of simulation rounds
+        participation_prob: Participation probability
+        rejoining_prob: Probability of rejoining
+        persona_csv_path: Path to the persona CSV file
     """
     logger = setup_logging()
     with logger:
@@ -157,7 +157,7 @@ def run_simulation(num_rounds: int = 2, participation_prob: float = 0.8, rejoini
                 agent_graph = agent.get_graph()
 
                 if current_round == 1:
-                    # 第一回合所有人都看初始话题
+                    # In the first round, everyone sees the initial topic
                     visible_messages_for_agent = initial_messages
                 else:
                     visible_messages_for_agent = get_personalized_feed(agent_id, agents, G, last_round_posts)
@@ -200,6 +200,5 @@ def run_simulation(num_rounds: int = 2, participation_prob: float = 0.8, rejoini
         final_report = summarize_discourse(global_discourse, agents)
         log_message("\n\n" + "#"*25 + "\n### Final Public Opinion Analysis Report ###\n" + "#"*25)
         log_message(final_report)
-
 if __name__ == "__main__":
     run_simulation()

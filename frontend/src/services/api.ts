@@ -1,7 +1,7 @@
-// API服务基础配置
+// API service base configuration
 const API_BASE_URL = 'http://localhost:8000/api';
 
-// API响应类型
+// API response type
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
@@ -13,7 +13,7 @@ export interface ApiResponse<T = any> {
   };
 }
 
-// 聊天相关类型
+// Chat related types
 export interface ChatSession {
   sessionId: string;
   content: string;
@@ -32,7 +32,7 @@ export interface ChatHistory {
   messages: ChatMessage[];
 }
 
-// 模拟相关类型
+// Simulation related types
 export interface SimulationConfig {
   agents: number;
   num_rounds: number;
@@ -49,7 +49,7 @@ export interface StartSimulationRequest {
   initialTopic: string;
   llmModel: string;
   simulationConfig: SimulationConfig;
-  prStrategy?: string;  // 第一轮公关策略（可选）
+  prStrategy?: string;  // First round PR strategy (optional)
 }
 
 export interface SimulationStatus {
@@ -171,7 +171,7 @@ export interface SimulationResultData {
   };
 }
 
-// API客户端类
+// API Client Class
 class ApiClient {
   private baseURL: string;
 
@@ -215,7 +215,7 @@ class ApiClient {
     }
   }
 
-  // LLM Chat相关API
+  // LLM Chat related APIs
   async initChatSession(): Promise<ApiResponse<ChatSession>> {
     return this.request<ChatSession>('/scenario1/chat/init', {
       method: 'GET',
@@ -238,7 +238,7 @@ class ApiClient {
     });
   }
 
-  // 模拟相关API
+  // Simulation related APIs
   async startSimulation(request: StartSimulationRequest): Promise<ApiResponse<{ simulationId: string; status: string }>> {
     return this.request('/scenario1/simulation/start', {
       method: 'POST',
@@ -286,7 +286,7 @@ class ApiClient {
     });
   }
 
-  // 获取模拟数据相关API
+  // Simulation data related APIs
   async getSimulationData(simulationId: string): Promise<ApiResponse<any>> {
     return this.request(`/scenario1/simulation/${simulationId}/data`, {
       method: 'GET',
@@ -303,7 +303,7 @@ class ApiClient {
     });
   }
 
-  // Scenario 2 相关API
+  // Scenario 2 related APIs
   async getHistoricalCases(): Promise<ApiResponse<any[]>> {
     return this.request('/scenario2/cases', {
       method: 'GET',
@@ -353,6 +353,6 @@ class ApiClient {
   }
 }
 
-// 导出API客户端实例
+// Export API client instance
 export const apiClient = new ApiClient();
 export default apiClient;

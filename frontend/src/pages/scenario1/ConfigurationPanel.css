@@ -152,7 +152,7 @@
   border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
-/* 锁定状态样式 */
+/* Locked state styles */
 .locked-label {
   display: flex;
   align-items: center;
@@ -192,7 +192,7 @@
   box-shadow: 0 4px 12px rgba(19, 127, 236, 0.2);
 }
 
-/* 轮询状态样式 */
+/* Polling status styles */
 .polling-status {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -235,7 +235,7 @@
   font-size: 12px !important;
 }
 
-/* 错误状态样式 */
+/* Error state styles */
 .error-status {
   background: rgba(239, 68, 68, 0.1);
   border: 1px solid rgba(239, 68, 68, 0.3);

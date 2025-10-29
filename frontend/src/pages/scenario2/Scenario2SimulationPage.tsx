@@ -16,12 +16,14 @@ const { Title, Text } = Typography;
 
 interface Scenario2SimulationPageProps {
   selectedCase: HistoricalCase | null;
+  llmModel: string; 
   onBack: () => void;
   onReselectCase: () => void;
 }
 
 const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   selectedCase,
+  llmModel,
   onBack: _onBack,
   onReselectCase,
 }) => {
@@ -33,20 +35,20 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   const [currentRound, setCurrentRound] = useState(1);
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
   const [reportData, setReportData] = useState<any>(null);
-  const [animationKey, setAnimationKey] = useState(0); // 用于强制重置动画
-  const [isReportJustClosed, setIsReportJustClosed] = useState(false); // 跟踪是否刚刚关闭报告
-  const [shouldKeepFinalState, setShouldKeepFinalState] = useState<boolean>(false); // 标记是否应该保持最终状态
+  const [animationKey, setAnimationKey] = useState(0); // Used to force reset animation
+  const [isReportJustClosed, setIsReportJustClosed] = useState(false); // Track if the report was just closed
+  const [shouldKeepFinalState, setShouldKeepFinalState] = useState<boolean>(false); // Flag to determine if the final state should be kept
 
   // API hooks
   const startSimulationMutation = useStartScenario2Simulation();
-  const addScenario2StrategyMutation = useAddScenario2Strategy(); // 使用Scenario2的API
+  const addScenario2StrategyMutation = useAddScenario2Strategy(); // Use Scenario2's API
   const generateReportMutation = useGenerateScenario2Report();
-  const resetSimulationMutation = useResetSimulation(); // 添加reset功能
+  const resetSimulationMutation = useResetSimulation(); // Add reset functionality
   const { data: simulationStatusData } = useScenario2SimulationStatus(simulationId, isSimulationRunning);
-  // 使用Scenario2的数据获取方式
+  // Use Scenario2's data fetching method
   const { data: simulationResultData } = useScenario2SimulationResult(simulationId);
 
-  // 监听模拟状态变化
+  // Listen for simulation state changes
   useEffect(() => {
     if (simulationStatusData?.success && simulationStatusData.data) {
       const status = simulationStatusData.data.status;
@@ -57,7 +59,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         console.log('Scenario 2 simulation completed, stopping polling and fetching results');
         setIsSimulationRunning(false);
         setCurrentRound(round);
-        // 不在这里设置hasCompletedSimulation，让动画组件通过onAnimationCompleted回调来设置
+        // Don't set hasCompletedSimulation here, let the animation component set it via the onAnimationCompleted callback
       } else if (status === 'error') {
         console.log('Scenario 2 simulation failed');
         setIsSimulationRunning(false);
@@ -66,9 +68,9 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     }
   }, [simulationStatusData, isSimulationRunning]);
 
-  // 监听数据获取结果，如果有数据就停止加载状态
+  // Listen for data fetch results, and stop the loading state if there is data
   useEffect(() => {
-    // 如果正在开始新轮次，忽略旧的缓存数据
+    // If a new round is starting, ignore old cached data
     if (isStartingNewRound) {
       console.log('Ignoring cached data because isStartingNewRound is true');
       return;
@@ -80,33 +82,33 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     }
   }, [simulationResultData, isSimulationRunning, isStartingNewRound]);
 
-  // 监听所有数据状态，判断数据是否准备好
+  // Listen to all data states to determine if data is ready
   useEffect(() => {
     const hasStatusData = !!simulationStatusData?.success;
     const hasResultData = !!simulationResultData?.success;
     
     if (hasStatusData && hasResultData) {
       console.log('All Scenario 2 simulation data ready, data is available for animation');
-      // 不在这里设置hasCompletedSimulation，让动画先开始
+      // Don't set hasCompletedSimulation here, let the animation start first
     }
   }, [simulationStatusData, simulationResultData]);
 
-  // 使用ref保存上一次的网络数据
+  // Use ref to save the previous network data
   const previousNetworkDataRef = useRef<any>(null);
   
-  // 处理网络数据转换 - 使用与Scenario1相同的方式
+  // Handle network data transformation - use the same method as Scenario1
   const memoizedNetworkData = useMemo(() => {
     console.log('====== [DATA DEBUG] Scenario2 - memoizedNetworkData computing ======');
     console.log('[DATA DEBUG] isStartingNewRound:', isStartingNewRound);
     console.log('[DATA DEBUG] simulationResultData:', simulationResultData?.success ? 'has data' : 'no data');
     
-    // 如果正在开始新轮次，返回上一轮的数据以保持组件挂载状态
+    // If a new round is starting, return the previous round's data to keep the component mounted
     if (isStartingNewRound) {
       console.log('[DATA DEBUG] Returning previous networkData because isStartingNewRound=true');
       return previousNetworkDataRef.current;
     }
     
-    // 数据转换：将后端格式转换为前端期望的格式
+    // Data transformation: Convert backend format to frontend expected format
     if (simulationResultData?.success && simulationResultData.data) {
       console.log('[DATA DEBUG] Processing simulation result data');
       console.log('[DATA DEBUG] Agents data:', simulationResultData.data.agents?.map((a: any) => ({
@@ -115,12 +117,12 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
       })));
       
       try {
-        // 转换数据格式以匹配期望的接口
+        // Convert data format to match the expected interface
         const transformedData = {
           ...simulationResultData.data,
           agents: simulationResultData.data.agents.map((agent: any) => ({
             ...agent,
-            // 后端返回的字段名是 influence_score，需要转换
+            // The field name returned by the backend is influence_score, needs conversion
             influenceScore: agent.influence_score !== undefined ? agent.influence_score : (agent.influenceScore || 0)
           }))
         };
@@ -134,18 +136,18 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
           stance: u.objective_stance_score
         })));
         
-        // 保存当前数据以供下一轮使用
+        // Save current data for the next round
         previousNetworkDataRef.current = result;
         
         return result;
       } catch (error) {
         console.error('Error transforming simulation data:', error);
-        // 如果转换失败，尝试简化版转换
+        // If transformation fails, try a simplified version
         if (simulationResultData.data.agents) {
-          // 转换数据格式以匹配期望的接口
+          // Convert data format to match the expected interface
           const transformedAgents = simulationResultData.data.agents.map((agent: any) => ({
             ...agent,
-            // 后端返回的字段名是 influence_score，需要转换
+            // The field name returned by the backend is influence_score, needs conversion
             influenceScore: agent.influence_score || 0
           }));
           const result = transformSimulationResultToNetworkData({
@@ -161,7 +163,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     return previousNetworkDataRef.current || undefined;
   }, [simulationResultData, isStartingNewRound]);
 
-  // 调试日志
+  // Debug log
   console.log('Scenario2SimulationPage - Current state:', {
     simulationId,
     isSimulationRunning,
@@ -177,17 +179,17 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
       return;
     }
 
-    // 立即设置运行状态，给用户即时反馈
+    // Immediately set the running state to give the user instant feedback
     setIsSimulationRunning(true);
     
     try {
       message.loading('Starting simulation...', 0);
       const result = await startSimulationMutation.mutateAsync({
         caseId: selectedCase.id,
-        llmModel: 'gpt-4o-mini',
+        llmModel: llmModel,
         simulationConfig: {
           agents: 10,
-          num_rounds: 1, // 每次添加策略后只执行一轮模拟
+          num_rounds: 1, // Only execute one round of simulation after adding a strategy
           interactionProbability: 0.7,
           positiveResponseProbability: 0.3,
           negativeResponseProbability: 0.2,
@@ -223,26 +225,26 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
       return;
     }
 
-    // 立即设置运行状态，给用户即时反馈
+    // Immediately set the running state to give user instant feedback
     console.log('handleContinueNextRound - Setting states:', {
       before: { isSimulationRunning, hasCompletedSimulation, isStartingNewRound }
     });
     
-    // 先重置完成状态，确保新组件能正确接收状态
+    // Reset the completion state first to ensure that the new component can correctly receive the state
     setHasCompletedSimulation(false);
     setIsSimulationRunning(true);
-    setIsStartingNewRound(true); // 标记正在开始新轮次，清除旧数据
+    setIsStartingNewRound(true); // Mark that a new round is starting, clear old data
     
-    // 立即更新到下一轮，让用户看到下一轮的策略
+    // Immediately update to the next round to let the user see the next round's strategy
     const nextRound = currentRound + 1;
     setCurrentRound(nextRound);
     
-    // 同步更新animationKey和hasCompletedSimulation状态
-    setAnimationKey(prev => prev + 1); // 强制重置动画
-    // 确保hasCompletedSimulation被重置
+    // Synchronously update animationKey and hasCompletedSimulation state
+    setAnimationKey(prev => prev + 1); // Force reset animation
+    // Ensure hasCompletedSimulation is reset
     setHasCompletedSimulation(false);
     
-    // 新轮次开始，重置报告关闭状态
+    // A new round starts, reset the report closed state
     setIsReportJustClosed(false);
     setShouldKeepFinalState(false);
     
@@ -260,10 +262,10 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         console.log('Next round simulation started, round:', roundNumber);
         console.log('Backend returned new data, clearing isStartingNewRound flag');
         
-        // 后端返回了新数据，清除新轮次标记
+        // The backend has returned new data, clear the new round flag
         setIsStartingNewRound(false);
         
-        // 确保轮次与后端返回的一致
+        // Ensure the round is consistent with the backend response
         if (roundNumber !== nextRound) {
           setCurrentRound(roundNumber);
         }
@@ -271,14 +273,14 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         message.error(result.error?.message || 'Failed to start next round');
         setIsSimulationRunning(false);
         setIsStartingNewRound(false);
-        // 如果失败，回退到上一轮
+        // If it fails, roll back to the previous round
         setCurrentRound(currentRound);
       }
     } catch (error) {
       message.destroy();
       setIsSimulationRunning(false);
       setIsStartingNewRound(false);
-      // 如果失败，回退到上一轮
+      // If it fails, roll back to the previous round
       setCurrentRound(currentRound);
       console.error('Failed to start next round:', error);
       message.error('Failed to start next round');
@@ -291,7 +293,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
       return;
     }
 
-    // 立即设置报告生成状态
+    // Immediately set the report generation state
     setIsGeneratingReport(true);
 
     try {
@@ -321,7 +323,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
 
   const handleReset = async () => {
     try {
-      // 如果有活跃的模拟，先调用后端reset接口
+      // If there is an active simulation, call the backend reset interface first
       if (simulationId) {
         const result = await resetSimulationMutation.mutateAsync(simulationId);
         if (!result.success) {
@@ -330,18 +332,18 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
         }
       }
 
-      // 重置所有前端状态
+      // Reset all frontend states
       setSimulationId(null);
       setCurrentRound(1);
       setIsSimulationRunning(false);
       setHasCompletedSimulation(false);
       setIsStartingNewRound(false);
-      setAnimationKey(0); // 重置动画key
+      setAnimationKey(0); // Reset animation key
       setIsReportJustClosed(false);
       setShouldKeepFinalState(false);
       setReportData(null);
       
-      // 清空缓存的网络数据，防止reset后仍然显示旧数据
+      // Clear cached network data to prevent old data from being displayed after reset
       previousNetworkDataRef.current = null;
     } catch (error) {
       console.error('Reset error:', error);
@@ -350,7 +352,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   };
 
   const getCurrentRoundStrategy = (strategies: any[], round: number) => {
-    // 从strategies数组中获取对应轮次的策略
+    // Get the strategy for the corresponding round from the strategies array
     const strategy = strategies.find(s => s.round === round);
     if (strategy) {
       return `
@@ -360,7 +362,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
       `;
     }
     
-    // 如果找不到对应轮次，返回第一轮或最后一轮
+    // If the corresponding round is not found, return the first or last round
     if (round > strategies.length) {
       const lastStrategy = strategies[strategies.length - 1];
       return `
@@ -381,16 +383,16 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   const renderMapVisualization = () => {
     return (
       <VisualizationArea
-        key={`scenario2-${currentRound}-${simulationId}-${animationKey}`} // 添加animationKey来强制重新渲染
+        key={`scenario2-${currentRound}-${simulationId}-${animationKey}`} // Add animationKey to force re-render
         isLoading={startSimulationMutation.isPending || addScenario2StrategyMutation.isPending || isSimulationRunning || isStartingNewRound}
         isSimulationRunning={isSimulationRunning || isStartingNewRound}
         hasCompletedSimulation={hasCompletedSimulation}
         onAnimationCompleted={() => setHasCompletedSimulation(true)}
         networkData={memoizedNetworkData}
         simulationResult={simulationResultData?.success ? simulationResultData.data : undefined}
-        animationKey={animationKey} // 传递animationKey给NetworkVisualization
-        isReportJustClosed={isReportJustClosed} // 传递报告关闭状态
-        shouldKeepFinalState={shouldKeepFinalState} // 传递是否应该保持最终状态
+        animationKey={animationKey} // Pass animationKey to NetworkVisualization
+        isReportJustClosed={isReportJustClosed} // Pass the report closed state
+        shouldKeepFinalState={shouldKeepFinalState} // Pass whether the final state should be kept
       />
     );
   };
@@ -429,7 +431,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
             </Button>
           ) : (
             <>
-              {/* 只有在还有下一轮策略时才显示Continue按钮 */}
+              {/* Only show the Continue button if there is a next round strategy */}
               {selectedCase && currentRound < selectedCase.strategies.length && (
                 <Button
                   size="large"
@@ -469,7 +471,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
             size="large"
             className="action-button secondary-button"
             onClick={async () => {
-              // 先重置后端状态，然后重新选择案例
+              // First reset the backend state, then reselect the case
               await handleReset();
               onReselectCase();
             }}
@@ -482,7 +484,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   };
 
 
-  // 如果显示结果页面，渲染结果比较页面
+  // If the results page is displayed, render the results comparison page
   if (showResults && reportData) {
     return (
       <Scenario2ReportPage
@@ -491,13 +493,13 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
           setShowResults(false);
           setIsReportJustClosed(true);
           setShouldKeepFinalState(true);
-          // 不要重置动画状态，保持当前的动画状态
+          // Do not reset the animation state, keep the current animation state
         }}
         onClose={() => {
           setShowResults(false);
           setIsReportJustClosed(true);
           setShouldKeepFinalState(true);
-          // 不要重置动画状态，保持当前的动画状态
+          // Do not reset the animation state, keep the current animation state
         }}
         onReset={handleReset}
       />

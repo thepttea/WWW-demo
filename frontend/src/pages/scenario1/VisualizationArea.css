@@ -86,7 +86,7 @@
   line-height: 1.5;
 }
 
-/* 模拟运行状态样式 */
+/* Simulation running state styles */
 .simulation-running-state {
   display: flex;
   flex-direction: column;
@@ -190,7 +190,7 @@
   box-shadow: 0 6px 16px rgba(19, 127, 236, 0.4);
 }
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 768px) {
   .visualization-content {
     min-height: 300px;
