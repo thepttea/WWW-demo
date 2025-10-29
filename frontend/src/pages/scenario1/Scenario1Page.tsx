@@ -450,56 +450,10 @@ const Scenario1Page: React.FC = () => {
             <VisualizationArea
               key={`scenario1-${simulationState?.currentRound || 1}-${simulationId}-${animationKey}`} // Add key to force re-render
               isLoading={startSimulationMutation.isPending || addPRStrategyMutation.isPending}
-<<<<<<< HEAD
-              networkData={(() => {
-                // 数据转换：将后端格式转换为前端期望的格式
-                if (simulationResultData?.success && simulationResultData.data) {
-                  try {
-                    // 转换数据格式以匹配期望的接口
-                    const transformedData = {
-                      ...simulationResultData.data,
-                      agents: simulationResultData.data.agents.map(agent => ({
-                        ...agent,
-                        // 后端返回的字段名已经是 influenceScore，不需要转换
-                        influenceScore: agent.influenceScore || agent.influence_score || 0
-                      }))
-                    };
-                    
-                    // 优先使用完整的模拟结果数据
-                    const backendNetworkData = networkData?.success && networkData.data ? {
-                      ...networkData.data,
-                      nodes: networkData.data.nodes.map(node => ({
-                        ...node,
-                        influenceScore: node.influence_score || 0
-                      })),
-                      edges: networkData.data.edges || []
-                    } : undefined;
-                    return transformSimulationResultToNetworkData(
-                      transformedData,
-                      backendNetworkData
-                    );
-                  } catch (error) {
-                    console.error('Error transforming simulation data:', error);
-                    // 如果转换失败，尝试简化版转换
-                    if (simulationResultData.data.agents) {
-                      // 转换数据格式以匹配期望的接口
-                      const transformedAgents = simulationResultData.data.agents.map(agent => ({
-                        ...agent,
-                        // 后端返回的字段名已经是 influenceScore，不需要转换
-                        influenceScore: agent.influenceScore || agent.influence_score || 0
-                      }));
-                      return transformAgentsToNetworkData(transformedAgents);
-                    }
-                  }
-                }
-                return undefined;
-              })()}
-=======
               isSimulationRunning={isSimulationRunning}
               hasCompletedSimulation={hasCompletedSimulation}
               onAnimationCompleted={() => setHasCompletedSimulation(true)}
               networkData={memoizedNetworkData}
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
               simulationResult={simulationResultData?.success ? simulationResultData.data : undefined}
               animationKey={animationKey} // Pass animationKey to NetworkVisualization
               isReportJustClosed={isReportJustClosed} // Pass the report closed state

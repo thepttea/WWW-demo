@@ -303,11 +303,7 @@ class ApiClient {
     });
   }
 
-<<<<<<< HEAD
-  // Scenario 2 相关API
-=======
   // Scenario 2 related APIs
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
   async getHistoricalCases(): Promise<ApiResponse<any[]>> {
     return this.request('/scenario2/cases', {
       method: 'GET',
@@ -331,33 +327,23 @@ class ApiClient {
     });
   }
 
-<<<<<<< HEAD
-  async advanceScenario2NextRound(simulationId: string): Promise<ApiResponse<any>> {
-    return this.request(`/scenario2/simulation/${simulationId}/next-round`, {
-=======
   async addScenario2Strategy(simulationId: string): Promise<ApiResponse<any>> {
     return this.request(`/scenario2/simulation/${simulationId}/add-strategy`, {
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
       method: 'POST',
     });
   }
 
-<<<<<<< HEAD
-=======
   async getScenario2Status(simulationId: string): Promise<ApiResponse<SimulationStatus>> {
     return this.request<SimulationStatus>(`/scenario2/simulation/${simulationId}/status`, {
       method: 'GET',
     });
   }
 
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
   async getScenario2Result(simulationId: string): Promise<ApiResponse<any>> {
     return this.request(`/scenario2/simulation/${simulationId}/result`, {
       method: 'GET',
     });
   }
-<<<<<<< HEAD
-=======
 
   async generateScenario2Report(request: ReportRequest): Promise<ApiResponse<ReportResponse>> {
     return this.request<ReportResponse>('/scenario2/reports/generate', {
@@ -365,7 +351,6 @@ class ApiClient {
       body: JSON.stringify(request),
     });
   }
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 }
 
 // Export API client instance

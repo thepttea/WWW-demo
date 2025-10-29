@@ -350,28 +350,15 @@
 
 ### 3.1 生成对比分析报告
 
-<<<<<<< HEAD
-**接口**: `POST /api/scenario2/simulation/{simulationId}/generate-report`
-
-**描述**: 生成 Scenario 2 的对比分析报告，对比模拟结果与历史真实结果
-
-**路径参数**:
-- `simulationId`: 模拟ID
-=======
 **接口**: `POST /api/scenario2/reports/generate`
 
 **描述**: 生成Scenario 2的对比分析报告，使用9维度LLM驱动评估系统对比模拟结果与历史真实结果
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 
 **请求体**: 
 ```json
 {
-<<<<<<< HEAD
-  "reportType": "comparison",
-=======
   "simulationId": "sim_scenario2_1759732135883",
   "reportType": "comprehensive",
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
   "includeVisualizations": true
 }
 ```
@@ -381,77 +368,6 @@
 {
   "success": true,
   "data": {
-<<<<<<< HEAD
-    "reportId": "report_scenario2_1759732135883",
-    "simulationId": "sim_scenario2_1759732135883",
-    "caseId": "case_001",
-    "caseTitle": "Tech Product Controversy",
-    "comparisonAnalysis": {
-      "accuracyScore": 87,
-      "rating": "High Accuracy",
-      "simulatedOutcome": {
-        "sentimentDistribution": {
-          "positive": 45,
-          "negative": 20,
-          "neutral": 35
-        },
-        "overallSentiment": 72,
-        "engagementRate": 15.3,
-        "reach": 850
-      },
-      "realWorldOutcome": {
-        "success": true,
-        "sentimentImprovement": 35,
-        "mediaCoverage": "positive",
-        "stockPrice": "+8% over 3 months",
-        "keyFactors": ["Quick apology", "Decisive action", "Transparency"]
-      },
-      "alignment": {
-        "sentimentAlignment": 92,
-        "outcomeAlignment": 85,
-        "trendAlignment": 88
-      }
-    },
-    "keyInsights": "The simulation successfully predicted the positive outcome of the PR strategy. The sentiment distribution closely matches reported media coverage patterns. The model accurately captured the importance of quick response and transparency.",
-    "deviations": [
-      "Simulation slightly overestimated negative sentiment in Round 1",
-      "Engagement rate prediction was 2% higher than actual"
-    ],
-    "modelValidation": {
-      "strengths": [
-        "Accurate prediction of overall sentiment trend",
-        "Successfully identified key influencers",
-        "Realistic propagation patterns"
-      ],
-      "improvements": [
-        "Fine-tune initial sentiment distribution",
-        "Improve engagement rate modeling"
-      ]
-    },
-    "visualizations": {
-      "sentimentComparison": {
-        "simulated": { "positive": 45, "negative": 20, "neutral": 35 },
-        "estimated_real": { "positive": 48, "negative": 18, "neutral": 34 }
-      },
-      "timelineComparison": [
-        {
-          "round": 1,
-          "simulated_sentiment": 58,
-          "estimated_real_sentiment": 55
-        },
-        {
-          "round": 2,
-          "simulated_sentiment": 68,
-          "estimated_real_sentiment": 70
-        },
-        {
-          "round": 3,
-          "simulated_sentiment": 72,
-          "estimated_real_sentiment": 75
-        }
-      ]
-    },
-=======
     "reportId": "report_sim_scenario2_1759732135883_1729987200",
     "reportType": "scenario2_comparative",
     "caseId": "CASE-01",
@@ -649,7 +565,6 @@
       "summary": "【场景二：对比评估】\n\n本次模拟与真实案例在9个关键维度上表现出高度一致性，总体相似度为84.2%，评级为"高相似度"。\n\n**高度一致的维度**：\n- 主流论点：相似度91.4%，都强调实际行动的重要性\n- 核心争议焦点：相似度88.7%，都围绕价值观一致性\n- 情绪基调：相似度86.8%，都反映对品牌诚意的怀疑\n- 总体立场倾向：相似度85.5%，都反映对品牌诚信的质疑\n\n**基本一致的维度**：\n- 舆论演变方向：相似度82.3%，都反映恶化趋势\n- 次生话题扩散路径：相似度81.6%，都反映初始策略问题\n- 公关策略响应模式：相似度79.3%，都反映策略争议性\n- 舆论分化程度：相似度78.9%，都反映极端化特征\n\n**需要改进的维度**：\n- 关键转折点时机：相似度75.2%，转折点时机把握需要优化\n\n**模型验证结论**：\n1. 模拟成功捕捉了真实案例的核心特征和演变趋势\n2. 在主流论点和争议焦点方面表现尤为出色\n3. 建议优化转折点时机预测，提升整体相似度"
     },
     "overallSimilarityPercentage": 84.2,
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     "generatedAt": "2024-01-01T12:00:00.000Z"
   }
 }
@@ -661,11 +576,7 @@
   "success": false,
   "error": {
     "code": "SIMULATION_NOT_FOUND",
-<<<<<<< HEAD
-    "message": "Simulation not found or not completed",
-=======
     "message": "Simulation ID 'xxx' does not exist.",
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     "timestamp": "2024-01-01T12:00:00.000Z"
   }
 }
@@ -673,50 +584,6 @@
 
 ---
 
-<<<<<<< HEAD
-### 3.2 获取分析结果数据
-
-**接口**: `GET /api/scenario2/simulation/{simulationId}/analysis`
-
-**描述**: 获取模拟的详细分析数据，用于结果页面展示
-
-**路径参数**:
-- `simulationId`: 模拟ID
-
-**响应示例**:
-```json
-{
-  "success": true,
-  "data": {
-    "accuracyScore": 87,
-    "simulatedSentiment": {
-      "positive": 45,
-      "negative": 20,
-      "neutral": 35
-    },
-    "comparisonMetrics": {
-      "sentimentAlignment": 92,
-      "outcomeAlignment": 85,
-      "trendAlignment": 88
-    },
-    "keyFindings": [
-      "High accuracy in predicting overall sentiment",
-      "Successfully identified key influencers",
-      "Minor deviation in engagement rate"
-    ],
-    "realWorldComparison": {
-      "success": true,
-      "sentimentImprovement": 35,
-      "mediaCoverage": "positive"
-    }
-  }
-}
-```
-
----
-
-=======
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 ## 4. 数据模型说明
 
 ### 4.1 历史案例模型 (HistoricalCase)
@@ -774,43 +641,6 @@ interface Scenario2SimulationStatus {
 }
 ```
 
-<<<<<<< HEAD
-### 4.5 对比分析报告模型 (ComparisonReport)
-
-```typescript
-interface ComparisonReport {
-  reportId: string;                   // 报告ID
-  simulationId: string;               // 模拟ID
-  caseId: string;                     // 案例ID
-  caseTitle: string;                  // 案例标题
-  comparisonAnalysis: {
-    accuracyScore: number;            // 准确度分数 0-100
-    rating: string;                   // 评级
-    simulatedOutcome: {               // 模拟结果
-      sentimentDistribution: {
-        positive: number;
-        negative: number;
-        neutral: number;
-      };
-      overallSentiment: number;
-      engagementRate: number;
-      reach: number;
-    };
-    realWorldOutcome: RealWorldOutcome;  // 真实结果
-    alignment: {                      // 对齐度
-      sentimentAlignment: number;
-      outcomeAlignment: number;
-      trendAlignment: number;
-    };
-  };
-  keyInsights: string;                // 关键洞察
-  deviations: string[];               // 偏差说明
-  modelValidation: {                  // 模型验证
-    strengths: string[];
-    improvements: string[];
-  };
-  visualizations?: any;               // 可视化数据
-=======
 ### 4.5 对比分析报告模型 (ReportResponse)
 
 ```typescript
@@ -850,7 +680,6 @@ interface ReportResponse {
     summary: string;                  // 评估总结
   };
   overallSimilarityPercentage: number; // 总体相似度 (兼容字段)
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
   generatedAt: string;                // 生成时间
 }
 ```
@@ -865,13 +694,9 @@ interface ReportResponse {
 | **策略来源** | 用户手动输入/LLM优化 | 从案例数据自动读取 |
 | **轮次推进** | `POST /add-strategy` 需要传入策略 | `POST /next-round` 自动读取 |
 | **报告类型** | 舆情分析报告（PR效果评估） | 对比报告（模拟vs真实） |
-<<<<<<< HEAD
-| **核心指标** | PR Effectiveness, Sentiment Trend | Accuracy Score, Alignment |
-=======
 | **核心指标** | 9维度达标度评估 | 9维度相似度对比 |
 | **评估系统** | 独立评估（standalone） | 对比评估（comparative） |
 | **报告接口** | `POST /api/scenario1/reports/generate` | `POST /api/scenario2/reports/generate` |
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 | **LLM Chat** | 有策略优化Chat界面 | 无（直接使用历史策略） |
 
 ---
@@ -909,74 +734,7 @@ interface ReportResponse {
 
 ### 7.3 报告生成流程
 
-<<<<<<< HEAD
-1. **生成报告**: 所有轮次完成后，调用 `POST /api/scenario2/simulation/{simulationId}/generate-report`
-2. **显示对比**: 展示模拟结果 vs 真实结果的对比分析
-3. **验证模型**: 显示准确度评分和模型验证信息
-
----
-
-## 8. 注意事项
-
-1. **自动策略读取**: Scenario 2 的策略由后端从案例数据中自动读取，前端无需传入
-2. **轮次控制**: 每个案例的 `totalRounds` 决定了最大轮次数，超过后无法继续
-3. **真实结果对比**: 报告中的对比分析是 Scenario 2 的核心价值
-4. **数据完整性**: 确保历史案例数据包含完整的策略和真实结果信息
-5. **状态管理**: 模拟完成后状态变为 `completed`，可以生成报告
-6. **多轮可视化**: 每一轮完成后都应该展示该轮的网络传播情况
-
----
-
-## 9. 示例：完整的前端交互流程
-
-```javascript
-// 1. 加载案例列表
-const casesResponse = await apiClient.getHistoricalCases();
-const cases = casesResponse.data;
-
-// 2. 选择案例
-const caseDetailResponse = await apiClient.getHistoricalCaseDetail('case_001');
-const selectedCase = caseDetailResponse.data;
-
-// 3. 启动模拟
-const startResponse = await apiClient.startScenario2Simulation({
-  caseId: 'case_001',
-  llmModel: 'gpt-4',
-  simulationConfig: { /* ... */ }
-});
-const simulationId = startResponse.data.simulationId;
-
-// 4. 轮询状态
-const statusInterval = setInterval(async () => {
-  const statusResponse = await apiClient.getSimulationStatus(simulationId);
-  if (statusResponse.data.status === 'completed') {
-    clearInterval(statusInterval);
-    // 5. 获取结果
-    const resultResponse = await apiClient.getScenario2Result(simulationId);
-    displayResults(resultResponse.data);
-  }
-}, 1000);
-
-// 6. 继续下一轮
-const nextRoundResponse = await apiClient.advanceScenario2NextRound(simulationId);
-
-// 7. 生成报告（所有轮次完成后）
-const reportResponse = await apiClient.generateScenario2Report(simulationId);
-displayComparisonReport(reportResponse.data);
-```
-
----
-
-## 10. 开发建议
-
-1. **前端复用**: Scenario 2 可以复用 Scenario 1 的网络可视化组件
-2. **轮次展示**: 建议使用 Steps 组件展示当前进行到第几轮
-3. **对比展示**: 报告页面使用对比布局（左侧模拟、右侧真实）
-4. **准确度可视化**: 使用进度条或仪表盘展示准确度分数
-5. **案例筛选**: 可以增加按行业、难度筛选案例的功能
-=======
 1. **生成报告**: 所有轮次完成后，调用 `POST /api/scenario2/reports/generate`
 2. **显示对比**: 展示模拟结果 vs 真实结果的9维度对比分析
 3. **验证模型**: 显示总体相似度评分和模型验证信息
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 

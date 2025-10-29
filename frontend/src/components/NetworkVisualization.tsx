@@ -331,19 +331,14 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     console.log('  - messageSteps.length:', messageSteps.length);
     console.log('  - platforms?.length:', platforms?.length);
     console.log('  - singleMessageMode:', singleMessageMode);
-<<<<<<< HEAD
-=======
     console.log('  - hasCompletedSimulation:', hasCompletedSimulation);
     console.log('  - animationKey:', animationKey);
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     
     // 如果处于单条消息模式，不启动正常的动画序列
     if (singleMessageMode) {
       console.log('NetworkVisualization - Skipping normal animation due to single message mode');
       return;
     }
-<<<<<<< HEAD
-=======
     
     // 如果模拟已经完成且没有animationKey变化，直接显示最终状态
     if (hasCompletedSimulation && animationKey === 0) {
@@ -554,7 +549,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       console.log('[ANIMATION KEY DEBUG] Preserving color states during animation key change');
       // 继续执行下面的动画逻辑
     }
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     
     if (users.length > 0 && messageSteps.length > 0) {
       console.log('====== [ANIMATION START DEBUG] Starting animation ======');
@@ -723,11 +717,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       setIsTransitioning(false);
       setActiveEdges({ senderToPlatform: false, platformToReceivers: false });
     }
-<<<<<<< HEAD
-  }, [users.length, platforms?.length, messageSteps.length, singleMessageMode]);
-=======
   }, [users.length, platforms?.length, messageSteps.length, singleMessageMode, hasCompletedSimulation, animationKey]);
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 
   // 颜色动画定时器 - 每100ms更新一次颜色和颜色状态
   useEffect(() => {
@@ -1145,15 +1135,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     };
   }, [singleMessageTimer]);
 
-<<<<<<< HEAD
-  // 监听数据变化，重置动画状态
-  useEffect(() => {
-    if (users.length > 0 && platforms?.length > 0 && messageSteps.length > 0) {
-      console.log('NetworkVisualization - Data changed, resetting animation state');
-      resetAnimationState();
-    }
-  }, [users.length, platforms?.length, messageSteps.length]);
-=======
   // 监听数据变化，重置动画状态 - 只有在动画未完成时才重置
   useEffect(() => {
     console.log('NetworkVisualization - Data change check:', {
@@ -1211,7 +1192,6 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
       hasInitializedColors.current = true;
     }
   }, [users.length]);
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 
 
 
@@ -1513,13 +1493,8 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
         nodeType={selectedNodeType}
       />
       
-<<<<<<< HEAD
-       {/* 消息通知 - 只在非单条消息模式下显示 */}
-       {!singleMessageMode && (
-=======
        {/* 消息通知 - 只在非单条消息模式下且动画未完成时显示 */}
        {!singleMessageMode && !animationCompleted && (
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
          <MessageNotification
            currentStep={currentStep}
            messageSteps={messageSteps}

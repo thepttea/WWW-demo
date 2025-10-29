@@ -457,22 +457,14 @@ def stop_scenario1_simulation(simulation_id: str) -> Dict[str, Any]:
 
 def generate_scenario1_report(simulation_id: str, report_type: str = "comprehensive") -> Dict[str, Any]:
     """
-<<<<<<< HEAD
-    生成 Scenario 1 的舆情分析报告（使用9维度评估）。
-=======
     Generates a public opinion analysis report for Scenario 1 (using 9-dimensional evaluation).
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     
     Args:
         simulation_id: The simulation ID.
         report_type: The report type ("summary" or "comprehensive").
     
     Returns:
-<<<<<<< HEAD
-        包含报告内容和维度评分的字典
-=======
         A dictionary containing the report content and dimension scores.
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -484,30 +476,6 @@ def generate_scenario1_report(simulation_id: str, report_type: str = "comprehens
     
     log_message(f"Generating {report_type} report for Scenario 1 simulation {simulation_id}")
     
-<<<<<<< HEAD
-    # 准备模拟数据
-    log_message("准备模拟数据...")
-    sim_data = em.prepare_simulation_data(sim)
-    
-    # 执行9维度评估（场景一：只评估模拟本身）
-    log_message("执行维度评估...")
-    evaluation_result = em.comprehensive_evaluation(sim_data, real_case_data=None)
-    
-    # 生成文字报告（使用LLM）
-    agents = sim["agents"]
-    discourse_history = sim["discourseHistory"]
-    
-    log_message("生成文字报告...")
-    formatted_history = ""
-    for author_id, content, round_num, stance in discourse_history:
-        if author_id == "system":
-            formatted_history += f"\n[第{round_num}轮] 【官方公关声明】: {content}\n"
-        else:
-            username = agents[author_id].persona.get('username', author_id) if author_id in agents else "Unknown"
-            formatted_history += f"[第{round_num}轮] {username} (立场: {stance}): {content}\n"
-    
-    llm = get_llm()
-=======
     # Prepare simulation data
     log_message("Preparing simulation data...")
     sim_data = em.prepare_simulation_data(sim)
@@ -533,26 +501,12 @@ def generate_scenario1_report(simulation_id: str, report_type: str = "comprehens
     
     # Build evaluation result summary
     eval_summary = evaluation_result.get('summary', '')
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
-    
-    # 构建评估结果摘要
-    eval_summary = evaluation_result.get('summary', '')
     
     if report_type == "summary":
-<<<<<<< HEAD
-        prompt = f"""请为以下舆情模拟生成简要分析报告（200-300字）。
-
-模拟对话记录：
-{formatted_history[:1500]}
-
-评估结果：
-{eval_summary}
-=======
         prompt = f"""Please generate a brief analysis report (200-300 words) for the following public opinion simulation.
 
 Simulation Dialogue Log:
 {formatted_history[:1500]}
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 
 Evaluation Results:
 {eval_summary}
@@ -564,20 +518,10 @@ Please briefly summarize:
 
 Please write the report in concise language."""
     else:  # comprehensive
-<<<<<<< HEAD
-        prompt = f"""请为以下舆情模拟生成详细的分析报告。
-
-模拟对话记录：
-{formatted_history[:3000]}
-
-9维度评估结果：
-{eval_summary}
-=======
         prompt = f"""Please generate a detailed analysis report for the following public opinion simulation.
 
 Simulation Dialogue Log:
 {formatted_history[:3000]}
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
 
 9-Dimension Evaluation Results:
 {eval_summary}
@@ -631,16 +575,6 @@ Please write the report in professional and objective language."""
 
 def generate_scenario2_report(simulation_id: str, report_type: str = "comprehensive") -> Dict[str, Any]:
     """
-<<<<<<< HEAD
-    生成 Scenario 2 的对比分析报告（模拟vs真实案例）。
-    
-    Args:
-        simulation_id: 模拟ID
-        report_type: 报告类型 ("summary" 或 "comprehensive")
-    
-    Returns:
-        包含对比分析和相似度评分的字典
-=======
     Generates a comparative analysis report for Scenario 2 (simulation vs. real case).
     
     Args:
@@ -649,18 +583,13 @@ def generate_scenario2_report(simulation_id: str, report_type: str = "comprehens
     
     Returns:
         A dictionary containing the comparative analysis and similarity score.
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
     
     sim = _simulations[simulation_id]
     
-<<<<<<< HEAD
-    # 场景二需要有关联的case
-=======
     # Scenario 2 requires an associated case
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     case_id = sim.get("caseId")
     if not case_id:
         raise ValueError("This simulation is not associated with a historical case.")
@@ -668,42 +597,11 @@ def generate_scenario2_report(simulation_id: str, report_type: str = "comprehens
     log_message(f"Generating {report_type} report for Scenario 2 simulation {simulation_id}")
     log_message(f"Associated case: {case_id}")
     
-<<<<<<< HEAD
-    # 获取真实案例数据
-=======
     # Get real case data
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     case = cm.get_case_by_id(case_id)
     if not case:
         raise ValueError(f"Case '{case_id}' not found.")
     
-<<<<<<< HEAD
-    # 准备数据
-    log_message("准备模拟数据和真实案例数据...")
-    sim_data = em.prepare_simulation_data(sim)
-    real_case_data = em.prepare_real_case_context(case)
-    
-    # 执行9维度对比评估
-    log_message("执行对比评估...")
-    evaluation_result = em.comprehensive_evaluation(sim_data, real_case_data)
-    
-    # 生成对比报告
-    agents = sim["agents"]
-    discourse_history = sim["discourseHistory"]
-    
-    log_message("生成对比分析报告...")
-    formatted_history = ""
-    for author_id, content, round_num, stance in discourse_history:
-        if author_id == "system":
-            formatted_history += f"\n[第{round_num}轮] 【官方公关声明】: {content}\n"
-        else:
-            username = agents[author_id].persona.get('username', author_id) if author_id in agents else "Unknown"
-            formatted_history += f"[第{round_num}轮] {username} (立场: {stance}): {content}\n"
-    
-    llm = get_llm()
-    
-    # 构建评估结果摘要
-=======
     # Prepare data
     log_message("Preparing simulation data and real case data...")
     sim_data = em.prepare_simulation_data(sim)
@@ -729,81 +627,10 @@ def generate_scenario2_report(simulation_id: str, report_type: str = "comprehens
     llm = get_llm(model_name="gemini-2.5-pro")
     
     # Build evaluation result summary
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     eval_summary = evaluation_result.get('summary', '')
     overall_similarity = evaluation_result.get('overall_similarity_percentage', 0)
     
     if report_type == "summary":
-<<<<<<< HEAD
-        prompt = f"""请为以下模拟与真实案例的对比生成简要报告（200-300字）。
-
-真实案例：{case['title']}
-案例背景：{case['background'][:200]}...
-
-模拟对话记录（部分）：
-{formatted_history[:1000]}...
-
-总体相似度：{overall_similarity}%
-
-请简要总结：
-1. 模拟与真实案例的主要相似之处
-2. 模拟与真实案例的主要差异
-3. 模拟的整体表现评价
-
-请用简洁的语言撰写报告。"""
-    else:  # comprehensive
-        prompt = f"""请为以下模拟与真实案例生成详细的对比分析报告。
-
-# 真实案例信息
-案例：{case['title']}
-行业：{case['industry']}
-背景：{case['background']}
-
-各轮策略：
-{chr(10).join([f"第{s['round']}轮: {s['title']} - {s['content'][:100]}..." for s in case['strategies']])}
-
-真实结果：
-成功：{case['realWorldOutcome']['success']}
-关键因素：{', '.join(case['realWorldOutcome']['keyFactors'])}
-
-# 模拟数据
-{formatted_history[:2000]}...
-
-# 相似度评估
-总体相似度：{overall_similarity}%
-
-评估详情：
-{eval_summary}
-
-请详细分析以下内容：
-
-## 1. 立场分布对比
-- 模拟的立场分布
-- 真实案例的立场描述
-- 相似度分析
-
-## 2. 演变趋势对比
-- 模拟的舆论演变轨迹
-- 真实案例的舆论走向
-- 关键转折点是否匹配
-
-## 3. 核心议题对比
-- 模拟讨论的主要焦点
-- 真实案例的核心矛盾
-- 议题覆盖度分析
-
-## 4. 情绪和论点对比
-- 模拟的情绪表达特征
-- 真实案例的舆论情绪
-- 主流论点的匹配程度
-
-## 5. 综合评价
-- 模拟的优点（哪些方面高度还原）
-- 模拟的不足（哪些方面需要改进）
-- 对模拟系统的建议
-
-请用专业、客观的语言撰写报告，突出对比分析。"""
-=======
         prompt = f"""Please generate a brief report (200-300 words) comparing the following simulation with the real case.
 
 Real Case: {case['title']}
@@ -872,7 +699,6 @@ Please analyze the following in detail:
 - Suggestions for the simulation system
 
 Please write the report in professional and objective language, emphasizing comparative analysis."""
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     
     report_content = llm.invoke(prompt).content
     
@@ -882,11 +708,7 @@ Please write the report in professional and objective language, emphasizing comp
     log_message(report_content)
     log_message("="*80 + "\n")
     
-<<<<<<< HEAD
-    # 提取总体相似度
-=======
     # Extract overall similarity
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     overall_similarity = evaluation_result.get('overall_similarity_percentage', 0)
     
     report_data = {
@@ -909,11 +731,7 @@ Please write the report in professional and objective language, emphasizing comp
 
 def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: Dict) -> Dict[str, Any]:
     """
-<<<<<<< HEAD
-    启动一个新的Scenario 2模拟任务（使用agent模拟）。
-=======
     Starts a new Scenario 2 simulation task (using agent simulation).
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     """
     case = cm.get_case_by_id(case_id)
     if not case:
@@ -922,16 +740,6 @@ def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: 
     sim_id = f"sim_scenario2_{uuid.uuid4()}"
     log_message(f"Starting Scenario 2 simulation: {sim_id}, case: {case['title']}")
     
-<<<<<<< HEAD
-    # 创建网络和agents（与scenario1相同）
-    num_agents = simulation_config.get("agents", 10)
-    G, agents = create_social_network(num_agents, sim_id_prefix=sim_id)
-    
-    # 使用案例背景作为初始话题
-    initial_topic = case.get("background", case.get("title"))
-    
-    # 获取第一轮的公关策略
-=======
     # Create network and agents (same as scenario1)
     num_agents = simulation_config.get("agents", 10)
     G, agents = create_social_network(
@@ -944,7 +752,6 @@ def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: 
     initial_topic = case.get("background", case.get("title"))
     
     # Get the PR strategy for the first round
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     first_round_strategy = ""
     if case.get("strategies"):
         for strategy in case["strategies"]:
@@ -952,11 +759,7 @@ def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: 
                 first_round_strategy = strategy.get("content", "")
                 break
 
-<<<<<<< HEAD
-    # 存储模拟状态（结构与scenario1类似）
-=======
     # Store simulation state (similar structure to scenario1)
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     _simulations[sim_id] = {
         "simulationId": sim_id,
         "scenario": "scenario2",
@@ -976,11 +779,7 @@ def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: 
         "prStrategies": []
     }
     
-<<<<<<< HEAD
-    # 如果有第一轮策略，直接执行
-=======
     # If there is a first-round strategy, execute it directly
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     if first_round_strategy:
         log_message(f"Executing first round with strategy from case...")
         try:
@@ -992,11 +791,7 @@ def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: 
                 ("system", f"[Official PR Statement] {first_round_strategy}", 1, None)
             )
             
-<<<<<<< HEAD
-            result = run_scenario1_round(sim_id)  # 复用scenario1的模拟逻辑
-=======
             result = run_scenario1_round(sim_id)  # Reuse scenario1's simulation logic
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
             _simulations[sim_id]["status"] = "round_completed"
             _simulations[sim_id]["currentRound"] = 1
             
@@ -1034,11 +829,7 @@ def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: 
 
 def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     """
-<<<<<<< HEAD
-    将Scenario 2模拟推进到下一轮（执行agent模拟）。
-=======
     Advances the Scenario 2 simulation to the next round (executes agent simulation).
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -1048,11 +839,7 @@ def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     if sim["currentRound"] >= sim["totalRounds"]:
         raise ValueError("Simulation has already reached the final round and cannot continue.")
     
-<<<<<<< HEAD
-    # 获取下一轮的策略
-=======
     # Get the strategy for the next round
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     next_round = sim["currentRound"] + 1
     case = cm.get_case_by_id(sim["caseId"])
     
@@ -1066,11 +853,7 @@ def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     if not round_strategy:
         log_message(f"Warning: No strategy found for round {next_round}")
     
-<<<<<<< HEAD
-    # 添加公关策略
-=======
     # Add PR strategy
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     sim["prStrategies"].append({
         "round": next_round,
         "strategy": round_strategy
@@ -1083,11 +866,7 @@ def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     
     log_message(f"Simulation {simulation_id} advancing to round {next_round}...")
     
-<<<<<<< HEAD
-    # 执行模拟
-=======
     # Execute simulation
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     try:
         num_rounds = sim["simulationConfig"].get("num_rounds", 1)
         log_message(f"Will simulate {num_rounds} interaction round(s)")
@@ -1095,11 +874,7 @@ def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
         result = None
         for i in range(num_rounds):
             log_message(f"Executing interaction round {i+1}/{num_rounds}")
-<<<<<<< HEAD
-            result = run_scenario1_round(simulation_id)  # 复用scenario1的逻辑
-=======
             result = run_scenario1_round(simulation_id)  # Reuse scenario1's logic
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
             
             if sim["status"] == "all_agents_inactive":
                 log_message(f"All agents inactive, stopping early")
@@ -1118,11 +893,7 @@ def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
 
 def get_scenario2_result(simulation_id: str) -> Dict[str, Any]:
     """
-<<<<<<< HEAD
-    获取Scenario 2当前轮次的模拟结果（使用真实agent模拟数据）。
-=======
     Gets the current round's simulation result for Scenario 2 (using real agent simulation data).
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -1139,26 +910,15 @@ def get_scenario2_result(simulation_id: str) -> Dict[str, Any]:
     if not case:
         raise ValueError(f"Associated case '{case_id}' not found for simulation.")
 
-<<<<<<< HEAD
-    # 使用与scenario1相同的结果获取逻辑
-    result = get_scenario1_result(simulation_id)
-    
-    # 添加scenario2特有的信息
-=======
     # Use the same result retrieval logic as scenario1
     result = get_scenario1_result(simulation_id)
     
     # Add scenario2-specific information
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     result["caseId"] = sim["caseId"]
     result["caseTitle"] = case.get("title")
     result["totalRounds"] = sim["totalRounds"]
     
-<<<<<<< HEAD
-    # 检查是否是最后一轮
-=======
     # Check if it's the last round
->>>>>>> 0e422721 (1. Resolved the LLM configuration issue; 2. Translated all Chinese text in frontend and backend code to English; 3. Increased character designs from 10 to 100.)
     if sim["currentRound"] >= sim["totalRounds"]:
         sim["status"] = "completed"
         log_message(f"Simulation {simulation_id} has completed all rounds.")
