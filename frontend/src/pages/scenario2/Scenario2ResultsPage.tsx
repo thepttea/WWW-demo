@@ -64,7 +64,7 @@ const Scenario2ResultsPage: React.FC<Scenario2ResultsPageProps> = ({
               title="Overall Sentiment"
               value={data.overallSentiment}
               suffix="%"
-              valueStyle={{ color: '#137fec' }}
+              valueStyle={{ color: '#2563eb' }}
             />
             <Text className="trend-text positive">+{data.sentimentTrend}</Text>
           </Card>
@@ -75,7 +75,7 @@ const Scenario2ResultsPage: React.FC<Scenario2ResultsPageProps> = ({
               title="Engagement Rate"
               value={data.engagementRate}
               suffix="%"
-              valueStyle={{ color: '#137fec' }}
+              valueStyle={{ color: '#2563eb' }}
             />
             <Text className="trend-text negative">-2%</Text>
           </Card>
@@ -86,7 +86,7 @@ const Scenario2ResultsPage: React.FC<Scenario2ResultsPageProps> = ({
               title="Reach"
               value={data.reach}
               suffix="K"
-              valueStyle={{ color: '#137fec' }}
+              valueStyle={{ color: '#2563eb' }}
             />
             <Text className="trend-text positive">+10%</Text>
           </Card>
@@ -107,12 +107,12 @@ const Scenario2ResultsPage: React.FC<Scenario2ResultsPageProps> = ({
           <svg fill="none" height="100%" preserveAspectRatio="none" viewBox="0 0 472 150" width="100%" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient gradientUnits="userSpaceOnUse" id="gradient" x1="236" x2="236" y1="1" y2="149">
-                <stop stopColor="#137fec" stopOpacity="0.4"></stop>
-                <stop offset="1" stopColor="#137fec" stopOpacity="0"></stop>
+                <stop stopColor="#2563eb" stopOpacity="0.4"></stop>
+                <stop offset="1" stopColor="#2563eb" stopOpacity="0"></stop>
               </linearGradient>
             </defs>
             <path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25V150H0V109Z" fill="url(#gradient)"></path>
-            <path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#137fec" strokeLinecap="round" strokeWidth="3"></path>
+            <path d="M0 109C18.1538 109 18.1538 21 36.3077 21C54.4615 21 54.4615 41 72.6154 41C90.7692 41 90.7692 93 108.923 93C127.077 93 127.077 33 145.231 33C163.385 33 163.385 101 181.538 101C199.692 101 199.692 61 217.846 61C236 61 236 45 254.154 45C272.308 45 272.308 121 290.462 121C308.615 121 308.615 149 326.769 149C344.923 149 344.923 1 363.077 1C381.231 1 381.231 81 399.385 81C417.538 81 417.538 129 435.692 129C453.846 129 453.846 25 472 25" stroke="#2563eb" strokeLinecap="round" strokeWidth="3"></path>
           </svg>
         </div>
       </div>

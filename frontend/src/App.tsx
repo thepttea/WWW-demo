@@ -24,10 +24,19 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ConfigProvider
         theme={{
-          algorithm: theme.darkAlgorithm,
+          algorithm: theme.defaultAlgorithm,
           token: {
-            colorPrimary: '#1890ff',
+            colorPrimary: '#2563eb',
             borderRadius: 6,
+            colorBgBase: '#f5f7fb',
+            colorTextBase: '#1f2937',
+            fontFamily:
+              '"Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+          },
+          components: {
+            Layout: {
+              bodyBg: '#f5f7fb',
+            },
           },
         }}
       >

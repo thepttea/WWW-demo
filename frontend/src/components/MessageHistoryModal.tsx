@@ -68,7 +68,7 @@ const MessageHistoryModal: React.FC<MessageHistoryModalProps> = ({
     <Drawer
       title={
         <div className="message-history-header">
-          <MessageOutlined style={{ marginRight: 8, color: '#137fec' }} />
+          <MessageOutlined style={{ marginRight: 8, color: '#2563eb' }} />
           <span>Message Propagation History</span>
         </div>
       }
@@ -118,7 +118,7 @@ const MessageHistoryModal: React.FC<MessageHistoryModalProps> = ({
                 </div>
 
                 <div className="message-sender">
-                  <UserOutlined style={{ marginRight: 6, color: '#137fec' }} />
+                  <UserOutlined style={{ marginRight: 6, color: '#2563eb' }} />
                   <Text strong>{step.sender}</Text>
                 </div>
 

@@ -135,7 +135,7 @@ const MessageNotification: React.FC<MessageNotificationProps> = ({
     <div className="message-notification-container">
       <div className={`message-notification ${isTransitioning ? 'fade-out' : 'fade-in'}`}>
         <div className="message-notification-icon">
-          <MessageOutlined style={{ color: '#137fec', fontSize: '20px' }} />
+          <MessageOutlined style={{ color: '#2563eb', fontSize: '20px' }} />
         </div>
         <div className="message-notification-content">
           <div className="message-notification-title">

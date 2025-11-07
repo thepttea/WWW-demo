@@ -13,13 +13,13 @@
 }
 
 .user-avatar {
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: white !important;
+  background: rgba(37, 99, 235, 0.1) !important;
+  color: #1d4ed8 !important;
 }
 
 .llm-avatar {
-  background: rgba(19, 127, 236, 0.2) !important;
-  color: #137fec !important;
+  background: rgba(37, 99, 235, 0.18) !important;
+  color: #2563eb !important;
 }
 
 .message-content {
@@ -46,7 +46,7 @@
 .message-sender {
   font-size: 12px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(30, 41, 59, 0.55);
 }
 
 .message-bubble {
@@ -57,14 +57,16 @@
 }
 
 .user-bubble {
-  background: #137fec;
-  color: white;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.24);
 }
 
 .llm-bubble {
-  background: rgba(0, 0, 0, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.08);
 }
 
 .message-text {

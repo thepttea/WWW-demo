@@ -40,12 +40,12 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh', background: '#101922' }}>
+    <Layout style={{ minHeight: '100vh', background: '#f5f7fb' }}>
       <Header
         currentScenario={currentScenario}
         onScenarioChange={handleScenarioChange}
       />
-      <Content style={{ background: '#101922' }}>
+      <Content style={{ background: '#f5f7fb' }}>
         {renderContent()}
       </Content>
     </Layout>

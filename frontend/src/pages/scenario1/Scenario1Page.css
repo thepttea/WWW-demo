@@ -38,7 +38,7 @@
 
 .page-description {
   margin: 0 auto !important;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(30, 41, 59, 0.7);
   font-size: 16px;
   max-width: 600px;
   text-align: center;
@@ -59,8 +59,14 @@
   min-height: 600px;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 32px;
   width: 100%;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--color-border);
+  border-radius: 28px;
+  box-shadow: var(--glass-shadow);
 }
 
 .content-grid {
@@ -68,6 +74,7 @@
   grid-template-columns: 3fr 7fr;
   gap: 32px;
   height: 100%;
+  align-items: stretch;
 }
 
 .config-column,
@@ -106,7 +113,7 @@
   .page-content {
     height: calc(100vh - 150px);
     min-height: 500px;
-    padding: 0 16px;
+    padding: 20px 16px;
   }
   
   .content-grid {

@@ -1,9 +1,13 @@
 .network-visualization-container {
   width: 100%;
   height: 100%;
-  background: #101922;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.78);
+  border-radius: 20px;
   overflow: hidden;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
 }
 
 .network-svg {
@@ -18,14 +22,14 @@
   align-items: center;
   justify-content: center;
   height: 400px;
-  color: #ffffff;
+  color: rgba(30, 41, 59, 0.75);
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid #333;
-  border-top: 3px solid #00D4FF;
+  border: 3px solid rgba(148, 163, 184, 0.3);
+  border-top: 3px solid #2563eb;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
@@ -141,23 +145,25 @@
 }
 
 .message-history-button {
-  background: linear-gradient(135deg, #2c3e50, #34495e);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  font-weight: 500;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  font-weight: 600;
   height: 40px;
   padding: 0 20px;
   transition: all 0.3s ease;
-  color: #bdc3c7;
+  color: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .message-history-button:hover {
-  background: linear-gradient(135deg, #34495e, #2c3e50);
+  background: rgba(37, 99, 235, 0.12);
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-  color: #ecf0f1;
-  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 18px 38px rgba(37, 99, 235, 0.22);
+  color: #1d4ed8;
+  border-color: rgba(37, 99, 235, 0.35);
 }
 
 .message-history-button:active {
