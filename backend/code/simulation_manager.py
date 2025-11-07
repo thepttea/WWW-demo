@@ -9,11 +9,12 @@ from network import create_social_network
 import case_manager as cm
 from llm_provider import get_llm
 from langchain.prompts import PromptTemplate
+import evaluation_metrics as em
 
 _simulations: Dict[str, Dict[str, Any]] = {}
 
 def get_personalized_feed(agent_id, agents, G, all_posts_last_round):
-    """根据不同平台的规则，为Agent计算本回合可见的帖子"""
+    """Calculates the visible posts for an agent in the current round based on platform rules."""
     if not all_posts_last_round:
         return []
 
@@ -23,7 +24,7 @@ def get_personalized_feed(agent_id, agents, G, all_posts_last_round):
         if author_id == agent_id: 
             continue
 
-        # 系统消息（官方公关声明）
+        # System message (Official PR Statement)
         if author_id == "system":
             feed.append({
                 "type": "official_statement",
@@ -31,7 +32,7 @@ def get_personalized_feed(agent_id, agents, G, all_posts_last_round):
             })
             continue
 
-        # 用户评论需要根据平台规则判断可见性
+        # User comments' visibility depends on platform rules
         author_persona = agents[author_id].persona
         author_platform = author_persona.get("primary_platform")
         
@@ -68,16 +69,16 @@ def get_personalized_feed(agent_id, agents, G, all_posts_last_round):
 
 def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_config: Dict, pr_strategy: str = "") -> Dict[str, Any]:
     """
-    启动一个新的Scenario 1模拟任务。
+    Starts a new Scenario 1 simulation task.
     
     Args:
-        initial_topic: 用户输入的初始话题
-        llm_model: 使用的LLM模型
-        simulation_config: 模拟配置参数
-        pr_strategy: 第一轮公关策略（可选）
+        initial_topic: The initial topic input by the user.
+        llm_model: The LLM model to use.
+        simulation_config: Simulation configuration parameters.
+        pr_strategy: The PR strategy for the first round (optional).
     
     Returns:
-        包含simulationId和websocketUrl的字典
+        A dictionary containing the simulationId and websocketUrl.
     """
     sim_id = f"sim_scenario1_{uuid.uuid4()}"
     log_message(f"Starting Scenario 1 simulation: {sim_id}")
@@ -86,12 +87,16 @@ def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_co
         log_message(f"First round PR strategy: {pr_strategy[:100]}...")
     
     
-    # 创建网络和agents
+    # Create network and agents
     num_agents = simulation_config.get("agents", 10)
-    # 传入 sim_id 作为前缀，确保每个模拟的 agent ID 唯一
-    G, agents = create_social_network(num_agents, sim_id_prefix=sim_id)
+    # Pass sim_id as a prefix to ensure unique agent IDs for each simulation
+    G, agents = create_social_network(
+        num_agents, 
+        sim_id_prefix=sim_id,
+        llm_model=llm_model  # Pass the model name
+    )
     
-    # 存储模拟状态
+    # Store simulation state
     _simulations[sim_id] = {
         "simulationId": sim_id,
         "status": "initialized",
@@ -105,23 +110,23 @@ def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_co
         "activeAgents": list(agents.keys()),  
         "inactiveAgents": [], 
         "currentRound": 0,
-        "prStrategies": []  # 存储每轮公关策略
+        "prStrategies": []  # Store PR strategies for each round
     }
     
     log_message(f"Simulation {sim_id} initialized with {num_agents} agents")
     
-    # 如果提供了PR strategy，直接执行第一轮模拟
+    # If a PR strategy is provided, execute the first round of simulation directly
     if pr_strategy:
         log_message(f"Executing first round simulation with PR strategy...")
         try:
-            # 添加PR策略到历史记录
+            # Add PR strategy to history
             _simulations[sim_id]["prStrategies"].append(pr_strategy)
             _simulations[sim_id]["discourseHistory"].append(("system", f"[Official PR Statement] {pr_strategy}", 1, None))
             
-            # 执行第一轮模拟
+            # Execute the first round of simulation
             result = run_scenario1_round(sim_id)
             
-            # 更新状态
+            # Update status
             _simulations[sim_id]["status"] = "round_completed"
             _simulations[sim_id]["currentRound"] = 1
             
@@ -135,7 +140,7 @@ def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_co
             }
         except Exception as e:
             log_message(f"Error executing first round simulation: {str(e)}")
-            # 如果第一轮模拟失败，仍然返回初始化的状态
+            # If the first round fails, still return the initialized state
             return {
                 "simulationId": sim_id,
                 "status": "initialized",
@@ -151,15 +156,15 @@ def start_scenario1_simulation(initial_topic: str, llm_model: str, simulation_co
 
 def add_pr_strategy_and_simulate(simulation_id: str, pr_strategy: str = "") -> Dict[str, Any]:
     """
-    为Scenario 1添加公关策略并执行一轮模拟。
-    支持在 round_completed 状态下多次添加策略进行干预。
+    Adds a PR strategy for Scenario 1 and executes one round of simulation.
+    Supports adding strategies multiple times in the 'round_completed' state for intervention.
     
     Args:
-        simulation_id: 模拟ID
-        pr_strategy: 公关策略内容（可选，如果为空则不添加策略，直接模拟）
+        simulation_id: The simulation ID.
+        pr_strategy: The content of the PR strategy (optional, if empty, simulates without adding a new strategy).
     
     Returns:
-        本轮模拟结果
+        The result of the current simulation round.
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -169,42 +174,42 @@ def add_pr_strategy_and_simulate(simulation_id: str, pr_strategy: str = "") -> D
     if sim.get("scenario") != "scenario1":
         raise ValueError("This API is only for Scenario 1 simulations.")
     
-    # 检查状态，允许在 initialized 和 round_completed 状态下添加策略
+    # Check status, allowing strategies to be added in 'initialized' and 'round_completed' states
     if sim["status"] == "completed":
         raise ValueError("Simulation has been stopped. Cannot add more strategies.")
     
-    # 如果所有 agent 都退出了，提醒用户
+    # Remind user if all agents have dropped out
     if not sim.get("activeAgents"):
         log_message(f"Warning: All agents have left the discussion in simulation {simulation_id}")
     
     next_round = sim["currentRound"] + 1
     
-    # 只在策略非空时添加公关策略
+    # Only add PR strategy if it's not empty
     if pr_strategy and pr_strategy.strip():
-        # 记录公关策略
+        # Record the PR strategy
         sim["prStrategies"].append({
             "round": next_round,
             "strategy": pr_strategy
         })
         
-        # 将公关策略作为系统消息添加到discourse
+        # Add the PR strategy as a system message to the discourse
         sim["discourseHistory"].append(("system", f"[PR Strategy]: {pr_strategy}", next_round, None))
         
         log_message(f"Added PR strategy for round {next_round}: {pr_strategy[:100]}...")
     else:
         log_message(f"No PR strategy provided for round {next_round}, agents will discuss naturally.")
     
-    # 获取配置的回合数，默认为1
+    # Get the number of configured rounds, default to 1
     num_rounds = sim["simulationConfig"].get("num_rounds", 1)
     log_message(f"Will simulate {num_rounds} interaction round(s) after adding PR strategy")
     
-    # 执行多轮模拟
+    # Execute multiple simulation rounds
     result = None
     for i in range(num_rounds):
         log_message(f"Executing interaction round {i+1}/{num_rounds}")
         result = run_scenario1_round(simulation_id)
         
-        # 如果所有 agent 都退出了，提前结束
+        # If all agents have dropped out, end early
         if sim["status"] == "all_agents_inactive":
             log_message(f"All agents inactive after round {i+1}, stopping early")
             break
@@ -213,13 +218,13 @@ def add_pr_strategy_and_simulate(simulation_id: str, pr_strategy: str = "") -> D
 
 def run_scenario1_round(simulation_id: str) -> Dict[str, Any]:
     """
-    执行Scenario 1的一轮模拟。
+    Executes one round of simulation for Scenario 1.
     
     Args:
-        simulation_id: 模拟ID
+        simulation_id: The simulation ID.
     
     Returns:
-        本轮模拟结果
+        The result of the current simulation round.
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -240,9 +245,9 @@ def run_scenario1_round(simulation_id: str) -> Dict[str, Any]:
     
     config = sim["simulationConfig"]
     participation_prob = config.get("interactionProbability", 0.8)
-    rejoining_prob = 0.1  # 可以添加到config中
+    rejoining_prob = 0.1  # Can be added to config
     
-    # 检查是否有agent重新加入
+    # Check if any agents rejoin
     newly_active = {agent_id for agent_id in inactive_agent_ids if random.random() < rejoining_prob}
     if newly_active:
         active_agent_ids.update(newly_active)
@@ -252,11 +257,11 @@ def run_scenario1_round(simulation_id: str) -> Dict[str, Any]:
     
     if not active_agent_ids:
         log_message("All agents have left. Waiting for user intervention.")
-        # 即使所有agent都退出，也允许用户继续添加公关策略尝试重新激活讨论
+        # Even if all agents have dropped out, allow the user to continue adding PR strategies to try to reactivate the discussion
         sim["status"] = "all_agents_inactive"
         return get_scenario1_result(simulation_id)
     
-    # 获取上一轮的帖子
+    # Get posts from the last round
     last_round_posts = [post for post in discourse_history if post[2] == current_round - 1]
     
     new_posts_this_round = []
@@ -264,7 +269,7 @@ def run_scenario1_round(simulation_id: str) -> Dict[str, Any]:
     action_order = list(active_agent_ids)
     random.shuffle(action_order)
     
-    # 每个agent进行决策
+    # Each agent makes a decision
     for agent_id in action_order:
         if random.random() > participation_prob:
             continue
@@ -272,33 +277,33 @@ def run_scenario1_round(simulation_id: str) -> Dict[str, Any]:
         agent = agents[agent_id]
         agent_graph = agent.get_graph()
         
-        # 确定可见消息
+        # Determine visible messages
         if current_round == 1:
-            # 第一轮：只有初始话题（系统消息）
+            # Round 1: Only the initial topic (system message)
             structured_messages = [{"type": "initial_topic", "content": post[1]} 
                                   for post in discourse_history if post[2] == 0]
         else:
-            # 后续轮次：获取结构化的消息列表
+            # Subsequent rounds: Get a structured list of messages
             structured_messages = get_personalized_feed(agent_id, agents, G, last_round_posts)
         
         if not structured_messages:
             log_message(f"--- {agent.persona['username']} ({agent_id}) saw no messages. ---")
             continue
         
-        # 明确区分官方声明和用户评论
+        # Clearly distinguish between official statements and user comments
         formatted_messages = []
         for msg in structured_messages:
             if msg["type"] == "official_statement":
-                # 官方公关声明
+                # Official PR Statement
                 formatted_messages.append(f"[Official PR Statement]: {msg['content']}")
             elif msg["type"] == "user_comment":
-                # 用户评论
+                # User Comment
                 formatted_messages.append(f"{msg['author']}: {msg['content']}")
             elif msg["type"] == "initial_topic":
-                # 初始话题
+                # Initial Topic
                 formatted_messages.append(f"[Initial Topic]: {msg['content']}")
         
-        # Agent思考和决策
+        # Agent thinks and decides
         state = {"recent_messages": formatted_messages, "agent_persona": agent.persona}
         final_state = agent_graph.invoke(state)
         cognitive_result = final_state.get('response')
@@ -317,36 +322,36 @@ def run_scenario1_round(simulation_id: str) -> Dict[str, Any]:
             agents_to_make_inactive.add(agent_id)
             log_message(f"--- {agent.persona['username']} ({agent_id}) dropped out. ---")
         
-        time.sleep(0.5)  # 避免请求过快
+        time.sleep(0.5)  # Avoid requests being too fast
     
-    # 更新状态
+    # Update status
     if agents_to_make_inactive:
         active_agent_ids -= agents_to_make_inactive
         inactive_agent_ids.update(agents_to_make_inactive)
     
-    # 保存为 list 以确保可序列化，避免后续轮次出错
+    # Save as list to ensure serializability and avoid errors in subsequent rounds
     sim["activeAgents"] = list(active_agent_ids)
     sim["inactiveAgents"] = list(inactive_agent_ids)
     
     if new_posts_this_round:
         discourse_history.extend(new_posts_this_round)
         log_message(f"--- Round {current_round} ended with {len(new_posts_this_round)} new posts ---")
-        # 每轮结束后设置为 "round_completed"，等待用户添加新策略或停止
+        # After each round, set to "round_completed" and wait for the user to add a new strategy or stop
         sim["status"] = "round_completed"
     else:
         log_message(f"--- Round {current_round} ended with no new posts ---")
-        # 即使没有新帖子，也允许用户继续干预
+        # Even if there are no new posts, allow the user to continue intervening
         sim["status"] = "round_completed_no_activity"
     
-    # 返回本轮结果
+    # Return the result of this round
     return get_scenario1_result(simulation_id)
 
 def get_scenario1_result(simulation_id: str) -> Dict[str, Any]:
     """
-    获取Scenario 1的模拟结果（支持按轮次查询）。
+    Gets the simulation result for Scenario 1 (supports querying by round).
     
     Returns:
-        包含agents详细信息、立场评分、帖子等的结果
+        A result containing detailed agent information, stance scores, posts, etc.
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -357,7 +362,7 @@ def get_scenario1_result(simulation_id: str) -> Dict[str, Any]:
     agents = sim["agents"]
     discourse_history = sim["discourseHistory"]
     
-    # 统计本轮情感分布
+    # Tally sentiment distribution for this round
     round_posts = [post for post in discourse_history if post[2] == current_round and post[3] is not None]
     
     if round_posts:
@@ -375,10 +380,10 @@ def get_scenario1_result(simulation_id: str) -> Dict[str, Any]:
         negative_sentiment = 0
         neutral_sentiment = 0
     
-    # 构建详细的agent信息
+    # Build detailed agent information
     agents_info = []
     for agent_id, agent in agents.items():
-        # 统计该agent的帖子
+        # Tally posts for this agent
         agent_posts = [post for post in discourse_history if post[0] == agent_id]
         latest_stance = agent_posts[-1][3] if agent_posts and agent_posts[-1][3] is not None else 0
         
@@ -389,20 +394,20 @@ def get_scenario1_result(simulation_id: str) -> Dict[str, Any]:
             "influenceScore": agent.persona.get("influence_score"),
             "primaryPlatform": agent.persona.get("primary_platform"),
             "emotionalStyle": agent.persona.get("emotional_style"),
-            "stanceScore": latest_stance,  # 当前立场评分
-            "postsSent": len([p for p in agent_posts if p[2] > 0]),  # 发送的帖子数
-            "latestPost": agent_posts[-1][1] if agent_posts else None,  # 最新评论
+            "stanceScore": latest_stance,  # Current stance score
+            "postsSent": len([p for p in agent_posts if p[2] > 0]),  # Number of posts sent
+            "latestPost": agent_posts[-1][1] if agent_posts else None,  # Latest comment
             "isActive": agent_id in sim["activeAgents"]
         })
     
-    # 构建传播路径（简化版，显示谁发了什么）
+    # Build propagation path (simplified version, showing who posted what)
     propagation_paths = []
     for author_id, content, round_num, stance in discourse_history:
         if author_id == "system" or round_num != current_round:
             continue
         propagation_paths.append({
             "from": author_id,
-            "content": content[:100],  # 截取前100字符
+            "content": content[:100],  # Truncate to first 100 characters
             "round": round_num,
             "stance": stance
         })
@@ -419,19 +424,19 @@ def get_scenario1_result(simulation_id: str) -> Dict[str, Any]:
             "negativeSentiment": round(negative_sentiment, 2),
             "neutralSentiment": round(neutral_sentiment, 2)
         },
-        "agents": agents_info,  # 详细的agent信息
-        "propagationPaths": propagation_paths  # 传播路径
+        "agents": agents_info,  # Detailed agent information
+        "propagationPaths": propagation_paths  # Propagation paths
     }
 
 def stop_scenario1_simulation(simulation_id: str) -> Dict[str, Any]:
     """
-    手动停止 Scenario 1 模拟。
+    Manually stops a Scenario 1 simulation.
     
     Args:
-        simulation_id: 模拟ID
+        simulation_id: The simulation ID.
     
     Returns:
-        停止确认信息
+        A confirmation message for stopping.
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -452,14 +457,14 @@ def stop_scenario1_simulation(simulation_id: str) -> Dict[str, Any]:
 
 def generate_scenario1_report(simulation_id: str, report_type: str = "comprehensive") -> Dict[str, Any]:
     """
-    生成 Scenario 1 的舆情分析报告。
+    Generates a public opinion analysis report for Scenario 1 (using 9-dimensional evaluation).
     
     Args:
-        simulation_id: 模拟ID
-        report_type: 报告类型 ("summary" 或 "comprehensive")
+        simulation_id: The simulation ID.
+        report_type: The report type ("summary" or "comprehensive").
     
     Returns:
-        包含报告内容的字典
+        A dictionary containing the report content and dimension scores.
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
@@ -469,141 +474,264 @@ def generate_scenario1_report(simulation_id: str, report_type: str = "comprehens
     if sim.get("scenario") != "scenario1":
         raise ValueError("This API is only for Scenario 1 simulations.")
     
-    log_message(f"Generating {report_type} report for simulation {simulation_id}")
+    log_message(f"Generating {report_type} report for Scenario 1 simulation {simulation_id}")
     
+    # Prepare simulation data
+    log_message("Preparing simulation data...")
+    sim_data = em.prepare_simulation_data(sim)
+    
+    # Perform 9-dimensional evaluation (Scenario 1: only evaluate the simulation itself)
+    log_message("Performing dimensional evaluation...")
+    evaluation_result = em.comprehensive_evaluation(sim_data, real_case_data=None)
+    
+    # Generate text report (using LLM)
     agents = sim["agents"]
     discourse_history = sim["discourseHistory"]
     
-    # 构建完整的对话历史用于 LLM 分析
-    log_message(f"Building conversation history from {len(discourse_history)} posts...")
+    log_message("Generating text report...")
     formatted_history = ""
     for author_id, content, round_num, stance in discourse_history:
         if author_id == "system":
-            formatted_history += f"\n[Round {round_num}] 【官方公关声明】: {content}\n"
+            formatted_history += f"\n[Round {round_num}] [Official PR Statement]: {content}\n"
         else:
             username = agents[author_id].persona.get('username', author_id) if author_id in agents else "Unknown"
-            formatted_history += f"[Round {round_num}] {username} (立场: {stance}): {content}\n"
+            formatted_history += f"[Round {round_num}] {username} (Stance: {stance}): {content}\n"
     
-    log_message(f"Formatted history length: {len(formatted_history)} characters")
+    llm = get_llm(model_name="gemini-2.5-pro")
     
-    # 使用 LLM 生成报告
-    log_message("--- Initializing LLM for report generation ---")
-    llm = get_llm()
+    # Build evaluation result summary
+    eval_summary = evaluation_result.get('summary', '')
     
     if report_type == "summary":
-        log_message("Generating SUMMARY report...")
-        prompt = f"""请为以下舆情模拟生成简要分析报告（200-300字）。
+        prompt = f"""Please generate a brief analysis report (200-300 words) for the following public opinion simulation.
 
-模拟对话记录：
-{formatted_history}
+Simulation Dialogue Log:
+{formatted_history[:1500]}
 
-请简要总结：
-1. 舆情整体走向
-2. 公关策略的效果
-3. 关键意见领袖的态度
+Evaluation Results:
+{eval_summary}
 
-请用简洁的语言撰写报告。"""
+Please briefly summarize:
+1. Overall trend of public opinion
+2. Effectiveness of the PR strategy
+3. Attitudes of key opinion leaders
+
+Please write the report in concise language."""
     else:  # comprehensive
-        log_message("Generating COMPREHENSIVE report...")
-        prompt = f"""请为以下舆情模拟生成详细的分析报告。
+        prompt = f"""Please generate a detailed analysis report for the following public opinion simulation.
 
-模拟对话记录：
-{formatted_history}
+Simulation Dialogue Log:
+{formatted_history[:3000]}
 
-请详细分析以下内容：
+9-Dimension Evaluation Results:
+{eval_summary}
 
-## 1. 舆情演变分析
-- 初始舆情状态
-- 各轮公关策略后的舆情变化
-- 整体舆情走向（正面/负面/中立的变化趋势）
+Please analyze the following in detail:
 
-## 2. 公关策略效果评估
-- 每个公关策略的具体效果
-- 哪些策略有效，哪些无效
-- 策略的时机是否合适
+## 1. Public Opinion Evolution Analysis
+- Initial state of public opinion
+- Changes in public opinion after each round of PR strategy
+- Overall trend of public opinion (changes in positive/negative/neutral sentiment)
 
-## 3. 关键意见领袖分析
-- 识别影响力最大的用户
-- 他们的态度变化
-- 他们对舆情的影响
+## 2. PR Strategy Effectiveness Evaluation
+- Specific effects of each PR strategy
+- Which strategies were effective, which were not
+- Was the timing of the strategies appropriate
 
-## 4. 不同平台的舆情差异
-- 微博/Twitter、朋友圈、抖音、论坛等平台上的不同反应
-- 平台特性对舆情传播的影响
+## 3. Key Opinion Leader Analysis
+- Identify the most influential users
+- Their changes in attitude
+- Their impact on public opinion
 
-## 5. 改进建议
-- 针对本次模拟，提出3-5条具体的公关改进建议
+## 4. Public Opinion Differences Across Platforms
+- Different reactions on platforms like Weibo/Twitter, WeChat Moments, TikTok, forums, etc.
+- The impact of platform characteristics on the spread of public opinion
 
-请用专业、客观的语言撰写报告。"""
+## 5. Suggestions for Improvement
+- Based on this simulation, provide 3-5 specific suggestions for PR improvement
+
+Please write the report in professional and objective language."""
     
-
-    log_message("Invoking LLM to generate report content...")
     report_content = llm.invoke(prompt).content
-    log_message(f"Report generated! Content length: {len(report_content)} characters")
     
-    # 打印报告内容
     log_message("\n" + "="*80)
-    log_message("=== GENERATED REPORT CONTENT ===")
+    log_message("=== SCENARIO 1 REPORT ===")
     log_message("="*80)
     log_message(report_content)
     log_message("="*80 + "\n")
     
-    # 分析关键洞察
-    key_insights = []
-    improvements = []
-    
-    # 统计整体情感
-    all_stances = [post[3] for post in discourse_history if post[3] is not None]
-    if all_stances:
-        avg_stance = sum(all_stances) / len(all_stances)
-        overall_sentiment = round(avg_stance / 3, 2)  # 归一化到 -1 到 1
-    else:
-        overall_sentiment = 0
-    
-    # 识别关键意见领袖
-    agent_post_counts = {}
-    for author_id, content, round_num, stance in discourse_history:
-        if author_id != "system":
-            if author_id not in agent_post_counts:
-                agent_post_counts[author_id] = 0
-            agent_post_counts[author_id] += 1
-    
-    top_agents = sorted(agent_post_counts.items(), key=lambda x: x[1], reverse=True)[:3]
-    for agent_id, count in top_agents:
-        if agent_id in agents:
-            username = agents[agent_id].persona.get('username')
-            key_insights.append(f"{username} 是关键意见领袖，发表了 {count} 次评论")
-    
-    # 分析策略数量
-    pr_strategies = [post for post in discourse_history if post[0] == "system"]
-    key_insights.append(f"共使用了 {len(pr_strategies)} 个公关策略")
-    key_insights.append(f"最终平均立场评分: {round(avg_stance, 2) if all_stances else 0}")
-    
-    # 打印关键洞察
-    log_message("\n--- Key Insights ---")
-    for i, insight in enumerate(key_insights, 1):
-        log_message(f"{i}. {insight}")
-    log_message(f"\n--- Overall Sentiment: {overall_sentiment} ---")
-    
     report_data = {
         "reportId": f"report_{simulation_id}_{int(time.time())}",
+        "reportType": "scenario1",
         "content": report_content,
-        "summary": {
-            "overallSentiment": overall_sentiment,
-            "keyInsights": key_insights,
-            "improvements": improvements
-        },
+        "evaluation": evaluation_result,
         "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     }
     
-    log_message(f"\n✅ Report generation completed successfully!")
+    log_message(f"\n✅ Scenario 1 report generation completed!")
     log_message(f"Report ID: {report_data['reportId']}")
     
     return report_data
 
+def generate_scenario2_report(simulation_id: str, report_type: str = "comprehensive") -> Dict[str, Any]:
+    """
+    Generates a comparative analysis report for Scenario 2 (simulation vs. real case).
+    
+    Args:
+        simulation_id: The simulation ID.
+        report_type: The report type ("summary" or "comprehensive").
+    
+    Returns:
+        A dictionary containing the comparative analysis and similarity score.
+    """
+    if simulation_id not in _simulations:
+        raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
+    
+    sim = _simulations[simulation_id]
+    
+    # Scenario 2 requires an associated case
+    case_id = sim.get("caseId")
+    if not case_id:
+        raise ValueError("This simulation is not associated with a historical case.")
+    
+    log_message(f"Generating {report_type} report for Scenario 2 simulation {simulation_id}")
+    log_message(f"Associated case: {case_id}")
+    
+    # Get real case data
+    case = cm.get_case_by_id(case_id)
+    if not case:
+        raise ValueError(f"Case '{case_id}' not found.")
+    
+    # Prepare data
+    log_message("Preparing simulation data and real case data...")
+    sim_data = em.prepare_simulation_data(sim)
+    real_case_data = em.prepare_real_case_context(case)
+    
+    # Perform 9-dimensional comparative evaluation
+    log_message("Performing comparative evaluation...")
+    evaluation_result = em.comprehensive_evaluation(sim_data, real_case_data)
+    
+    # Generate comparative report
+    agents = sim["agents"]
+    discourse_history = sim["discourseHistory"]
+    
+    log_message("Generating comparative analysis report...")
+    formatted_history = ""
+    for author_id, content, round_num, stance in discourse_history:
+        if author_id == "system":
+            formatted_history += f"\n[Round {round_num}] [Official PR Statement]: {content}\n"
+        else:
+            username = agents[author_id].persona.get('username', author_id) if author_id in agents else "Unknown"
+            formatted_history += f"[Round {round_num}] {username} (Stance: {stance}): {content}\n"
+    
+    llm = get_llm(model_name="gemini-2.5-pro")
+    
+    # Build evaluation result summary
+    eval_summary = evaluation_result.get('summary', '')
+    overall_similarity = evaluation_result.get('overall_similarity_percentage', 0)
+    
+    if report_type == "summary":
+        prompt = f"""Please generate a brief report (200-300 words) comparing the following simulation with the real case.
+
+Real Case: {case['title']}
+Case Background: {case['background'][:200]}...
+
+Simulation Dialogue Log (Partial):
+{formatted_history[:1000]}...
+
+Overall Similarity: {overall_similarity}%
+
+Please briefly summarize:
+1. Main similarities between the simulation and the real case
+2. Main differences between the simulation and the real case
+3. Overall evaluation of the simulation's performance
+
+Please write the report in concise language."""
+    else:  # comprehensive
+        prompt = f"""Please generate a detailed comparative analysis report for the following simulation and real case.
+
+# Real Case Information
+Case: {case['title']}
+Industry: {case['industry']}
+Background: {case['background']}
+
+Strategies per Round:
+{chr(10).join([f"Round {s['round']}: {s['title']} - {s['content'][:100]}..." for s in case['strategies']])}
+
+Real Outcome:
+Success: {case['realWorldOutcome']['success']}
+Key Factors: {', '.join(case['realWorldOutcome']['keyFactors'])}
+
+# Simulation Data
+{formatted_history[:2000]}...
+
+# Similarity Assessment
+Overall Similarity: {overall_similarity}%
+
+Evaluation Details:
+{eval_summary}
+
+Please analyze the following in detail:
+
+## 1. Stance Distribution Comparison
+- Stance distribution in the simulation
+- Description of stance in the real case
+- Similarity analysis
+
+## 2. Evolution Trend Comparison
+- Trajectory of public opinion evolution in the simulation
+- Public opinion trend in the real case
+- Do the key turning points match?
+
+## 3. Core Issue Comparison
+- Main focus of discussion in the simulation
+- Core conflict in the real case
+- Analysis of issue coverage
+
+## 4. Emotion and Argument Comparison
+- Characteristics of emotional expression in the simulation
+- Public opinion sentiment in the real case
+- Degree of matching for mainstream arguments
+
+## 5. Comprehensive Evaluation
+- Strengths of the simulation (which aspects were highly replicated)
+- Weaknesses of the simulation (which aspects need improvement)
+- Suggestions for the simulation system
+
+Please write the report in professional and objective language, emphasizing comparative analysis."""
+    
+    report_content = llm.invoke(prompt).content
+    
+    log_message("\n" + "="*80)
+    log_message("=== SCENARIO 2 COMPARATIVE REPORT ===")
+    log_message("="*80)
+    log_message(report_content)
+    log_message("="*80 + "\n")
+    
+    # Extract overall similarity
+    overall_similarity = evaluation_result.get('overall_similarity_percentage', 0)
+    
+    report_data = {
+        "reportId": f"report_{simulation_id}_{int(time.time())}",
+        "reportType": "scenario2_comparative",
+        "caseId": case_id,
+        "caseTitle": case['title'],
+        "content": report_content,
+        "evaluation": evaluation_result,
+        "overallSimilarityPercentage": overall_similarity,
+        "generatedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+    
+    log_message(f"\n✅ Scenario 2 comparative report generation completed!")
+    log_message(f"Report ID: {report_data['reportId']}")
+    log_message(f"Overall Similarity: {overall_similarity}%")
+    
+    return report_data
+
+
 def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: Dict) -> Dict[str, Any]:
     """
-    启动一个新的Scenario 2模拟任务。
+    Starts a new Scenario 2 simulation task (using agent simulation).
     """
     case = cm.get_case_by_id(case_id)
     if not case:
@@ -611,106 +739,188 @@ def start_scenario2_simulation(case_id: str, llm_model: str, simulation_config: 
 
     sim_id = f"sim_scenario2_{uuid.uuid4()}"
     log_message(f"Starting Scenario 2 simulation: {sim_id}, case: {case['title']}")
+    
+    # Create network and agents (same as scenario1)
+    num_agents = simulation_config.get("agents", 10)
+    G, agents = create_social_network(
+        num_agents, 
+        sim_id_prefix=sim_id,
+        llm_model=llm_model # Pass the model name
+    )
+    
+    # Use case background as the initial topic
+    initial_topic = case.get("background", case.get("title"))
+    
+    # Get the PR strategy for the first round
+    first_round_strategy = ""
+    if case.get("strategies"):
+        for strategy in case["strategies"]:
+            if strategy.get("round") == 1:
+                first_round_strategy = strategy.get("content", "")
+                break
 
-    # 存储模拟状态
+    # Store simulation state (similar structure to scenario1)
     _simulations[sim_id] = {
         "simulationId": sim_id,
+        "scenario": "scenario2",
         "caseId": case_id,
-        "status": "started",
-        "totalRounds": case.get("totalRounds", 1),
-        "currentRound": 1,
+        "caseTitle": case.get("title"),
+        "initialTopic": initial_topic,
         "llmModel": llm_model,
         "simulationConfig": simulation_config,
-        "results": [] # 存储每轮的结果
+        "network": G,
+        "agents": agents,
+        "discourseHistory": [("system", f"[Initial Topic] {initial_topic}", 0, None)],
+        "activeAgents": list(agents.keys()),
+        "inactiveAgents": [],
+        "status": "initialized",
+        "totalRounds": case.get("totalRounds", 1),
+        "currentRound": 0,
+        "prStrategies": []
     }
+    
+    # If there is a first-round strategy, execute it directly
+    if first_round_strategy:
+        log_message(f"Executing first round with strategy from case...")
+        try:
+            _simulations[sim_id]["prStrategies"].append({
+                "round": 1,
+                "strategy": first_round_strategy
+            })
+            _simulations[sim_id]["discourseHistory"].append(
+                ("system", f"[Official PR Statement] {first_round_strategy}", 1, None)
+            )
+            
+            result = run_scenario1_round(sim_id)  # Reuse scenario1's simulation logic
+            _simulations[sim_id]["status"] = "round_completed"
+            _simulations[sim_id]["currentRound"] = 1
+            
+            return {
+                "simulationId": sim_id,
+                "caseId": case_id,
+                "caseTitle": case.get("title"),
+                "status": "round_completed",
+                "totalRounds": case.get("totalRounds", 1),
+                "currentRound": 1,
+                "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}",
+                "result": result
+            }
+        except Exception as e:
+            log_message(f"Error executing first round: {str(e)}")
+            return {
+                "simulationId": sim_id,
+                "caseId": case_id,
+                "status": "initialized",
+                "totalRounds": case.get("totalRounds", 1),
+                "currentRound": 0,
+                "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}",
+                "error": str(e)
+            }
 
     return {
         "simulationId": sim_id,
         "caseId": case_id,
-        "status": "started",
+        "caseTitle": case.get("title"),
+        "status": "initialized",
         "totalRounds": case.get("totalRounds", 1),
-        "currentRound": 1,
+        "currentRound": 0,
         "websocketUrl": f"ws://localhost:8000/ws/simulation/{sim_id}"
     }
 
 def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     """
-    将模拟推进到下一轮。
+    Advances the Scenario 2 simulation to the next round (executes agent simulation).
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
 
     sim = _simulations[simulation_id]
-
+    
     if sim["currentRound"] >= sim["totalRounds"]:
         raise ValueError("Simulation has already reached the final round and cannot continue.")
-
-    sim["currentRound"] += 1
-    sim["status"] = "running"
     
-    log_message(f"Simulation {simulation_id} advancing to round {sim['currentRound']}.")
-
+    # Get the strategy for the next round
+    next_round = sim["currentRound"] + 1
     case = cm.get_case_by_id(sim["caseId"])
-    round_strategy = "No strategy found for this round."
+    
+    round_strategy = ""
     if case and 'strategies' in case:
         for strategy in case['strategies']:
-            if strategy.get('round') == sim['currentRound']:
-                round_strategy = strategy.get('content', round_strategy)
+            if strategy.get('round') == next_round:
+                round_strategy = strategy.get('content', "")
                 break
-
-    return {
-        "simulationId": simulation_id,
-        "currentRound": sim["currentRound"],
-        "status": sim["status"],
-        "roundStrategy": round_strategy
-    }
+    
+    if not round_strategy:
+        log_message(f"Warning: No strategy found for round {next_round}")
+    
+    # Add PR strategy
+    sim["prStrategies"].append({
+        "round": next_round,
+        "strategy": round_strategy
+    })
+    
+    if round_strategy:
+        sim["discourseHistory"].append(
+            ("system", f"[Official PR Statement] {round_strategy}", next_round, None)
+        )
+    
+    log_message(f"Simulation {simulation_id} advancing to round {next_round}...")
+    
+    # Execute simulation
+    try:
+        num_rounds = sim["simulationConfig"].get("num_rounds", 1)
+        log_message(f"Will simulate {num_rounds} interaction round(s)")
+        
+        result = None
+        for i in range(num_rounds):
+            log_message(f"Executing interaction round {i+1}/{num_rounds}")
+            result = run_scenario1_round(simulation_id)  # Reuse scenario1's logic
+            
+            if sim["status"] == "all_agents_inactive":
+                log_message(f"All agents inactive, stopping early")
+                break
+        
+        return {
+            "simulationId": simulation_id,
+            "currentRound": sim["currentRound"],
+            "status": sim["status"],
+            "roundStrategy": round_strategy,
+            "result": result
+        }
+    except Exception as e:
+        log_message(f"Error advancing to next round: {str(e)}")
+        raise
 
 def get_scenario2_result(simulation_id: str) -> Dict[str, Any]:
     """
-    获取Scenario 2当前轮次的模拟结果（模拟）。
+    Gets the current round's simulation result for Scenario 2 (using real agent simulation data).
     """
     if simulation_id not in _simulations:
         raise ValueError(f"Simulation ID '{simulation_id}' does not exist.")
 
     sim = _simulations[simulation_id]
-    case = cm.get_case_by_id(sim["caseId"])
+    
+    # Check for caseId (use .get() to avoid KeyError)
+    case_id = sim.get("caseId")
+    if not case_id:
+        raise ValueError(f"Simulation '{simulation_id}' is not a Scenario 2 simulation (missing caseId).")
+    
+    # Get case information
+    case = cm.get_case_by_id(case_id)
     if not case:
-        raise ValueError(f"Associated case '{sim['caseId']}' not found for simulation.")
+        raise ValueError(f"Associated case '{case_id}' not found for simulation.")
 
-    # --- 这里是实际模拟逻辑的入口 ---
-    # 目前，我们只生成一个模拟/伪造的结果用于API测试
-    log_message(f"Generating mock result for simulation {simulation_id} (Round {sim['currentRound']}).")
+    # Use the same result retrieval logic as scenario1
+    result = get_scenario1_result(simulation_id)
     
-    # 模拟情感值的微小随机变化
-    simulated_sentiment = case["realWorldOutcome"]["metrics"]["sentimentImprovement"] / 100 + (random.random() - 0.5) * 0.1
+    # Add scenario2-specific information
+    result["caseId"] = sim["caseId"]
+    result["caseTitle"] = case.get("title")
+    result["totalRounds"] = sim["totalRounds"]
     
-    mock_result = {
-        "round": sim["currentRound"],
-        "summary": {
-            "totalAgents": sim["simulationConfig"].get("agents", 100),
-            "activeAgents": random.randint(85, 98),
-            "totalPosts": random.randint(150, 300),
-            "positiveSentiment": max(0, min(1, simulated_sentiment + random.uniform(-0.05, 0.05))),
-            "negativeSentiment": max(0, min(1, 1 - (simulated_sentiment + random.uniform(-0.1, 0.1)))),
-            "neutralSentiment": 0.1
-        },
-        "realWorldComparison": {
-            "round": sim["currentRound"],
-            "realWorldSentiment": case["realWorldOutcome"]["metrics"]["sentimentImprovement"] / 100.0,
-            "simulationSentiment": simulated_sentiment,
-            "accuracy": max(0, 1 - abs(case["realWorldOutcome"]["metrics"]["sentimentImprovement"] / 100.0 - simulated_sentiment))
-        },
-        # ... 其他API文档中定义的字段可以类似地模拟
-    }
-
-    # 检查是否是最后一轮
+    # Check if it's the last round
     if sim["currentRound"] >= sim["totalRounds"]:
         sim["status"] = "completed"
-        log_message(f"Simulation {simulation_id} has completed.")
+        log_message(f"Simulation {simulation_id} has completed all rounds.")
 
-    return {
-        "simulationId": simulation_id,
-        "caseId": sim["caseId"],
-        "status": sim["status"],
-        **mock_result
-    }
+    return result

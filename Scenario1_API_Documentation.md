@@ -272,11 +272,11 @@
 
 ## 3. 报告生成接口
 
-### 3.1 生成分析报告 (真实API)
+### 3.1 生成分析报告
 
 **接口**: `POST /api/scenario1/reports/generate`
 
-**描述**: 生成Scenario 1的舆情分析报告
+**描述**: 生成Scenario 1的舆情分析报告，使用9维度LLM驱动评估系统
 
 **请求体**:
 ```json
@@ -287,120 +287,161 @@
 }
 ```
 
-### 3.2 生成分析报告 (Mock API - 临时静态数据)
-
-**接口**: `POST /api/scenario1/simulation/{simulationId}/generate-report`
-
-**描述**: 生成Scenario 1的舆情分析报告 (临时静态数据实现)
-
-**路径参数**:
-- `simulationId`: 模拟ID
-
-**请求体**: 无
-
-**响应示例**:
-```json
-{
-  "reportId": "report_1759732135883",
-  "content": "基于模拟结果的分析报告...",
-  "overallSentiment": 72,
-  "engagementRate": 15.3,
-  "reach": 850,
-  "sentimentTrend": "+12%",
-  "prEffectiveness": 85,
-  "keyInsights": "The PR strategy has shown significant effectiveness in shifting public opinion. The sentiment analysis reveals a 12% positive trend over the simulation period, with high engagement rates indicating strong public interest. The strategy successfully mitigated initial negative sentiment and built positive momentum.",
-  "recommendations": [
-    "Continue the current communication strategy as it shows strong positive momentum",
-    "Focus on maintaining engagement through regular updates and transparency",
-    "Monitor key opinion leaders and influencers for potential amplification opportunities",
-    "Consider expanding the message to reach additional demographic segments"
-  ],
-    "influentialNodes": [
-      {
-        "node": "Media Outlet A",
-        "influence_score": 95,
-        "sentiment": "Positive",
-        "reach": 120
-      },
-      {
-        "node": "Industry Expert B",
-        "influence_score": 88,
-        "sentiment": "Positive",
-        "reach": 85
-      }
-    ],
-  "sentimentDistribution": {
-    "positive": 45,
-    "neutral": 35,
-    "negative": 20
-  },
-  "trendData": {
-    "positive": "+8%",
-    "engagement": "+8%",
-    "reach": "+15%"
-  },
-  "effectivenessRating": {
-    "score": 85,
-    "rating": "Excellent",
-    "thresholds": {
-      "excellent": 80,
-      "good": 60
-    }
-  },
-  "generatedAt": "2024-01-01T12:00:00.000Z"
-}
-```
-
-### 3.2 获取分析结果数据
-
-**接口**: `GET /api/scenario1/simulation/{simulationId}/analysis`
-
-**描述**: 获取模拟的详细分析结果数据，用于结果页面展示
-
-**路径参数**:
-- `simulationId`: 模拟ID
-
 **响应示例**:
 ```json
 {
   "success": true,
   "data": {
-    "overallSentiment": 72,
-    "engagementRate": 15.3,
-    "reach": 850,
-    "sentimentTrend": "+12%",
-    "prEffectiveness": 85,
-    "keyInsights": "The PR strategy has shown significant effectiveness in shifting public opinion...",
-    "recommendations": [
-      "Continue the current communication strategy as it shows strong positive momentum",
-      "Focus on maintaining engagement through regular updates and transparency"
-    ],
-    "influentialNodes": [
-      {
-        "node": "Media Outlet A",
-        "influence_score": 95,
-        "sentiment": "Positive",
-        "reach": 120
-      }
-    ],
-    "sentimentDistribution": {
-      "positive": 45,
-      "neutral": 35,
-      "negative": 20
+    "reportId": "report_sim_1759732135883_1729987200",
+    "reportType": "scenario1",
+    "content": "# 舆情分析报告\n\n## 1. 舆情演变分析\n- 初始舆情状态：负面情绪占主导...\n\n## 2. 公关策略效果评估\n- 第一轮策略：立即道歉和暂停产品...\n\n## 3. 关键意见领袖分析\n- MarketingPro_Serena：影响力90分，态度转变明显...\n\n## 4. 不同平台的舆情差异\n- 微博/Twitter：讨论活跃，情绪波动较大...\n\n## 5. 改进建议\n- 增强对品牌公关策略的分析...\n- 加强对多样化公众人群反应的模拟...",
+    "evaluation": {
+      "evaluation_type": "standalone",
+      "overall_ideal_achievement_percentage": 78.5,
+      "rating": "良好 - 大部分达到理想效果",
+      "dimension_scores": {
+        "总体立场倾向": {
+          "weight": 0.12,
+          "details": {
+            "category": "simulation_only",
+            "description": "模拟中的总体立场倾向显示出明显的反对态度，反对者数量超过支持者，且平均立场为负值，反映出对品牌诚信和透明度的质疑。虽然有部分支持声音，但整体上公众对品牌恢复信任的前景持悲观态度，强调实质性改革的重要性。",
+            "key_features": [
+              "反对态度占主导地位",
+              "平均立场为负值",
+              "强调实质性改革需求"
+            ],
+            "ideal_achievement_percentage": 75.0,
+            "reasoning": "当前模拟在总体立场倾向方面表现中等。虽然成功反映了公众对品牌诚信的质疑，但未能充分展现品牌恢复信任的可能性。建议在后续轮次中加强正面信息的传播，提升公众对品牌改进的信心。"
+          }
+        },
+        "舆论演变方向": {
+          "weight": 0.12,
+          "details": {
+            "category": "simulation_only",
+            "description": "舆论演变整体走向趋向恶化，平均立场从0.11下降至-0.33，变化幅度达到0.44，显示出支持与反对意见的剧烈反转。",
+            "key_features": [
+              "立场变化幅度较大",
+              "支持与反对意见反转",
+              "整体趋势向负面发展"
+            ],
+            "ideal_achievement_percentage": 65.0,
+            "reasoning": "舆论演变方向显示公关策略需要调整。当前策略未能有效扭转负面趋势，建议在后续轮次中采用更积极的沟通策略，及时回应公众关切。"
+          }
+        },
+        "舆论分化程度": {
+          "weight": 0.08,
+          "details": {
+            "category": "simulation_only",
+            "description": "该模拟中舆论呈现出明显的分化特征，参与者的观点呈现出极端支持与极端反对的对立局面，导致整体舆论趋向极端化且缺乏中立意见。",
+            "key_features": [
+              "观点极端化明显",
+              "缺乏中立意见",
+              "支持与反对对立"
+            ],
+            "ideal_achievement_percentage": 70.0,
+            "reasoning": "舆论分化程度较高，反映了争议性话题的特点。建议通过提供更多客观信息来减少极端化，促进理性讨论。"
+          }
+        },
+        "关键转折点时机": {
+          "weight": 0.08,
+          "details": {
+            "category": "simulation_only",
+            "description": "在第3轮出现了显著的转折点，立场发生了恶化，平均立场下降幅度达到-0.56。",
+            "key_features": [
+              "第3轮出现转折点",
+              "立场恶化明显",
+              "下降幅度较大"
+            ],
+            "ideal_achievement_percentage": 60.0,
+            "reasoning": "转折点时机显示公关策略在后期出现失误。建议优化策略执行时机，避免在关键时刻出现负面转折。"
+          }
+        },
+        "核心争议焦点": {
+          "weight": 0.15,
+          "details": {
+            "category": "simulation_only",
+            "description": "公众讨论的焦点主要集中在品牌对AI产品的回应及透明度上，围绕品牌的声誉和消费者对产品安全的担忧形成。传递出对品牌责任感的期待。",
+            "key_features": [
+              "关注品牌回应透明度",
+              "消费者安全担忧",
+              "期待品牌责任感"
+            ],
+            "ideal_achievement_percentage": 80.0,
+            "reasoning": "核心争议焦点把握准确，成功识别了公众的主要关切。建议继续围绕透明度和责任感进行沟通。"
+          }
+        },
+        "主流论点": {
+          "weight": 0.12,
+          "details": {
+            "category": "simulation_only",
+            "description": "在AI产品争议案例中，强调了品牌恢复信任需要以透明和诚实为基础，消费者希望看到实际的行动而不仅是口头承诺。对品牌形象的脆弱性应给予重视，面对质疑时，企业必须展示出真诚的改进措施。",
+            "key_features": [
+              "强调透明和诚实",
+              "期待实际行动",
+              "重视品牌形象脆弱性"
+            ],
+            "ideal_achievement_percentage": 85.0,
+            "reasoning": "主流论点分析准确，成功捕捉了公众对品牌改进的期待。建议在后续策略中更多展示具体行动。"
+          }
+        },
+        "情绪基调": {
+          "weight": 0.10,
+          "details": {
+            "category": "simulation_only",
+            "description": "大部分发言者支持品牌通过透明和真诚来重建信任，但也有不少人对其诚意表示怀疑，认为应采取更多实质性措施。",
+            "key_features": [
+              "支持透明和真诚",
+              "对诚意表示怀疑",
+              "期待实质性措施"
+            ],
+            "ideal_achievement_percentage": 75.0,
+            "reasoning": "情绪基调分析合理，反映了公众的复杂心理。建议通过具体行动来增强公众对品牌诚意的信心。"
+          }
+        },
+        "公关策略响应模式": {
+          "weight": 0.10,
+          "details": {
+            "category": "simulation_only",
+            "description": "在多轮评审后，支持票和反对票接近平衡，显示出争议性。",
+            "key_features": [
+              "支持与反对接近平衡",
+              "显示出争议性",
+              "多轮评审结果"
+            ],
+            "ideal_achievement_percentage": 70.0,
+            "reasoning": "公关策略响应模式显示策略效果有限。建议调整策略方向，增强说服力和影响力。"
+          }
+        },
+        "次生话题扩散路径": {
+          "weight": 0.13,
+          "details": {
+            "category": "simulation_only",
+            "description": "品牌初始的公关回应是防御性和对抗性的，未能有效解决公众关切。",
+            "key_features": [
+              "防御性和对抗性回应",
+              "未能解决公众关切",
+              "初始策略存在问题"
+            ],
+            "ideal_achievement_percentage": 65.0,
+            "reasoning": "次生话题扩散路径分析准确，识别了初始策略的问题。建议采用更积极的沟通方式。"
+          }
+        }
+      },
+      "summary": "【场景一：独立评估】\n\n本次模拟在9个关键维度上表现中等偏上，总体达标度为78.5%，评级为"良好"。\n\n**优势方面**：\n- 核心争议焦点把握准确，成功识别公众主要关切\n- 主流论点分析深入，准确捕捉公众期待\n- 情绪基调分析合理，反映公众复杂心理\n\n**改进空间**：\n- 舆论演变方向需要调整，当前策略未能扭转负面趋势\n- 关键转折点时机把握不当，后期出现负面转折\n- 公关策略响应模式效果有限，需要增强说服力\n\n**建议**：\n1. 优化策略执行时机，避免关键时刻出现负面转折\n2. 采用更积极的沟通策略，及时回应公众关切\n3. 通过具体行动增强公众对品牌诚意的信心\n4. 调整策略方向，增强说服力和影响力"
     },
-    "trendData": {
-      "positive": "+8%",
-      "engagement": "+8%",
-      "reach": "+15%"
-    },
-    "effectivenessRating": {
-      "score": 85,
-      "rating": "Excellent",
-      "thresholds": {
-        "excellent": 80,
-        "good": 60
-      }
-    }
+    "generatedAt": "2024-01-01T12:00:00.000Z"
+  }
+}
+```
+
+**错误响应**:
+```json
+{
+  "success": false,
+  "error": {
+    "code": "SIMULATION_NOT_FOUND",
+    "message": "Simulation ID 'xxx' does not exist.",
+    "timestamp": "2024-01-01T12:00:00.000Z"
   }
 }
 ```
@@ -493,34 +534,27 @@ interface SimulationStatus {
 ### 5.5 分析结果模型 (AnalysisResult)
 
 ```typescript
-interface AnalysisResult {
+interface ReportResponse {
   reportId: string;                   // 报告ID
-  content: string;                    // 报告内容
-  overallSentiment: number;           // 整体情感分数 0-100
-  engagementRate: number;             // 参与率百分比
-  reach: number;                      // 触达人数 (K为单位)
-  sentimentTrend: string;             // 情感趋势 "+12%"
-  prEffectiveness: number;           // PR效果分数 0-100
-  keyInsights: string;                // 关键洞察文本
-  recommendations: string[];           // 改进建议列表
-  influentialNodes: InfluentialNode[]; // 关键影响者列表
-  sentimentDistribution: {            // 情感分布
-    positive: number;
-    neutral: number;
-    negative: number;
-  };
-  trendData: {                        // 趋势数据
-    positive: string;
-    engagement: string;
-    reach: string;
-  };
-  effectivenessRating: {              // 效果评级
-    score: number;
-    rating: string;
-    thresholds: {
-      excellent: number;
-      good: number;
+  reportType: string;                 // 报告类型 ("scenario1")
+  content: string;                    // 报告内容 (Markdown格式)
+  evaluation: {                       // 9维度评估结果
+    evaluation_type: string;          // 评估类型 ("standalone")
+    overall_ideal_achievement_percentage: number; // 总体达标度 0-100
+    rating: string;                   // 评级文字
+    dimension_scores: {               // 9个维度的详细评分
+      [dimensionName: string]: {
+        weight: number;               // 权重
+        details: {
+          category: string;            // 类别 ("simulation_only")
+          description: string;        // 200-300字详细描述
+          key_features: string[];     // 核心特征列表
+          ideal_achievement_percentage: number; // 达标度分数
+          reasoning: string;          // 详细推理说明
+        };
+      };
     };
+    summary: string;                  // 评估总结
   };
   generatedAt: string;                // 生成时间
 }
@@ -571,124 +605,3 @@ initial → running → completed → consumed
   error ← error ← error
 ```
 
-## 8. 前端静态数据说明
-
-### 8.1 当前实现状态
-
-**注意**: 目前前端使用的是静态数据和模拟API，所有接口都通过 `mockApi.ts` 实现，数据来源于静态JSON文件。
-
-### 8.2 静态数据文件
-
-#### 8.2.1 轮次数据文件
-- **文件位置**: `frontend/data/round1.json`, `frontend/data/round2.json`, `frontend/data/round3.json`
-- **用途**: 存储不同轮次的模拟数据
-- **数据结构**: 包含用户信息、平台信息、消息传播数据等
-
-#### 8.2.2 结果数据文件
-- **文件位置**: `frontend/data/result.json`
-- **用途**: 存储模拟结果分析数据
-- **数据结构**: 包含整体情感、参与率、触达人数、关键洞察、建议等
-
-### 8.3 Mock API 实现
-
-#### 8.3.1 文件位置
-- **文件**: `frontend/src/services/mockApi.ts`
-- **导出**: `mockApiClient` 实例
-
-#### 8.3.2 实现的接口
-```typescript
-// 启动模拟
-async startSimulation(config: {
-  eventDescription: string;
-  llm: string;
-  strategy: string;
-}): Promise<ApiResponse<{ simulationId: string; status: string }>>
-
-// 添加下一轮策略
-async addNextRoundStrategy(simulationId: string, strategy: string, currentRound: number): Promise<ApiResponse<{ simulationId: string; status: string }>>
-
-// 生成报告
-async generateReport(simulationId: string): Promise<ApiResponse<{...}>>
-
-// 获取模拟结果数据
-async getSimulationResultData(simulationId: string): Promise<ApiResponse<SimulationResultData>>
-
-// 重置模拟
-async resetSimulation(simulationId: string): Promise<ApiResponse<{ success: boolean; message: string }>>
-
-// 获取模拟状态
-async getSimulationStatus(simulationId: string): Promise<ApiResponse<SimulationStatus>>
-
-// 获取模拟结果
-async getSimulationResult(simulationId: string): Promise<ApiResponse<MockSimulationData>>
-```
-
-#### 8.3.3 响应格式
-所有 Mock API 都返回 `ApiResponse<T>` 格式：
-```typescript
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: {
-    code: string;
-    message: string;
-    details?: string;
-    timestamp: string;
-  };
-}
-```
-
-### 8.4 数据流程
-
-#### 8.4.1 模拟启动流程
-1. 用户配置事件描述和PR策略
-2. 调用 `mockApiClient.startSimulation()`
-3. 返回模拟ID和状态
-4. 开始轮询状态
-
-#### 8.4.2 轮次数据获取流程
-1. 根据当前轮次选择对应的JSON文件
-2. 返回用户、平台、消息等数据
-3. 前端渲染网络可视化
-
-#### 8.4.3 结果分析流程
-1. 模拟完成后调用 `getSimulationResultData()`
-2. 返回 `result.json` 中的分析数据
-3. 前端显示结果页面
-
-### 8.5 与真实API的差异
-
-#### 8.5.1 当前静态实现
-- **数据来源**: 本地JSON文件
-- **状态管理**: 内存中的Map存储
-- **延迟模拟**: 使用 `setTimeout` 模拟网络延迟
-- **错误处理**: 简单的错误返回
-
-#### 8.5.2 真实API预期
-- **数据来源**: 后端数据库
-- **状态管理**: 后端状态存储
-- **实时处理**: 真实的异步处理
-- **错误处理**: 完整的错误码和重试机制
-
-### 8.6 迁移到真实API的准备工作
-
-#### 8.6.1 接口兼容性
-- 所有Mock API接口都遵循真实API的接口规范
-- 响应格式完全一致（`ApiResponse<T>`）
-- 错误处理机制已就位
-
-#### 8.6.2 需要修改的部分
-1. **API客户端**: 从 `mockApiClient` 切换到 `apiClient`
-2. **数据源**: 从静态JSON文件切换到HTTP请求
-3. **状态管理**: 从内存存储切换到后端状态
-4. **错误处理**: 增强错误处理和重试机制
-
-## 9. 注意事项
-
-1. **数据一致性**: 每个轮次的数据都是独立的，不会累积
-2. **状态管理**: 模拟状态在获取结果后会自动变为 `consumed`，防止重复获取
-3. **错误处理**: 所有接口都应该包含适当的错误处理和重试机制
-4. **性能优化**: 轮询机制应该在前端组件卸载时自动清理
-5. **数据格式**: 所有时间戳都使用ISO 8601格式
-6. **静态数据**: 当前使用静态JSON文件，便于开发和测试
-7. **API兼容性**: Mock API与真实API接口完全兼容，便于后续迁移

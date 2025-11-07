@@ -292,7 +292,7 @@
   border-color: rgba(19, 127, 236, 0.3) !important;
 }
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 1200px) {
   .comparison-grid {
     grid-template-columns: 1fr;

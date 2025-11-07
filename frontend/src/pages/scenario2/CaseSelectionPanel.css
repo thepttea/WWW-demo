@@ -144,7 +144,7 @@
 }
 
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 768px) {
   .case-select-button {
     height: 44px;

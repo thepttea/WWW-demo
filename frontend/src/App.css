@@ -1,4 +1,4 @@
-/* 全局样式重置 */
+/* Global Style Reset */
 * {
   box-sizing: border-box;
 }
@@ -21,7 +21,7 @@ html, body {
   color: #e2e8f0;
 }
 
-/* Ant Design 组件样式覆盖 */
+/* Ant Design Component Style Overrides */
 .ant-layout {
   background: transparent;
 }
@@ -40,12 +40,12 @@ html, body {
   flex-direction: column;
 }
 
-/* 深色模式支持 */
+/* Dark Mode Support */
 .dark {
   color-scheme: dark;
 }
 
-/* 滚动条样式 */
+/* Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

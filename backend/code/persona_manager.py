@@ -11,13 +11,13 @@ file_path = current_file.parent.parent / 'data' / 'personas.csv'
 
 def load_personas_from_csv(csv_file_path: str = file_path) -> List[Dict]:
     """
-    从CSV文件加载人设信息。
+    Loads persona information from a CSV file.
     
     Args:
-        csv_file_path: CSV文件路径
+        csv_file_path: Path to the CSV file.
         
     Returns:
-        List[Dict]: 人设信息列表，格式与原来的PERSONA_LIBRARY兼容
+        List[Dict]: A list of persona information, compatible with the original PERSONA_LIBRARY format.
     """
     personas = []
     
@@ -28,15 +28,13 @@ def load_personas_from_csv(csv_file_path: str = file_path) -> List[Dict]:
         reader = csv.DictReader(file)
         
         for row in reader:
-            # 转换数据类型
+            # Convert data types
             persona_data = {
                 "username": row["username"],
                 "description": row["description"],
                 "emotional_style": row["emotional_style"],
                 "influence_score": int(row["influence_score"]),
                 "primary_platform": row["primary_platform"],
-                "llm_model": row["llm_model"],
-                "llm_temperature": float(row["llm_temperature"])
             }
             
             personas.append({"data": persona_data})
@@ -44,14 +42,14 @@ def load_personas_from_csv(csv_file_path: str = file_path) -> List[Dict]:
     log_message(f"Successfully loaded {len(personas)} personas from {csv_file_path}") 
     return personas
 
-    # 加载csv文件数据到PERSONA_LIBRARY
+    # Load data from the CSV file into PERSONA_LIBRARY
 try:
     PERSONA_LIBRARY = load_personas_from_csv()
 except FileNotFoundError as e:
     log_message(f"Warning: {e}")  
     log_message("Will use the default hardcoded persona library.")  
     
-    # 备用硬编码数据（防止CSV文件不存在时程序崩溃）
+    # Fallback hardcoded data (to prevent the program from crashing if the CSV file does not exist)
     PERSONA_LIBRARY = [
         {"data": {
             "username": "Default_Agent", 
@@ -59,26 +57,24 @@ except FileNotFoundError as e:
             "emotional_style": "Neutral", 
             "influence_score": 50,
             "primary_platform": "Weibo/Twitter-like",
-            "llm_model": "gpt-4o-mini",
-            "llm_temperature": 0.7
         }}
     ]
 
 def get_persona_library() -> List[Dict]:
     """
-    获取人设库的公共接口函数。
+    Public interface function to get the persona library.
     """
     return PERSONA_LIBRARY
 
 def get_persona_by_username(username: str) -> Dict:
     """
-    根据用户名获取特定人设。
+    Gets a specific persona by username.
     
     Args:
-        username: 用户名
+        username: The username.
         
     Returns:
-        Dict: 人设数据，如果未找到返回None
+        Dict: Persona data, or None if not found.
     """
     for persona in PERSONA_LIBRARY:
         if persona["data"]["username"] == username:
@@ -87,17 +83,17 @@ def get_persona_by_username(username: str) -> Dict:
 
 def add_persona_to_csv(persona_data: Dict, csv_file_path: str = "personas.csv"):
     """
-    向CSV文件添加新的人设。
+    Adds a new persona to the CSV file.
     
     Args:
-        persona_data: 人设数据字典
-        csv_file_path: CSV文件路径
+        persona_data: A dictionary containing the persona data.
+        csv_file_path: Path to the CSV file.
     """
     file_exists = os.path.exists(csv_file_path)
     
     with open(csv_file_path, 'a', encoding='utf-8', newline='') as file:
         fieldnames = ["username", "description", "emotional_style", "influence_score", 
-                     "primary_platform", "llm_model", "llm_temperature"]
+                     "primary_platform"]
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         
         if not file_exists:
@@ -109,14 +105,12 @@ def add_persona_to_csv(persona_data: Dict, csv_file_path: str = "personas.csv"):
             "emotional_style": persona_data["emotional_style"],
             "influence_score": persona_data["influence_score"],
             "primary_platform": persona_data["primary_platform"],
-            "llm_model": persona_data["llm_model"],
-            "llm_temperature": persona_data["llm_temperature"]
         })
     
     log_message(f"Successfully added persona '{persona_data['username']}' to {csv_file_path}")  
 
 def list_personas():
-    """列出所有人设"""
+    """Lists all personas."""
     for i, persona in enumerate(PERSONA_LIBRARY, 1):
         data = persona['data']
         log_message(f"{i}. {data['username']} - {data['description']} ({data['primary_platform']})")

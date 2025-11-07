@@ -59,7 +59,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
 .event-header {
@@ -276,7 +276,7 @@
 }
 
 
-/* 响应式设计 */
+/* Responsive Design */
 @media (max-width: 1200px) {
   .content-grid {
     grid-template-columns: 1fr;

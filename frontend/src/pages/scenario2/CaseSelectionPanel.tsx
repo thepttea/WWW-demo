@@ -11,29 +11,31 @@ import './CaseSelectionPanel.css';
 const { Title, Text } = Typography;
 
 interface CaseSelectionPanelProps {
-  historicalCases: HistoricalCase[]; // 新增 prop
+  historicalCases: HistoricalCase[]; // New prop
   selectedCase: HistoricalCase | null;
   onCaseSelect: (caseItem: HistoricalCase) => void;
   onStartSimulation: (config: any) => void;
 }
 
 const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
-  historicalCases, // 接收 prop
+  historicalCases, // Receive prop
   selectedCase,
   onCaseSelect,
   onStartSimulation,
 }) => {
-  const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4');
+  const [selectedLLM, setSelectedLLM] = useState<string>('gpt-4o-mini');
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const llmOptions: LLMOption[] = [
-    { value: 'gpt-4', label: 'GPT-4' },
-    { value: 'claude-3', label: 'Claude 3' },
-    { value: 'gemini-pro', label: 'Gemini Pro' },
+    { value: 'gpt-4o-mini', label: 'gpt-4o-mini' },
+    { value: 'gpt-4.1-mini', label: 'gpt-4.1-mini' },
+    { value: 'gpt-4-turbo', label: 'gpt-4-turbo' },
+    { value: 'gpt-4.1-nano', label: 'gpt-4.1-nano' },
+    { value: 'gpt-5-mini', label: 'gpt-5-mini' },
+    { value: 'gemini-2.5-flash-preview-05-20', label: 'gemini-2.5-flash-preview-05-20'},
+    //Tested and found unusable { value: 'gemini-2.5-flash-preview-09-2025', label: 'gemini-2.5-flash-preview-09-2025' }, 
+    { value: 'gemini-2.5-pro-preview-03-25', label: 'gemini-2.5-pro-preview-03-25' },
   ];
-
-  // 历史案例数据 - 等待后端对接 (现在已对接)
-  // const historicalCases: HistoricalCase[] = [];
 
   const handleStartSimulation = () => {
     if (!selectedCase) {
@@ -109,7 +111,7 @@ const CaseSelectionPanel: React.FC<CaseSelectionPanelProps> = ({
         visible={isModalVisible}
         onClose={() => setIsModalVisible(false)}
         onCaseSelect={onCaseSelect}
-        historicalCases={historicalCases} // 传递数据到 Modal
+        historicalCases={historicalCases} // Pass data to Modal
       />
     </Card>
   );
