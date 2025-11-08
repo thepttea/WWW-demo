@@ -84,10 +84,10 @@ const Scenario2Page: React.FC = () => {
     <div className="scenario2-page">
       <div className="page-header">
         <Title level={2} className="page-title">
-          Public Opinion Simulator: Historical Case Analysis
+        EchoChamber: A Simulator for Public Relations Crisis Dynamics
         </Title>
         <Paragraph className="page-description">
-          Select classic PR cases and simulate public opinion propagation using LLM-based multi-agent systems.
+        Analyze public opinion propagation through multi-agent llm-based simulation.
         </Paragraph>
       </div>
 

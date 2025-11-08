@@ -41,10 +41,10 @@ const HomePage: React.FC<HomePageProps> = ({
               <div className="card-background"></div>
               <div className="card-header">
                 <ExperimentOutlined className="scenario-icon" />
-                <Title level={3} className="scenario-title">Scenario 1: Influencer Dynamics</Title>
+                <Title level={3} className="scenario-title">Case Study 1: Real-world Fidelity</Title>
               </div>
               <Paragraph className="scenario-description">
-                Analyze how key influencers shape public discourse and impact opinion trends within a simulated social network.
+              Simulate public reactions to some typical public relations crisis event and evaluate the difference between the real world and our simulation.
               </Paragraph>
               <Button
                 type="primary"
@@ -53,7 +53,7 @@ const HomePage: React.FC<HomePageProps> = ({
                 onClick={onNavigateToScenario1}
                 icon={<ArrowRightOutlined />}
               >
-                Explore Scenario
+                Explore Case Study
               </Button>
             </div>
           </div>
@@ -63,10 +63,10 @@ const HomePage: React.FC<HomePageProps> = ({
               <div className="card-background"></div>
               <div className="card-header">
                 <HistoryOutlined className="scenario-icon" />
-                <Title level={3} className="scenario-title">Scenario 2: Yesterday Once More</Title>
+                <Title level={3} className="scenario-title">Case Study 2: User-specified Simulation</Title>
               </div>
               <Paragraph className="scenario-description">
-                Simulate public reactions to some typical public relations crisis event and evaluate the difference between the real world and our simulation.
+                Analyze how key influencers shape public discourse and impact opinion trends within a simulated social network.
               </Paragraph>
               <Button
                 type="primary"
@@ -75,7 +75,7 @@ const HomePage: React.FC<HomePageProps> = ({
                 onClick={onNavigateToScenario2}
                 icon={<ArrowRightOutlined />}
               >
-                Explore Scenario
+                Explore Case Study
               </Button>
             </div>
           </div>

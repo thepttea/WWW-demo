@@ -26,9 +26,9 @@ const Dashboard: React.FC = () => {
           />
         );
       case 'scenario1':
-        return <Scenario1Page />;
-      case 'scenario2':
         return <Scenario2Page />;
+      case 'scenario2':
+        return <Scenario1Page />;
       default:
         return (
           <HomePage
