@@ -143,7 +143,18 @@ const Scenario1ReportPage: React.FC<Scenario1ReportPageProps> = ({
                   <div className="dimension-header">
                     <Title level={4} className="dimension-title">{dimensionName}</Title>
                     <div className="dimension-meta">
-                      <Tag color="blue">Weight: {(weight * 100).toFixed(0)}%</Tag>
+                      <Tag 
+                        style={{
+                          borderRadius: 12,
+                          padding: '0 10px',
+                          fontWeight: 500,
+                          background: 'rgba(37, 99, 235, 0.12)',
+                          border: '1px solid rgba(37, 99, 235, 0.18)',
+                          color: '#2563eb',
+                        }}
+                      >
+                        Weight: {(weight * 100).toFixed(0)}%
+                      </Tag>
                       <div className="dimension-score">
                         <Progress
                           type="circle"
