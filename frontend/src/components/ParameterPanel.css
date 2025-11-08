@@ -4,10 +4,10 @@
   flex-direction: column;
   border: none;
   border-radius: 12px;
-  background: rgba(16, 25, 34, 0.1);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.25);
   overflow: hidden;
 }
 
@@ -21,7 +21,7 @@
 
 .panel-title {
   margin-bottom: 24px !important;
-  color: white !important;
+  color: #0f172a !important;
   font-weight: 700;
   font-size: 24px;
   font-family: 'Space Grotesk', sans-serif;
@@ -49,7 +49,7 @@
   display: block;
   font-size: 14px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(30, 41, 59, 0.65);
   margin-bottom: 4px;
 }
 
@@ -58,31 +58,31 @@
 }
 
 .parameter-input .ant-input-number {
-  background: rgba(0, 0, 0, 0.2) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 8px !important;
-  color: white !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(148, 163, 184, 0.35) !important;
+  border-radius: 10px !important;
+  color: #0f172a !important;
 }
 
 .parameter-input .ant-input-number-input {
   background: transparent !important;
-  color: white !important;
+  color: #0f172a !important;
   border: none !important;
 }
 
 .parameter-input .ant-input-number:hover {
-  border-color: #137fec !important;
+  border-color: #2563eb !important;
 }
 
 .parameter-input .ant-input-number-focused {
-  border-color: #137fec !important;
-  box-shadow: 0 0 0 2px rgba(19, 127, 236, 0.2) !important;
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.18) !important;
 }
 
 .strategy-notice {
   margin-top: auto;
   padding: 16px;
-  background: rgba(19, 127, 236, 0.2);
+  background: rgba(37, 99, 235, 0.18);
   border-radius: 8px;
   text-align: center;
 }
@@ -91,7 +91,7 @@
   margin: 0;
   font-size: 14px;
   font-weight: 500;
-  color: white;
+  color: rgba(15, 23, 42, 0.8);
 }
 
 /* 滚动条样式 */
@@ -100,15 +100,15 @@
 }
 
 .parameters-container::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(148, 163, 184, 0.2);
   border-radius: 2px;
 }
 
 .parameters-container::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(100, 116, 139, 0.5);
   border-radius: 2px;
 }
 
 .parameters-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(71, 85, 105, 0.7);
 }

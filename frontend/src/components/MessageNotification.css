@@ -10,20 +10,20 @@
 
 /* 消息通知主体 - 手机通知样式 */
 .message-notification {
-  background: rgba(16, 25, 34, 0.95);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
   margin: 16px;
-  padding: 16px;
+  padding: 18px;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: 14px;
   pointer-events: auto; /* 恢复点击事件 */
   animation: slideInFromRight 0.3s ease-out;
-  color: white;
+  color: rgba(15, 23, 42, 0.85);
   max-width: 500px;
   margin-left: auto; /* 右对齐 */
 }
@@ -81,7 +81,7 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: rgba(19, 127, 236, 0.2);
+  background: rgba(37, 99, 235, 0.18);
   border-radius: 50%;
 }
 
@@ -95,7 +95,7 @@
 .message-notification-title {
   font-size: 14px;
   font-weight: 600;
-  color: white;
+  color: rgba(15, 23, 42, 0.9);
   margin-bottom: 4px;
   line-height: 1.4;
 }
@@ -103,7 +103,7 @@
 /* 通知描述 */
 .message-notification-description {
   font-size: 12px;
-  color: #9ca3af;
+  color: rgba(30, 41, 59, 0.7);
   line-height: 1.4;
   word-break: break-word;
   margin-bottom: 8px;
@@ -112,7 +112,7 @@
 /* 接收者信息 */
 .message-notification-receivers {
   font-size: 11px;
-  color: #60a5fa;
+  color: #2563eb;
   line-height: 1.4;
   margin-bottom: 8px;
 }
@@ -120,23 +120,23 @@
 /* 消息内容 */
 .message-notification-content-text {
   font-size: 11px;
-  color: #d1d5db;
+  color: rgba(30, 41, 59, 0.68);
   line-height: 1.4;
 }
 
 .message-notification-content-text strong {
-  color: #f3f4f6;
+  color: #1f2937;
   font-weight: 600;
 }
 
 /* 消息内容预览 */
 .message-content-preview {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 8px;
   padding: 8px;
   margin-top: 4px;
   font-style: italic;
-  border-left: 3px solid #3b82f6;
+  border-left: 3px solid #2563eb;
 }
 
 /* 关闭按钮 */
@@ -147,17 +147,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(148, 163, 184, 0.18);
   border-radius: 50%;
   cursor: pointer;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(51, 65, 85, 0.6);
   transition: all 0.2s ease;
 }
 
 .message-notification-close:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
+  background: rgba(37, 99, 235, 0.18);
+  color: #1d4ed8;
 }
 
 /* 响应式设计 */

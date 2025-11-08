@@ -7,18 +7,27 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: #101922;
-  color: #e2e8f0;
+  background: #f5f7fb;
+  color: #1f2937;
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+  --color-border: rgba(148, 163, 184, 0.25);
+  --glass-background: rgba(255, 255, 255, 0.75);
+  --glass-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+  --primary-color: #2563eb;
+  --primary-color-hover: #1d4ed8;
+  --text-muted: rgba(30, 41, 59, 0.65);
+}
+
 #root {
   height: 100%;
-  background: #101922;
-  color: #e2e8f0;
+  background: #f5f7fb;
+  color: #1f2937;
 }
 
 /* Ant Design Component Style Overrides */
@@ -52,17 +61,17 @@ html, body {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(148, 163, 184, 0.2);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(100, 116, 139, 0.5);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(71, 85, 105, 0.7);
 }
 
 .dark ::-webkit-scrollbar-track {

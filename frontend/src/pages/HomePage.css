@@ -13,13 +13,13 @@
   z-index: 0;
   height: 100%;
   width: 100%;
-  background: #101922;
+  background: linear-gradient(180deg, rgba(246, 249, 255, 1) 0%, rgba(234, 240, 252, 1) 40%, rgba(224, 231, 247, 1) 100%);
 }
 
 .background-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 80% at 50% -20%, rgba(19, 127, 236, 0.3), rgba(255, 255, 255, 0));
+  background: radial-gradient(ellipse 80% 80% at 50% -20%, rgba(37, 99, 235, 0.28), rgba(255, 255, 255, 0));
 }
 
 .home-content {
@@ -44,7 +44,7 @@
 }
 
 .hero-title {
-  color: white !important;
+  color: #0f172a !important;
   font-weight: 700 !important;
   font-size: 48px !important;
   line-height: 1.1 !important;
@@ -53,7 +53,7 @@
 }
 
 .hero-description {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(30, 41, 59, 0.75) !important;
   font-size: 18px !important;
   line-height: 1.6 !important;
   margin: 0 auto !important;
@@ -78,23 +78,24 @@
 .scenario-card {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 24px;
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
 }
 
 .scenario-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 25px 50px rgba(19, 127, 236, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 30px 70px rgba(37, 99, 235, 0.18);
 }
 
 .glass-effect {
-  background: rgba(16, 25, 34, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
 .card-content {
@@ -113,9 +114,9 @@
   width: 192px;
   height: 192px;
   border-radius: 50%;
-  background: rgba(19, 127, 236, 0.2);
-  opacity: 0.5;
-  filter: blur(48px);
+  background: rgba(37, 99, 235, 0.22);
+  opacity: 0.55;
+  filter: blur(64px);
   transition: all 0.5s ease;
 }
 
@@ -131,19 +132,19 @@
 
 .scenario-icon {
   font-size: 32px;
-  color: #137fec;
+  color: #2563eb;
   margin-bottom: 8px;
 }
 
 .scenario-title {
-  color: white !important;
+  color: #0f172a !important;
   font-weight: 700 !important;
   font-size: 24px !important;
   margin-bottom: 0 !important;
 }
 
 .scenario-description {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: rgba(30, 41, 59, 0.75) !important;
   font-size: 16px !important;
   line-height: 1.6 !important;
   margin-bottom: 0 !important;
@@ -151,24 +152,24 @@
 }
 
 .scenario-button {
-  background: #137fec !important;
-  border-color: #137fec !important;
-  color: white !important;
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   font-size: 14px !important;
   height: 48px !important;
   border-radius: 8px !important;
-  box-shadow: 0 4px 12px rgba(19, 127, 236, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.24) !important;
   transition: all 0.3s ease !important;
   margin-top: 16px !important;
   align-self: flex-start;
 }
 
 .scenario-button:hover {
-  background: #0f6fd4 !important;
-  border-color: #0f6fd4 !important;
-  transform: scale(1.05) !important;
-  box-shadow: 0 6px 16px rgba(19, 127, 236, 0.4) !important;
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.28) !important;
 }
 
 .home-footer {
@@ -176,10 +177,11 @@
   z-index: 10;
   width: 100%;
   padding: 24px 16px;
-  background: rgba(16, 25, 34, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 -12px 30px rgba(15, 23, 42, 0.06);
 }
 
 .footer-content {
@@ -189,7 +191,7 @@
 }
 
 .footer-text {
-  color: rgba(255, 255, 255, 0.5) !important;
+  color: rgba(30, 41, 59, 0.6) !important;
   font-size: 14px !important;
   margin: 0 !important;
 }

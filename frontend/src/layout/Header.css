@@ -2,13 +2,14 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background: rgba(16, 25, 34, 0.1);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
   padding: 0;
   height: 64px;
   line-height: 64px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
 }
 
 .header-content {
@@ -36,7 +37,7 @@
 .logo-icon {
   width: 32px;
   height: 32px;
-  color: #137fec;
+  color: #2563eb;
 }
 
 .logo-text {
@@ -59,23 +60,23 @@
 }
 
 .header-menu .ant-menu-item {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(15, 23, 42, 0.72);
   font-weight: 500;
   font-size: 14px;
   padding: 0 20px;
   margin: 0 8px;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: all 0.3s;
 }
 
 .header-menu .ant-menu-item:hover {
-  color: #137fec;
-  background: rgba(19, 127, 236, 0.1);
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.12);
 }
 
 .header-menu .ant-menu-item-selected {
-  color: #137fec;
-  background: rgba(19, 127, 236, 0.1);
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.16);
 }
 
 .header-right {
@@ -95,7 +96,7 @@
 }
 
 .header-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(37, 99, 235, 0.12);
 }
 
 @media (max-width: 768px) {

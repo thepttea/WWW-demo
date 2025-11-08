@@ -1,5 +1,5 @@
 .content-modal .ant-modal-content {
-  background: rgba(16, 25, 34, 0.95);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -27,7 +27,7 @@
 }
 
 .content-modal .ant-modal-close:hover {
-  color: #137fec;
+  color: #2563eb;
 }
 
 .modal-content {

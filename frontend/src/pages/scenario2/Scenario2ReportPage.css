@@ -3,8 +3,9 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  background: linear-gradient(180deg, rgba(246, 249, 255, 0.95) 0%, rgba(234, 240, 252, 1) 45%, rgba(224, 231, 247, 1) 100%);
   min-height: 100vh;
+  color: rgba(15, 23, 42, 0.9);
 }
 
 .page-header {
@@ -22,7 +23,7 @@
 }
 
 .page-title {
-  color: #ffffff !important;
+  color: #0f172a !important;
   font-weight: 700;
   font-size: 28px;
   margin-bottom: 8px !important;
@@ -32,12 +33,12 @@
 }
 
 .title-icon {
-  color: #1890ff;
+  color: #2563eb;
   font-size: 32px;
 }
 
 .page-description {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(30, 41, 59, 0.68);
   font-size: 16px;
   margin: 0;
 }
@@ -54,11 +55,12 @@
 
 /* Glassmorphism效果 */
 .glassmorphism {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
 }
 
 /* 案例信息卡片 */
@@ -71,14 +73,14 @@
 }
 
 .case-title {
-  color: #ffffff !important;
+  color: #0f172a !important;
   font-weight: 600;
   font-size: 20px;
   margin-bottom: 12px !important;
 }
 
 .case-name {
-  color: #ffffff;
+  color: #0f172a;
   font-size: 18px;
   font-weight: 500;
   display: block;
@@ -86,7 +88,7 @@
 }
 
 .case-id {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(71, 85, 105, 0.6);
   font-size: 14px;
   display: block;
 }
@@ -109,13 +111,13 @@
 .similarity-value {
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: #0f172a;
   line-height: 1;
 }
 
 .similarity-label {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(30, 41, 59, 0.68);
   margin-top: 4px;
 }
 
@@ -126,6 +128,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  font-weight: 600;
 }
 
 /* 详细报告卡片 */
@@ -134,7 +137,7 @@
 }
 
 .section-title {
-  color: #ffffff !important;
+  color: #0f172a !important;
   font-weight: 600;
   font-size: 20px;
   margin-bottom: 24px !important;
@@ -144,19 +147,20 @@
 }
 
 .section-icon {
-  color: #1890ff;
+  color: #2563eb;
   font-size: 20px;
 }
 
 .report-content-text {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 16px;
   padding: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
 }
 
 .report-text {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(15, 23, 42, 0.9);
   font-size: 15px;
   line-height: 1.6;
   margin: 0;
@@ -169,7 +173,7 @@
 .report-text h4,
 .report-text h5,
 .report-text h6 {
-  color: #ffffff;
+  color: #0f172a;
   margin-top: 16px;
   margin-bottom: 8px;
   font-weight: 600;
@@ -183,14 +187,14 @@
 .report-text h6 { font-size: 13px; }
 
 .report-text p {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(15, 23, 42, 0.9);
   margin-bottom: 12px;
   line-height: 1.6;
 }
 
 .report-text ul,
 .report-text ol {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(15, 23, 42, 0.9);
   margin-bottom: 12px;
   padding-left: 20px;
 }
@@ -201,18 +205,18 @@
 }
 
 .report-text strong {
-  color: #ffffff;
+  color: #0f172a;
   font-weight: 600;
 }
 
 .report-text em {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(30, 41, 59, 0.78);
   font-style: italic;
 }
 
 .report-text code {
-  background: rgba(255, 255, 255, 0.1);
-  color: #1890ff;
+  background: rgba(148, 163, 184, 0.25);
+  color: #2563eb;
   padding: 2px 6px;
   border-radius: 4px;
   font-family: 'Courier New', monospace;
@@ -220,8 +224,8 @@
 }
 
 .report-text pre {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(37, 99, 235, 0.07);
+  border: 1px solid rgba(148, 163, 184, 0.25);
   border-radius: 6px;
   padding: 12px;
   margin: 12px 0;
@@ -230,15 +234,15 @@
 
 .report-text pre code {
   background: none;
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(15, 23, 42, 0.9);
   padding: 0;
 }
 
 .report-text blockquote {
-  border-left: 3px solid #1890ff;
+  border-left: 3px solid #2563eb;
   padding-left: 12px;
   margin: 12px 0;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(30, 41, 59, 0.78);
   font-style: italic;
 }
 
@@ -250,19 +254,19 @@
 
 .report-text th,
 .report-text td {
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(148, 163, 184, 0.3);
   padding: 8px 12px;
   text-align: left;
 }
 
 .report-text th {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: rgba(148, 163, 184, 0.25);
+  color: #0f172a;
   font-weight: 600;
 }
 
 .report-text td {
-  color: rgba(255, 255, 255, 0.9);
+  color: rgba(15, 23, 42, 0.9);
 }
 
 /* 维度评估卡片 */
@@ -278,13 +282,14 @@
 }
 
 .dimension-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   height: 100%;
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
 }
 
 .dimension-header {
@@ -295,7 +300,7 @@
 }
 
 .dimension-title {
-  color: #ffffff !important;
+  color: #0f172a !important;
   font-weight: 600;
   font-size: 16px;
   margin: 0 !important;
@@ -326,7 +331,7 @@
 }
 
 .comparison-title {
-  color: #ffffff !important;
+  color: #0f172a !important;
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 8px !important;
@@ -335,18 +340,19 @@
 
 .simulation-side,
 .real-case-side {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
-  padding: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
   display: flex;
   flex-direction: column;
   height: 100%;
   min-height: 160px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .simulation-side {
-  border-left: 3px solid #1890ff;
+  border-left: 3px solid #2563eb;
 }
 
 .real-case-side {
@@ -361,7 +367,7 @@
 }
 
 .summary-text {
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(30, 41, 59, 0.78);
   font-size: 12px;
   line-height: 1.4;
   margin: 0;
@@ -378,7 +384,7 @@
 .percentage-value {
   font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
+  color: #0f172a;
   margin-bottom: 6px;
 }
 
@@ -396,7 +402,7 @@
 }
 
 .similarity-breakdown-compact .breakdown-title {
-  color: #ffffff !important;
+  color: #0f172a !important;
   font-weight: 600;
   font-size: 14px;
   margin-bottom: 8px !important;
@@ -413,13 +419,14 @@
 }
 
 .breakdown-mini-item {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 6px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 8px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
 }
 
 .mini-item-header {
@@ -430,7 +437,7 @@
 }
 
 .mini-dimension-name {
-  color: #ffffff;
+  color: #0f172a;
   font-size: 10px;
   font-weight: 500;
   flex: 1;
@@ -439,7 +446,7 @@
 }
 
 .mini-contribution {
-  color: #1890ff;
+  color: #2563eb;
   font-size: 10px;
   font-weight: 600;
 }
@@ -450,18 +457,18 @@
 }
 
 .reasoning-summary {
-  color: #1890ff;
+  color: #2563eb;
   font-size: 14px;
   cursor: pointer;
   font-weight: 500;
 }
 
 .reasoning-summary:hover {
-  color: #40a9ff;
+  color: #1d4ed8;
 }
 
 .reasoning-text {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(30, 41, 59, 0.68);
   font-size: 13px;
   line-height: 1.4;
   margin-top: 8px;
@@ -505,15 +512,15 @@
 }
 
 .secondary-button {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: rgba(148, 163, 184, 0.25);
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  color: #0f172a;
 }
 
 .secondary-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: #ffffff;
+  background: rgba(148, 163, 184, 0.3);
+  border-color: rgba(148, 163, 184, 0.4);
+  color: #0f172a;
   transform: translateY(-2px);
 }
 

@@ -23,22 +23,23 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
 }) => {
   const { evaluation, caseId, caseTitle, overallSimilarityPercentage } = reportData;
   const overallSimilarity = overallSimilarityPercentage || evaluation.overall_similarity_percentage || 0;
+  const similarityColor = getSimilarityColor(overallSimilarity);
 
   // Get color based on similarity
-  const getSimilarityColor = (score: number): string => {
-    if (score >= 85) return '#52c41a'; // Highly Similar
-    if (score >= 70) return '#1890ff'; // Similar
-    if (score >= 55) return '#faad14'; // Moderately Similar
-    return '#ff7a45'; // Low Similarity
-  };
+  function getSimilarityColor(score: number): string {
+    if (score >= 85) return '#22c55e'; // Highly Similar
+    if (score >= 70) return '#2563eb'; // Similar
+    if (score >= 55) return '#f59e0b'; // Moderately Similar
+    return '#f97316'; // Low Similarity
+  }
 
   // Get rating based on similarity
-  const getSimilarityRating = (score: number): string => {
+  function getSimilarityRating(score: number): string {
     if (score >= 85) return 'Highly Similar';
     if (score >= 70) return 'Similar';
     if (score >= 55) return 'Moderately Similar';
     return 'Low Similarity';
-  };
+  }
 
   return (
     <div className="scenario2-report-page">
@@ -69,7 +70,7 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
                   <Progress
                     type="circle"
                     percent={overallSimilarity}
-                    strokeColor={getSimilarityColor(overallSimilarity)}
+                    strokeColor={similarityColor}
                     format={() => (
                       <div className="similarity-text">
                         <div className="similarity-value">{overallSimilarity.toFixed(1)}%</div>
@@ -80,8 +81,12 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
                   />
                 </div>
                 <Tag 
-                  className="similarity-tag" 
-                  color={getSimilarityColor(overallSimilarity)}
+                  className="similarity-tag"
+                  style={{
+                    backgroundColor: `${similarityColor}1a`,
+                    borderColor: `${similarityColor}33`,
+                    color: similarityColor,
+                  }}
                 >
                   {getSimilarityRating(overallSimilarity)}
                 </Tag>
@@ -141,7 +146,9 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
                   <div className="dimension-header">
                     <Title level={4} className="dimension-title">{dimensionName}</Title>
                     <div className="dimension-meta">
-                      <Tag color="blue">Weight: {(weight * 100).toFixed(0)}%</Tag>
+                      <Tag color="#2563eb" style={{ borderRadius: 12, padding: '0 10px', fontWeight: 500, background: 'rgba(37, 99, 235, 0.12)', border: '1px solid rgba(37, 99, 235, 0.18)', color: '#1d4ed8' }}>
+                        Weight: {(weight * 100).toFixed(0)}%
+                      </Tag>
                       <div className="similarity-badge">
                         <Progress
                           type="circle"

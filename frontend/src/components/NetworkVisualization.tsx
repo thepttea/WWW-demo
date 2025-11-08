@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Button } from 'antd';
 import { HistoryOutlined } from '@ant-design/icons';
 import NodeDetailModal from './NodeDetailModal';
@@ -123,6 +123,18 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
     senderToPlatform: false,
     platformToReceivers: false
   });
+
+  const baseAssetPath = useMemo(() => {
+    const base = import.meta.env.BASE_URL ?? '/';
+    return base.endsWith('/') ? base : `${base}/`;
+  }, []);
+
+  const platformIcons = useMemo(() => ({
+    Weibo: `${baseAssetPath}icons/weibo.png`,
+    WeChat: `${baseAssetPath}icons/wechat.png`,
+    TikTok: `${baseAssetPath}icons/tiktok.png`,
+    Forum: `${baseAssetPath}icons/forum.png`,
+  }), [baseAssetPath]);
 
 
   // 从实际数据生成消息传播步骤 - 使用后端提供的实际数据
@@ -1218,7 +1230,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
               y={getPlatformCoordinates('Weibo').y - 20}
               width="40"
               height="40"
-              href="/data/icons/weibo.png"
+              href={platformIcons.Weibo}
               className="platform-icon"
             />
           </g>
@@ -1242,7 +1254,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
               y={getPlatformCoordinates('WeChat').y - 20}
               width="40"
               height="40"
-              href="/data/icons/wechat.png"
+              href={platformIcons.WeChat}
               className="platform-icon"
             />
           </g>
@@ -1266,7 +1278,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
               y={getPlatformCoordinates('TikTok').y - 20}
               width="40"
               height="40"
-              href="/data/icons/tiktok.png"
+              href={platformIcons.TikTok}
               className="platform-icon"
             />
           </g>
@@ -1290,7 +1302,7 @@ const NetworkVisualization: React.FC<NetworkVisualizationProps> = ({
               y={getPlatformCoordinates('Forum').y - 20}
               width="40"
               height="40"
-              href="/data/icons/forum.png"
+              href={platformIcons.Forum}
               className="platform-icon"
             />
           </g>

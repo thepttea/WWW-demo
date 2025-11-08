@@ -15,12 +15,12 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, currentScenario, onSc
   return (
     <ConfigProvider
       theme={{
-        algorithm: theme.darkAlgorithm,
+        algorithm: theme.defaultAlgorithm,
         token: {
-          colorPrimary: '#137fec',
-          colorBgBase: '#101922',
-          colorTextBase: '#e2e8f0',
-          borderRadius: 8,
+          colorPrimary: '#2563eb',
+          colorBgBase: '#f5f7fb',
+          colorTextBase: '#1f2937',
+          borderRadius: 12,
           fontFamily: '"Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
         },
         components: {
@@ -30,6 +30,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children, currentScenario, onSc
           },
           Card: {
             colorBgContainer: 'transparent',
+          },
+          Button: {
+            controlHeight: 44,
           },
         },
       }}
