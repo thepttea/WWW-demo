@@ -18,11 +18,11 @@ const Header: React.FC<HeaderProps> = ({ currentScenario, onScenarioChange }) =>
     },
     {
       key: 'scenario1',
-      label: 'Scenario 1',
+      label: 'Case Study 1',
     },
     {
       key: 'scenario2',
-      label: 'Scenario 2',
+      label: 'Case Study 2',
     },
   ];
 
