@@ -7,12 +7,15 @@ import {
 } from '@ant-design/icons';
 import { HistoricalCase } from '../../types';
 import Scenario2ReportPage from './Scenario2ReportPage';
+import EvaluationMetricsReportPage from './EvaluationMetricsReportPage';
 import VisualizationArea from '../scenario1/VisualizationArea';
 import { useStartScenario2Simulation, useScenario2SimulationStatus, useGenerateScenario2Report, useAddScenario2Strategy, useScenario2SimulationResult, useResetSimulation } from '../../hooks/useApi';
 import { transformSimulationResultToNetworkData } from '../../utils/dataTransformer';
 import './Scenario2SimulationPage.css';
 
 const { Title, Text } = Typography;
+
+type ReportType = 'comparative' | 'metrics';
 
 interface Scenario2SimulationPageProps {
   selectedCase: HistoricalCase | null;
@@ -29,6 +32,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
 }) => {
   const [simulationId, setSimulationId] = useState<string | null>(null);
   const [showResults, setShowResults] = useState(false);
+  const [currentReportType, setCurrentReportType] = useState<ReportType>('comparative');
   const [isSimulationRunning, setIsSimulationRunning] = useState<boolean>(false);
   const [hasCompletedSimulation, setHasCompletedSimulation] = useState<boolean>(false);
   const [isStartingNewRound, setIsStartingNewRound] = useState<boolean>(false);
@@ -484,26 +488,46 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   };
 
 
-  // If the results page is displayed, render the results comparison page
+  // Handle report switching
+  const handleSwitchReport = (reportType: ReportType) => {
+    setCurrentReportType(reportType);
+  };
+
+  // If the results page is displayed, render the appropriate report based on currentReportType
   if (showResults && reportData) {
-    return (
-      <Scenario2ReportPage
-        reportData={reportData}
-        onBack={() => {
-          setShowResults(false);
-          setIsReportJustClosed(true);
-          setShouldKeepFinalState(true);
-          // Do not reset the animation state, keep the current animation state
-        }}
-        onClose={() => {
-          setShowResults(false);
-          setIsReportJustClosed(true);
-          setShouldKeepFinalState(true);
-          // Do not reset the animation state, keep the current animation state
-        }}
-        onReset={handleReset}
-      />
-    );
+    const commonProps = {
+      onBack: () => {
+        setShowResults(false);
+        setIsReportJustClosed(true);
+        setShouldKeepFinalState(true);
+        // Do not reset the animation state, keep the current animation state
+      },
+      onClose: () => {
+        setShowResults(false);
+        setIsReportJustClosed(true);
+        setShouldKeepFinalState(true);
+        // Do not reset the animation state, keep the current animation state
+      },
+      onReset: handleReset,
+      onSwitchReport: handleSwitchReport,
+      currentReportType: currentReportType,
+    };
+
+    if (currentReportType === 'comparative') {
+      return (
+        <Scenario2ReportPage
+          reportData={reportData}
+          {...commonProps}
+        />
+      );
+    } else {
+      return (
+        <EvaluationMetricsReportPage
+          metricsData={reportData?.evaluationMetrics}  // Pass backend data
+          {...commonProps}
+        />
+      );
+    }
   }
 
   return (

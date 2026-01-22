@@ -13,6 +13,8 @@ interface Scenario2ReportPageProps {
   onBack: () => void;
   onClose: () => void;
   onReset: () => void;
+  onSwitchReport?: (reportType: 'comparative' | 'metrics') => void;
+  currentReportType?: 'comparative' | 'metrics';
 }
 
 const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
@@ -20,6 +22,8 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
   onBack,
   onClose,
   onReset,
+  onSwitchReport,
+  currentReportType,
 }) => {
   const { evaluation, caseId, caseTitle, overallSimilarityPercentage } = reportData;
   const overallSimilarity = overallSimilarityPercentage || evaluation.overall_similarity_percentage || 0;
@@ -255,6 +259,17 @@ const Scenario2ReportPage: React.FC<Scenario2ReportPageProps> = ({
         {/* Action Buttons */}
         <div className="action-buttons">
           <Space size="large">
+            {onSwitchReport && (
+              <Button
+                size="large"
+                type="primary"
+                className="action-button"
+                onClick={() => onSwitchReport('metrics')}
+                icon={<BarChartOutlined />}
+              >
+                View Evaluation Metrics
+              </Button>
+            )}
             <Button
               size="large"
               className="action-button secondary-button"

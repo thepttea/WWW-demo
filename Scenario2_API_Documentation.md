@@ -373,6 +373,40 @@
     "caseId": "CASE-01",
     "caseTitle": "'Ascending Dragon' Fireworks Incident",
     "content": "# 对比分析报告\n\n## 1. 模拟与真实案例对比\n- 模拟案例：Arc'teryx烟花事件...\n- 真实案例：Arc'teryx烟花事件...\n\n## 2. 9维度相似度分析\n- 总体立场倾向：相似度85.5%...\n- 舆论演变方向：相似度82.3%...\n\n## 3. 关键差异分析\n- 模拟中的情绪波动比真实案例更剧烈...\n\n## 4. 模型验证结果\n- 总体相似度：84.2%，评级为"高相似度"...",
+    "evaluationMetrics": [
+      {
+        "group": 1,
+        "pr_round": "Round 1",
+        "r_e": 0.62,
+        "JSD_e": 0.39,
+        "KL_p_e_m_e": 0.41,
+        "KL_p_hat_e_m_e": 0.37,
+        "statistics": {
+          "mean_y_e": 45.2,
+          "mean_y_hat_e": 44.8,
+          "std_y_e": 12.5,
+          "std_y_hat_e": 12.1,
+          "rmse": 3.2,
+          "mae": 2.5
+        }
+      },
+      {
+        "group": 2,
+        "pr_round": "Round 2",
+        "r_e": 0.66,
+        "JSD_e": 0.34,
+        "KL_p_e_m_e": 0.36,
+        "KL_p_hat_e_m_e": 0.32,
+        "statistics": {
+          "mean_y_e": 48.5,
+          "mean_y_hat_e": 48.1,
+          "std_y_e": 11.8,
+          "std_y_hat_e": 11.5,
+          "rmse": 2.9,
+          "mae": 2.2
+        }
+      }
+    ],
     "evaluation": {
       "evaluation_type": "comparative",
       "overall_similarity_percentage": 84.2,
@@ -644,12 +678,30 @@ interface Scenario2SimulationStatus {
 ### 4.5 对比分析报告模型 (ReportResponse)
 
 ```typescript
+interface EvaluationMetric {
+  group: number;                      // 轮次编号 (1-based)
+  pr_round: string;                   // 轮次标签 (例如: "Round 1")
+  r_e: number;                        // Pearson相关系数 (模拟vs真实)
+  JSD_e: number;                      // Jensen-Shannon散度
+  KL_p_e_m_e: number;                 // KL散度 (真实→模拟)
+  KL_p_hat_e_m_e: number;             // KL散度 (模拟→真实)
+  statistics: {                       // 统计指标
+    mean_y_e: number;                 // 真实数据平均值
+    mean_y_hat_e: number;             // 模拟数据平均值
+    std_y_e: number;                  // 真实数据标准差
+    std_y_hat_e: number;              // 模拟数据标准差
+    rmse: number;                     // 均方根误差
+    mae: number;                      // 平均绝对误差
+  };
+}
+
 interface ReportResponse {
   reportId: string;                   // 报告ID
   reportType: string;                 // 报告类型 ("scenario2_comparative")
   caseId: string;                     // 案例ID
   caseTitle: string;                  // 案例标题
   content: string;                    // 报告内容 (Markdown格式)
+  evaluationMetrics: EvaluationMetric[]; // 【新增】轨迹保真度评估指标
   evaluation: {                       // 9维度对比评估结果
     evaluation_type: string;          // 评估类型 ("comparative")
     overall_similarity_percentage: number; // 总体相似度 0-100
@@ -683,6 +735,32 @@ interface ReportResponse {
   generatedAt: string;                // 生成时间
 }
 ```
+
+**评估指标说明 (evaluationMetrics)**:
+
+`evaluationMetrics` 字段提供了轨迹保真度的量化评估，包含以下指标：
+
+1. **r_e (Pearson Correlation)**
+   - 范围: -1 到 1
+   - 含义: 模拟轨迹与真实轨迹的线性相关程度
+   - 值越接近1，表示轨迹越相似
+
+2. **JSD_e (Jensen-Shannon Divergence)**
+   - 范围: 0 到 1
+   - 含义: 模拟与真实的概率分布差异
+   - 值越接近0，表示分布越相似
+
+3. **KL Divergence (KL_p_e_m_e & KL_p_hat_e_m_e)**
+   - 范围: 0 到 ∞
+   - 含义: 非对称的分布差异度量
+   - 值越小，表示分布越接近
+
+4. **Statistics (统计指标)**
+   - `rmse`: 轨迹点的均方根误差
+   - `mae`: 轨迹点的平均绝对误差
+   - `mean/std`: 均值和标准差对比
+
+**注意**: 当前版本的 `evaluationMetrics` 使用静态数据。未来版本将基于实际模拟结果动态计算这些指标。
 
 ---
 

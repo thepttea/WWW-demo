@@ -114,6 +114,24 @@ export interface ReportRequest {
   includeVisualizations: boolean;
 }
 
+// Evaluation metrics for trajectory fidelity assessment
+export interface EvaluationMetric {
+  group: number;              // Round number (1-based)
+  pr_round: string;           // Round label (e.g., "Round 1")
+  r_e: number;                // Pearson correlation coefficient
+  JSD_e: number;              // Jensen-Shannon Divergence
+  KL_p_e_m_e: number;         // KL divergence (real → simulation)
+  KL_p_hat_e_m_e: number;     // KL divergence (simulation → real)
+  statistics: {
+    mean_y_e: number;         // Ground truth mean stance
+    mean_y_hat_e: number;     // Simulation mean stance
+    std_y_e: number;          // Ground truth standard deviation
+    std_y_hat_e: number;      // Simulation standard deviation
+    rmse: number;             // Root Mean Square Error
+    mae: number;              // Mean Absolute Error
+  };
+}
+
 export interface ReportResponse {
   reportId: string;
   reportType: string;
@@ -134,6 +152,7 @@ export interface ReportResponse {
   caseId?: string; // Scenario2
   caseTitle?: string; // Scenario2
   overallSimilarityPercentage?: number; // Scenario2
+  evaluationMetrics?: EvaluationMetric[]; // Scenario2: Trajectory fidelity metrics
   generatedAt: string;
 }
 
