@@ -4,9 +4,7 @@
 LLM_PROVIDER = "CUSTOM_OPENAI"
 
 # Custom API Base URL
-CUSTOM_API_BASE = "https://api.claude-plus.top/v1"
+CUSTOM_API_BASE = "https://api.deepseek.com"
 
 # API key
-# API_KEY = "sk-onq4u79lAEMpVsNHlBwVP5f9YUmSTBybnB1UfP4T5TLF6TLi"
-# API_KEY = "sk-7HDcNWdvjgiLodWZlB05tXOJwojPxfDQlWQArrtvK0a0zysU"
-API_KEY = "sk-fVsCDaKRZoyCjVQ8nPYApeuzZwsqodsSDgSjCr0JQ43Pgifg"
+API_KEY = "sk-5e5f47444da0417b8c5291b47a087795"

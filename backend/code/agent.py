@@ -28,7 +28,7 @@ class AgentState(TypedDict):
     response: CognitiveStep
 
 class Agent:
-    def __init__(self, agent_id: str, persona: dict, llm_model: str = "gpt-4o-mini"):
+    def __init__(self, agent_id: str, persona: dict, llm_model: str = "deepseek-chat"):
         self.id = agent_id
         self.persona = persona
         self.llm = get_llm(model_name=llm_model)

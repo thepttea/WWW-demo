@@ -11,7 +11,7 @@ def get_llm(model_name="gpt-4o-mini", temperature=0.7):
     # Unify the use of the OpenAI client
     base_url = config.CUSTOM_API_BASE
     log_message(f"--- Loading model: {model_name} ---")
-        
+    model_name = "deepseek-chat"
     return ChatOpenAI(
         model=model_name,
         temperature=temperature,
