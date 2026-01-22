@@ -1,19 +1,22 @@
-# EchoChamber: A Multi-Agent LLM-based Simulation Platform for Public Relations Crisis Dynamics
+# DualMind: Understanding Cognitive-Affective Cascades in Public Opinion Dissemination via Multi-Agent Simulation
 
-EchoChamber is a dynamic multi-agent system powered by Large Language Models (LLMs) to simulate the formation and evolution of public opinion in complex social network environments. The project features a full-stack architecture with a React frontend and a Python FastAPI backend.
+DualMind is an advanced multi-agent simulation platform powered by Large Language Models (LLMs) that models the dual interplay between cognitive beliefs and affective responses in public opinion dynamics. The project features a full-stack architecture with a React frontend and a Python FastAPI backend.
 
-This framework brings a miniature, dynamic public sphere to life by assigning unique "Personas" to each agent, simulating their information consumption, decision-making processes, and content publishing behaviors across various social media platforms.
+This framework introduces a novel dual-component agent architecture that explicitly models how rapidly fluctuating emotions and slowly evolving cognitive states interact across heterogeneous agent personas. By simulating information consumption, decision-making processes, and content publishing behaviors across various social media platforms, DualMind provides a high-fidelity environment for understanding cognitive-affective cascades in crisis communication.
 
 ## Core Features
 
+*   **Dual-Component Agent Architecture**: Explicitly models the interplay between slowly evolving cognitive beliefs (semantic persona) and rapidly fluctuating affective states (emotional responses), enabling realistic simulation of opinion dynamics.
 *   **Dual Simulation Scenarios**:
-    *   **Scenario 1**: A sandbox mode where users can define a PR crisis, collaboratively refine a response strategy with an LLM assistant, and simulate its impact.
-    *   **Scenario 2**: A "yesterday once more" mode where users can select historical PR cases, simulate the events, and compare the simulation's outcome with real-world results.
-*   **Interactive LLM Strategy Chat**: An integrated chat interface allows users to brainstorm, develop, and refine their PR strategies with guidance from a specialized LLM expert before launching a simulation.
-*   **Dynamic Social Network Simulation**: The backend creates a complex social network graph with varying relationship strengths, influencing how information spreads among agents.
-*   **Cross-Platform Simulation**: Simulates distinct information distribution logics for different social media archetypes (e.g., Twitter, WeChat, Forums).
-*   **Real-time Visualization**: The frontend is designed to visualize the network graph and the flow of public opinion as the simulation progresses (backend WebSocket integration pending).
-*   **Comprehensive API**: A well-documented FastAPI backend provides clear endpoints for both simulation scenarios.
+    *   **Scenario 1**: Retrospective analysis of real-world PR crises, allowing users to select from 15 historical cases and compare simulation outcomes with actual events.
+    *   **Scenario 2**: Interactive strategy rehearsal sandbox where users can define custom PR scenarios, refine strategies with LLM assistance, and test their effectiveness.
+*   **Cognitive-Affective State Modeling**: Each agent maintains both a slowly evolving semantic persona (cognitive beliefs) and rapidly fluctuating affective states (emotional responses), updated through gated consolidation mechanisms.
+*   **Interactive LLM Strategy Chat**: Integrated chat interface for collaborative strategy development with LLM guidance before simulation launch.
+*   **Dynamic Social Network Simulation**: Complex multi-platform social networks with heterogeneous relationship strengths and platform-specific propagation rules.
+*   **Cross-Platform Dynamics**: Distinct information distribution mechanisms for WeChat Moments, Weibo/Twitter, TikTok, and Forum platforms.
+*   **High-Fidelity Evaluation**: 9-dimensional LLM-driven evaluation system for assessing trajectory similarity and outcome fidelity against real-world cases.
+*   **Real-time Visualization**: Interactive network visualization showing opinion propagation and agent state evolution.
+*   **Comprehensive API**: Well-documented FastAPI backend with endpoints for both retrospective analysis and prospective simulation scenarios.
 
 ## Tech Stack
 
@@ -121,5 +124,5 @@ You must start the backend server first, then the frontend development server.
     ```
 *   The Vite development server will start, and it should automatically open your browser to **http://localhost:3000**.
 
-You can now interact with the EchoChamber application. The frontend will proxy API requests to the backend, allowing the two services to communicate.
+You can now interact with the DualMind application. The frontend will proxy API requests to the backend, allowing the two services to communicate.
 
