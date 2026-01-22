@@ -12,8 +12,8 @@ from logger import log_message
 
 # Initialize FastAPI application
 app = FastAPI(
-    title="EchoChamber Multi-Agent Simulation API",
-    description="API for managing LLM chat sessions and multi-agent simulations.",
+    title="DualMind Multi-Agent Simulation API",
+    description="API for cognitive-affective cascade modeling in public opinion dissemination via multi-agent simulation.",
     version="1.0.0"
 )
 

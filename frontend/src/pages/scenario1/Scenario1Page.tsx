@@ -425,10 +425,10 @@ const Scenario1Page: React.FC = () => {
     <div className="scenario1-page">
       <div className="page-header">
         <Title level={2} className="page-title">
-          EchoChamber: A Simulator for Public Relations Crisis Dynamics
+          DualMind: Cognitive-Affective Simulation for PR Crisis Dynamics
         </Title>
         <Paragraph className="page-description">
-          Analyze public opinion propagation through multi-agent llm-based simulation.
+          Simulate public opinion evolution through dual-component agent architecture modeling cognitive beliefs and affective responses.
         </Paragraph>
       </div>
 

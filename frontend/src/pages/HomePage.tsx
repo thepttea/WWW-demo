@@ -27,11 +27,11 @@ const HomePage: React.FC<HomePageProps> = ({
       <div className="home-content">
         <div className="hero-section">
           <Title level={1} className="hero-title">
-            EchoChamber : A Multi-Agent Public Relations Simulator
+            DualMind: Understanding Cognitive-Affective Cascades in Public Opinion
           </Title>
           <Paragraph className="hero-description">
-            Explore the dynamics of public opinion with our advanced multi-agent simulation system. 
-            Understand how opinions form, spread, and evolve in complex social networks.
+            A multi-agent simulation platform that models the interplay between cognitive beliefs and affective responses in public opinion dissemination. 
+            Explore how emotions and cognition shape crisis communication dynamics across social networks.
           </Paragraph>
         </div>
 
@@ -85,7 +85,7 @@ const HomePage: React.FC<HomePageProps> = ({
       <footer className="home-footer">
         <div className="footer-content">
           <Paragraph className="footer-text">
-            © 2025 EchoChamber. All Rights Reserved.
+            © 2025 DualMind. All Rights Reserved.
           </Paragraph>
         </div>
       </footer>

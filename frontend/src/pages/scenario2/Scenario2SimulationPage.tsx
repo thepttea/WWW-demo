@@ -510,7 +510,7 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
     <div className="scenario2-simulation-page">
       <div className="page-header">
         <Title level={2} className="page-title">
-          EchoChamber: A Simulator for Public Relations Crisis Dynamics
+          DualMind: Cognitive-Affective Simulation for PR Crisis Dynamics
         </Title>
       </div>
 
