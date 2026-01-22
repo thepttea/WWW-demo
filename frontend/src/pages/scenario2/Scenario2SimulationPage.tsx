@@ -6,9 +6,9 @@ import {
   PlayCircleOutlined
 } from '@ant-design/icons';
 import { HistoricalCase } from '../../types';
-import Scenario2ReportPage from './Scenario2ReportPage';
+import EvaluationMetricsReportPage from './EvaluationMetricsReportPage';
 import VisualizationArea from '../scenario1/VisualizationArea';
-import { useStartScenario2Simulation, useScenario2SimulationStatus, useGenerateScenario2Report, useAddScenario2Strategy, useScenario2SimulationResult, useResetSimulation } from '../../hooks/useApi';
+import { useStartScenario2Simulation, useScenario2SimulationStatus, useAddScenario2Strategy, useScenario2SimulationResult, useResetSimulation } from '../../hooks/useApi';
 import { transformSimulationResultToNetworkData } from '../../utils/dataTransformer';
 import './Scenario2SimulationPage.css';
 
@@ -34,7 +34,6 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   const [isStartingNewRound, setIsStartingNewRound] = useState<boolean>(false);
   const [currentRound, setCurrentRound] = useState(1);
   const [isGeneratingReport, setIsGeneratingReport] = useState<boolean>(false);
-  const [reportData, setReportData] = useState<any>(null);
   const [animationKey, setAnimationKey] = useState(0); // Used to force reset animation
   const [isReportJustClosed, setIsReportJustClosed] = useState(false); // Track if the report was just closed
   const [shouldKeepFinalState, setShouldKeepFinalState] = useState<boolean>(false); // Flag to determine if the final state should be kept
@@ -42,7 +41,6 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   // API hooks
   const startSimulationMutation = useStartScenario2Simulation();
   const addScenario2StrategyMutation = useAddScenario2Strategy(); // Use Scenario2's API
-  const generateReportMutation = useGenerateScenario2Report();
   const resetSimulationMutation = useResetSimulation(); // Add reset functionality
   const { data: simulationStatusData } = useScenario2SimulationStatus(simulationId, isSimulationRunning);
   // Use Scenario2's data fetching method
@@ -288,37 +286,10 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   };
 
   const handleViewResults = async () => {
-    if (!simulationId) {
-      message.warning('Please run a simulation first');
-      return;
-    }
-
-    // Immediately set the report generation state
-    setIsGeneratingReport(true);
-
-    try {
-      message.loading('Generating report...', 0);
-      const result = await generateReportMutation.mutateAsync({
-        simulationId,
-        reportType: 'comprehensive',
-        includeVisualizations: true,
-      });
-
-      message.destroy();
-      
-      if (result.success && result.data) {
-        setReportData(result.data);
-        setShowResults(true);
-      } else {
-        message.error(result.error?.message || 'Failed to generate report');
-      }
-    } catch (error) {
-      message.destroy();
-      console.error('Failed to generate report:', error);
-      message.error('Failed to generate report');
-    } finally {
-      setIsGeneratingReport(false);
-    }
+    // Directly show the evaluation metrics report page with static data
+    // No need to call API, just set the state to show the new report page
+    setShowResults(true);
+    setIsGeneratingReport(false);
   };
 
   const handleReset = async () => {
@@ -341,7 +312,6 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
       setAnimationKey(0); // Reset animation key
       setIsReportJustClosed(false);
       setShouldKeepFinalState(false);
-      setReportData(null);
       
       // Clear cached network data to prevent old data from being displayed after reset
       previousNetworkDataRef.current = null;
@@ -484,11 +454,10 @@ const Scenario2SimulationPage: React.FC<Scenario2SimulationPageProps> = ({
   };
 
 
-  // If the results page is displayed, render the results comparison page
-  if (showResults && reportData) {
+  // If the results page is displayed, render the evaluation metrics report page
+  if (showResults) {
     return (
-      <Scenario2ReportPage
-        reportData={reportData}
+      <EvaluationMetricsReportPage
         onBack={() => {
           setShowResults(false);
           setIsReportJustClosed(true);

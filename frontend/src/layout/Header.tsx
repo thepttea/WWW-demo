@@ -48,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ currentScenario, onScenarioChange }) =>
                 </defs>
               </svg>
             </div>
-            <h1 className="logo-text">EchoChamber</h1>
+            <h1 className="logo-text">DualMind</h1>
           </div>
         </div>
         
