@@ -9,3 +9,5 @@ python-dotenv
 networkx
 chromadb
 langgraph
+numpy
+scipy

@@ -5,6 +5,10 @@
 import json
 from typing import Dict, Any, List, Tuple
 from collections import Counter
+import math
+import numpy as np
+from scipy.spatial.distance import jensenshannon
+from scipy.stats import entropy
 from llm_provider import get_llm
 from logger import log_message
 
@@ -1652,3 +1656,129 @@ Evaluation Note:
             "dimension_scores": results,
             "summary": summary
         }
+
+def _estimate_real_case_stats(real_case_data: Dict, round_num: int) -> Dict[str, Any]:
+    """
+    Helper: Estimates numerical stats for the real case based on textual descriptions.
+    """
+    # Default baseline (Neutral)
+    mean_val = 0.0
+    std_val = 0.5
+    
+    # Try to find specific round info from situation summaries
+    if "situation_summaries" in real_case_data:
+        for summary in real_case_data["situation_summaries"]:
+            if summary.get("round") == round_num:
+                stance_text = summary.get("overall_stance", "").lower()
+                # Simple heuristic mapping for demo purposes
+                if "strong support" in stance_text or "highly positive" in stance_text:
+                    mean_val = 0.8
+                    std_val = 0.3
+                elif "support" in stance_text or "positive" in stance_text:
+                    mean_val = 0.4
+                    std_val = 0.6
+                elif "strong oppose" in stance_text or "highly negative" in stance_text:
+                    mean_val = -0.8
+                    std_val = 0.3
+                elif "oppose" in stance_text or "negative" in stance_text:
+                    mean_val = -0.4
+                    std_val = 0.6
+                break
+    
+    # Construct a synthetic distribution for JSD/KL calc
+    x = np.array([-1, -0.5, 0, 0.5, 1])
+    dist = np.exp(-0.5 * ((x - mean_val) / std_val) ** 2)
+    dist = dist / dist.sum() 
+    
+    return {
+        "mean": mean_val,
+        "std": std_val,
+        "distribution": dist
+    }
+
+def calculate_trajectory_fidelity_metrics(sim_data: Dict, real_case_data: Dict) -> List[Dict[str, Any]]:
+    """
+    Calculates dynamic fidelity metrics comparing Simulation vs Real Case per round.
+    """
+    metrics_list = []
+    sim_means = []
+    real_means = []
+    
+    total_rounds = sim_data.get("total_rounds", 0)
+    
+    for r in range(1, total_rounds + 1):
+        # 1. Simulation Stats
+        sim_round_data = sim_data["stance_by_round"].get(r)
+        if not sim_round_data:
+            sim_mean = 0.0
+            sim_std = 0.0
+            sim_dist = np.array([0.2, 0.2, 0.2, 0.2, 0.2])
+        else:
+            sim_mean = sim_round_data["average"]
+            sim_std = 0.5 
+            # Construct distribution from counts
+            c_ext_neg = sim_round_data.get("extreme_negative", 0)
+            c_neg = max(0, sim_round_data.get("negative_count", 0) - c_ext_neg)
+            c_neu = sim_round_data.get("neutral_count", 0)
+            c_ext_pos = sim_round_data.get("extreme_positive", 0)
+            c_pos = max(0, sim_round_data.get("positive_count", 0) - c_ext_pos)
+            
+            sim_dist = np.array([c_ext_neg, c_neg, c_neu, c_pos, c_ext_pos], dtype=float)
+            if sim_dist.sum() > 0:
+                sim_dist = sim_dist / sim_dist.sum()
+            else:
+                sim_dist = np.array([0.2, 0.2, 0.2, 0.2, 0.2])
+
+        sim_means.append(sim_mean)
+
+        # 2. Real Case Stats
+        real_stats = _estimate_real_case_stats(real_case_data, r)
+        real_mean = real_stats["mean"]
+        real_std = real_stats["std"]
+        real_dist = real_stats["distribution"]
+        real_means.append(real_mean)
+
+        # 3. Calculate Metrics
+        epsilon = 1e-10
+        p = real_dist + epsilon
+        q = sim_dist + epsilon
+        
+        jsd_val = jensenshannon(p, q, base=2)
+        if np.isnan(jsd_val): jsd_val = 0.0
+        
+        kl_real_to_sim = entropy(p, q)
+        kl_sim_to_real = entropy(q, p)
+        
+        pearson_r = 0.0
+        if len(sim_means) > 1:
+            try:
+                r_matrix = np.corrcoef(real_means, sim_means)
+                pearson_r = r_matrix[0, 1]
+                if np.isnan(pearson_r): pearson_r = 0.0
+            except:
+                pearson_r = 0.0
+        elif len(sim_means) == 1:
+            pearson_r = 1.0 if abs(sim_mean - real_mean) < 0.2 else 0.5
+            
+        error = sim_mean - real_mean
+        mae = abs(error)
+        rmse = math.sqrt(error ** 2)
+        
+        metrics_list.append({
+            "group": r,
+            "pr_round": f"Round {r}",
+            "r_e": round(float(pearson_r), 4),
+            "JSD_e": round(float(jsd_val), 4),
+            "KL_p_e_m_e": round(float(kl_real_to_sim), 4),
+            "KL_p_hat_e_m_e": round(float(kl_sim_to_real), 4),
+            "statistics": {
+                "mean_y_e": round(float(real_mean), 3),
+                "mean_y_hat_e": round(float(sim_mean), 3),
+                "std_y_e": round(float(real_std), 3),
+                "std_y_hat_e": round(float(sim_std), 3),
+                "rmse": round(float(rmse), 3),
+                "mae": round(float(mae), 3)
+            }
+        })
+        
+    return metrics_list

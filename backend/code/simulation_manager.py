@@ -727,7 +727,17 @@ Please write the report in professional and objective language, emphasizing comp
     # 
     # Implementation should be added to evaluation_metrics.py module.
     # Function signature suggestion: calculate_trajectory_metrics(sim_data, real_case_data) -> List[Dict]
-    evaluation_metrics = _load_static_evaluation_metrics()
+    # evaluation_metrics = _load_static_evaluation_metrics()
+    try:
+        log_message("Calculating dynamic trajectory fidelity metrics...")
+        # Resolve TODO 1: Call the dynamic calculation function
+        evaluation_metrics = em.calculate_trajectory_fidelity_metrics(sim_data, real_case_data)
+        log_message(f"✓ Successfully calculated metrics for {len(evaluation_metrics)} rounds.")
+    except Exception as e:
+        log_message(f"⚠️ Error calculating metrics: {str(e)}")
+        import traceback
+        log_message(traceback.format_exc())
+        evaluation_metrics = []
     
     report_data = {
         "reportId": f"report_{simulation_id}_{int(time.time())}",
