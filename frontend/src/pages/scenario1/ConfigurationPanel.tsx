@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Select, Input, Button, Space, Typography, Progress } from 'antd';
 import { ThunderboltOutlined, SendOutlined, RightOutlined, EyeOutlined, LockOutlined } from '@ant-design/icons';
 import { LLMOption, SimulationState } from '../../types';
-import { SimulationStatus } from '../../services/mockApi';
+import { SimulationStatus } from '../../services/api';
 import ContentModal from '../../components/ContentModal';
 import './ConfigurationPanel.css';
 

@@ -1,5 +1,3 @@
-# network.py
-
 import networkx as nx
 import random
 from agent import Agent

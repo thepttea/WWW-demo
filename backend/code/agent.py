@@ -1,5 +1,3 @@
-# agent.py
-
 import chromadb
 import uuid
 import json

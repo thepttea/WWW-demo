@@ -713,21 +713,6 @@ Please write the report in professional and objective language, emphasizing comp
     # Extract overall similarity
     overall_similarity = evaluation_result.get('overall_similarity_percentage', 0)
     
-    # TODO: FUTURE IMPLEMENTATION - Dynamic Evaluation Metrics Generation
-    # Currently loading static evaluation metrics from JSON file as a placeholder.
-    # In the future, this should be replaced with dynamically calculated metrics based on:
-    # 1. Stance trajectory comparison (simulation vs. ground truth)
-    #    - Calculate Pearson correlation (r_e) between simulation and real-world stance distributions
-    # 2. Distribution divergence metrics
-    #    - Jensen-Shannon Divergence (JSD_e) for overall distribution similarity
-    #    - KL Divergence (KL_p_e_m_e and KL_p_hat_e_m_e) for fine-grained comparison
-    # 3. Statistical measures per round
-    #    - Mean and std deviation comparison (mean_y_e, mean_y_hat_e, std_y_e, std_y_hat_e)
-    #    - Error metrics (RMSE, MAE) for quantitative assessment
-    # 
-    # Implementation should be added to evaluation_metrics.py module.
-    # Function signature suggestion: calculate_trajectory_metrics(sim_data, real_case_data) -> List[Dict]
-    # evaluation_metrics = _load_static_evaluation_metrics()
     try:
         log_message("Calculating dynamic trajectory fidelity metrics...")
         # Resolve TODO 1: Call the dynamic calculation function
@@ -920,95 +905,6 @@ def advance_to_next_round(simulation_id: str) -> Dict[str, Any]:
     except Exception as e:
         log_message(f"Error advancing to next round: {str(e)}")
         raise
-
-def _load_static_evaluation_metrics() -> List[Dict[str, Any]]:
-    """
-    Load static evaluation metrics from JSON file (TEMPORARY IMPLEMENTATION).
-    
-    TODO: REPLACE THIS FUNCTION WITH DYNAMIC CALCULATION
-    
-    This is a placeholder implementation that loads pre-computed evaluation metrics
-    from a static JSON file. In production, this should be replaced with real-time
-    calculation based on the simulation results.
-    
-    Future implementation requirements:
-    
-    1. **Trajectory Correlation (r_e)**
-       - Calculate Pearson correlation coefficient between simulated stance trajectory
-         and ground truth trajectory for each round
-       - Input: List of stance scores from simulation and real case
-       - Output: Correlation value between -1 and 1
-    
-    2. **Distribution Divergence (JSD_e)**
-       - Calculate Jensen-Shannon Divergence between simulated opinion distribution
-         and real-world opinion distribution
-       - Measures overall similarity of probability distributions
-       - Range: 0 (identical) to 1 (completely different)
-    
-    3. **KL Divergence Metrics**
-       - KL_p_e_m_e: KL divergence from real distribution to simulated distribution
-       - KL_p_hat_e_m_e: KL divergence from simulated to real (reverse direction)
-       - Asymmetric measure of distribution difference
-    
-    4. **Statistical Measures**
-       - mean_y_e: Mean stance score from ground truth
-       - mean_y_hat_e: Mean stance score from simulation
-       - std_y_e: Standard deviation of ground truth
-       - std_y_hat_e: Standard deviation of simulation
-       - rmse: Root Mean Square Error between trajectories
-       - mae: Mean Absolute Error between trajectories
-    
-    Data structure per round:
-    {
-        "group": int,              # Round number (1-based)
-        "pr_round": str,           # Round label (e.g., "Round 1")
-        "r_e": float,              # Pearson correlation
-        "JSD_e": float,            # Jensen-Shannon Divergence
-        "KL_p_e_m_e": float,       # KL divergence (real → sim)
-        "KL_p_hat_e_m_e": float,   # KL divergence (sim → real)
-        "statistics": {
-            "mean_y_e": float,      # Ground truth mean
-            "mean_y_hat_e": float,  # Simulation mean
-            "std_y_e": float,       # Ground truth std
-            "std_y_hat_e": float,   # Simulation std
-            "rmse": float,          # Root Mean Square Error
-            "mae": float            # Mean Absolute Error
-        }
-    }
-    
-    Suggested implementation location:
-    - Add to evaluation_metrics.py as: calculate_trajectory_fidelity_metrics()
-    - Input: simulation stance history, real case stance history
-    - Output: List of metric dictionaries (one per round)
-    
-    Returns:
-        List of evaluation metric dictionaries, one per simulation round.
-        Empty list if file cannot be loaded.
-    """
-    json_path = os.path.join(os.path.dirname(__file__), '../data/evaluation_metrics.json')
-    
-    try:
-        with open(json_path, 'r', encoding='utf-8') as f:
-            metrics_data = json.load(f)
-        
-        log_message(f"✓ Loaded {len(metrics_data)} evaluation metric entries from static file")
-        log_message("⚠️  WARNING: Using static evaluation metrics. Replace with dynamic calculation in production.")
-        
-        return metrics_data
-    
-    except FileNotFoundError:
-        log_message(f"⚠️  Warning: Evaluation metrics file not found at {json_path}")
-        log_message("Returning empty metrics list. Please ensure evaluation_metrics.json exists.")
-        return []
-    
-    except json.JSONDecodeError as e:
-        log_message(f"⚠️  Error parsing evaluation metrics JSON: {e}")
-        return []
-    
-    except Exception as e:
-        log_message(f"⚠️  Unexpected error loading evaluation metrics: {e}")
-        return []
-
 
 def get_scenario2_result(simulation_id: str) -> Dict[str, Any]:
     """
